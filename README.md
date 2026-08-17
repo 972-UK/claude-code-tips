@@ -6,7 +6,7 @@ This repo is intentionally a **power-user default**: it assumes you want aggress
 
 Post: [`claude-code-tips.md`](./claude-code-tips.md)
 
-Stack: **CBM** (code graph) + **context-mode** (output sandbox) + **RTK** (shell compression) + **Headroom** (API-layer) + **Caveman** (Claude output) + enforcement hooks. ~30min → 3h+ sessions, same 200K window.
+Stack: **CBM** (code graph) + **context-mode** (output sandbox) + **RTK** (shell compression) + **Headroom** (API-layer) + **Caveman** (Claude output) + **UI/UX Pro Max** (design intelligence) + enforcement hooks. ~30min → 3h+ sessions, same 200K window.
 
 ## Install
 
@@ -15,7 +15,7 @@ git clone https://github.com/sgaabdu4/claude-code-tips.git
 cd claude-code-tips && chmod +x install.sh && ./install.sh
 ```
 
-Sanity-checks `git`/`curl`/`jq`/`python3` upfront. Installs Headroom (`pip install --user`), CBM binary, context-mode + Caveman plugins via `claude plugin install`, hooks, slash commands, statusline, settings, shell wrapper for your `$SHELL`. **Idempotent** — re-run anytime.
+Sanity-checks `git`/`curl`/`jq`/`python3` upfront. Installs Headroom (`pip install --user`), CBM binary, context-mode + Caveman + UI/UX Pro Max plugins via `claude plugin install`, hooks, slash commands, statusline, settings, shell wrapper for your `$SHELL`. **Idempotent** — re-run anytime.
 
 ### Power-user flags
 
@@ -24,6 +24,7 @@ Default stays maximal. These flags narrow blast radius without editing the scrip
 ```bash
 ./install.sh --no-shell-wrapper   # install Headroom/RTK, but do not alias claude
 ./install.sh --no-caveman         # skip Caveman plugin + omit it from settings
+./install.sh --no-ui-ux-pro-max   # skip UI/UX Pro Max plugin + omit it from settings
 ./install.sh --sonnet             # use model: sonnet + effortLevel: high
 ./install.sh --check              # validate repo wiring only
 ```
@@ -49,7 +50,7 @@ Walks `settings.json`, asserts every hook command path resolves on disk, every `
 
 | Path | Purpose |
 |---|---|
-| [`install.sh`](./install.sh) | One-click power-user install. Supports `--check`, `--no-shell-wrapper`, `--no-caveman`, and `--sonnet`. |
+| [`install.sh`](./install.sh) | One-click power-user install. Supports `--check`, `--no-shell-wrapper`, `--no-caveman`, `--no-ui-ux-pro-max`, and `--sonnet`. |
 | [`settings/settings.json`](./settings/settings.json) | `~/.claude/settings.json` — model, effort, hooks, env, plugins, statusline |
 | [`CLAUDE.md.example`](./CLAUDE.md.example) | Body of `~/.claude/CLAUDE.md` — rules + tool routing. Wrapped in `<!--cct-->` markers when installed |
 | [`hooks/`](./hooks/) | All enforcement hooks (cbm-*, bash-ban-raw-tools, sync-*-on-edit, flutter-ctx-redirect, memory-repo-symlink) |
@@ -80,6 +81,7 @@ SessionStart            context-mode + memory-repo-symlink + cbm-session-reminde
 | codebase-memory-mcp | https://github.com/DeusData/codebase-memory-mcp |
 | context-mode plugin | https://github.com/mksglu/context-mode |
 | Caveman plugin | https://github.com/JuliusBrussee/caveman |
+| UI/UX Pro Max plugin | https://github.com/nextlevelbuilder/ui-ux-pro-max-skill |
 | RTK standalone | https://github.com/rtk-ai/rtk |
 
 ### Optional — required only for `/e2e` and `/e2e-auto`
