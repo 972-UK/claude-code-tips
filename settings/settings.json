@@ -147,7 +147,8 @@
   },
   "enabledPlugins": {
     "caveman@caveman": true,
-    "context-mode@context-mode": true
+    "context-mode@context-mode": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -160,6 +161,12 @@
       "source": {
         "source": "github",
         "repo": "mksglu/context-mode"
+      }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": {
+        "source": "github",
+        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
       }
     }
   },

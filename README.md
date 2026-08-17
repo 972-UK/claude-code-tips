@@ -15,7 +15,7 @@ git clone https://github.com/sgaabdu4/claude-code-tips.git
 cd claude-code-tips && chmod +x install.sh && ./install.sh
 ```
 
-Sanity-checks `git`/`curl`/`jq`/`python3` upfront. Installs Headroom (`pip install --user`), CBM binary, context-mode + Caveman plugins via `claude plugin install`, hooks, slash commands, statusline, settings, shell wrapper for your `$SHELL`. **Idempotent** — re-run anytime.
+Sanity-checks `git`/`curl`/`jq`/`python3` upfront. Installs Headroom (`pip install --user`), CBM binary, context-mode + Caveman + ui-ux-pro-max plugins via `claude plugin install`, hooks, slash commands, statusline, settings, shell wrapper for your `$SHELL`. **Idempotent** — re-run anytime.
 
 ### Power-user flags
 
@@ -24,6 +24,7 @@ Default stays maximal. These flags narrow blast radius without editing the scrip
 ```bash
 ./install.sh --no-shell-wrapper   # install Headroom/RTK, but do not alias claude
 ./install.sh --no-caveman         # skip Caveman plugin + omit it from settings
+./install.sh --no-ui-ux-pro-max   # skip ui-ux-pro-max plugin + omit it from settings
 ./install.sh --sonnet             # use model: sonnet + effortLevel: high
 ./install.sh --check              # validate repo wiring only
 ```
@@ -80,6 +81,7 @@ SessionStart            context-mode + memory-repo-symlink + cbm-session-reminde
 | codebase-memory-mcp | https://github.com/DeusData/codebase-memory-mcp |
 | context-mode plugin | https://github.com/mksglu/context-mode |
 | Caveman plugin | https://github.com/JuliusBrussee/caveman |
+| ui-ux-pro-max plugin | https://github.com/nextlevelbuilder/ui-ux-pro-max-skill |
 | RTK standalone | https://github.com/rtk-ai/rtk |
 
 ### Optional — required only for `/e2e` and `/e2e-auto`
