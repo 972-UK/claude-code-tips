@@ -9,14 +9,15 @@ Usage:
   ./install.sh [options]
 
 Power-user default:
-  Installs Headroom + RTK, CBM, context-mode, Caveman, hooks, commands,
-  statusline, settings, and the shell wrapper that runs `claude` through
-  Headroom.
+  Installs Headroom + RTK, CBM, context-mode, Caveman, ui-ux-pro-max, hooks,
+  commands, statusline, settings, and the shell wrapper that runs `claude`
+  through Headroom.
 
 Options:
   --check              Validate repo settings/hooks/commands without installing.
   --no-shell-wrapper   Install Headroom, but do not modify your shell rc to wrap `claude`.
   --no-caveman         Skip Caveman plugin install and omit it from merged settings.
+  --no-ui-ux-pro-max   Skip ui-ux-pro-max plugin install and omit it from merged settings.
   --sonnet             Use `model: sonnet` and `effortLevel: high` instead of Opus/xhigh.
   -h, --help           Show this help.
 
@@ -30,6 +31,7 @@ EOF
 
 CHECK_ONLY=0
 INSTALL_CAVEMAN=1
+INSTALL_UIUX=1
 INSTALL_SHELL_WRAPPER=1
 MODEL_PROFILE="power"
 
@@ -45,6 +47,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --no-caveman)
       INSTALL_CAVEMAN=0
+      shift
+      ;;
+    --no-ui-ux-pro-max)
+      INSTALL_UIUX=0
       shift
       ;;
     --sonnet)
@@ -78,6 +84,10 @@ prepare_settings_source() {
 
   if [[ "$INSTALL_CAVEMAN" -eq 0 ]]; then
     filter="$filter | del(.enabledPlugins[\"caveman@caveman\"]) | del(.extraKnownMarketplaces.caveman)"
+  fi
+
+  if [[ "$INSTALL_UIUX" -eq 0 ]]; then
+    filter="$filter | del(.enabledPlugins[\"ui-ux-pro-max@ui-ux-pro-max-skill\"]) | del(.extraKnownMarketplaces[\"ui-ux-pro-max-skill\"])"
   fi
 
   if [[ "$MODEL_PROFILE" == "sonnet" ]]; then
@@ -151,6 +161,11 @@ if [[ "$INSTALL_CAVEMAN" -eq 1 ]]; then
   echo "Power-user output compression: Caveman enabled"
 else
   echo "Power-user output compression: Caveman skipped (--no-caveman)"
+fi
+if [[ "$INSTALL_UIUX" -eq 1 ]]; then
+  echo "UI/UX design intelligence: ui-ux-pro-max enabled"
+else
+  echo "UI/UX design intelligence: ui-ux-pro-max skipped (--no-ui-ux-pro-max)"
 fi
 if [[ "$INSTALL_SHELL_WRAPPER" -eq 1 ]]; then
   echo "Shell wrapper: enabled (claude → headroom wrap claude)"
@@ -235,23 +250,25 @@ if [[ -n "$CBM_OS" && -n "$CBM_ARCH" ]]; then
   rm -rf "$CBM_TMP"
 fi
 
-# ── 3. Install Claude Code plugins (context-mode + optional caveman) ──
+# ── 3. Install Claude Code plugins (context-mode + optional caveman/ui-ux-pro-max) ──
 # Plugin install (not raw `mcp add`) so context-mode tools resolve under
 # `mcp__plugin_context-mode_context-mode__*` — the namespace slash commands
 # (/e2e, /unleash) reference. Raw `mcp add` produces `mcp__context-mode__*`
-# which the slash commands cannot find. Caveman stays enabled by default for
-# the power-user profile, but --no-caveman keeps private style choices out of
-# the merged settings.
-if [[ "$INSTALL_CAVEMAN" -eq 1 ]]; then
-  echo "→ Installing Claude Code plugins (context-mode, caveman)..."
-else
-  echo "→ Installing Claude Code plugins (context-mode only; Caveman skipped)..."
-fi
+# which the slash commands cannot find. Caveman and ui-ux-pro-max stay enabled
+# by default for the power-user profile, but --no-caveman / --no-ui-ux-pro-max
+# keep them out of the merged settings.
+plugin_label="context-mode"
+[[ "$INSTALL_CAVEMAN" -eq 1 ]] && plugin_label="$plugin_label, caveman"
+[[ "$INSTALL_UIUX" -eq 1 ]] && plugin_label="$plugin_label, ui-ux-pro-max"
+echo "→ Installing Claude Code plugins ($plugin_label)..."
 if ! command -v claude >/dev/null 2>&1; then
   echo "  ⚠ 'claude' CLI not on PATH. Skip plugin install — install Claude Code first, then run:"
   echo "    claude plugin marketplace add mksglu/context-mode && claude plugin install context-mode@context-mode"
   if [[ "$INSTALL_CAVEMAN" -eq 1 ]]; then
     echo "    claude plugin marketplace add JuliusBrussee/caveman && claude plugin install caveman@caveman"
+  fi
+  if [[ "$INSTALL_UIUX" -eq 1 ]]; then
+    echo "    claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill && claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill"
   fi
 else
   claude plugin marketplace add mksglu/context-mode 2>/dev/null \
@@ -263,6 +280,12 @@ else
       || echo "  (run 'claude plugin marketplace add JuliusBrussee/caveman' manually if this failed)"
     claude plugin install caveman@caveman 2>/dev/null \
       || echo "  (run 'claude plugin install caveman@caveman' manually if this failed)"
+  fi
+  if [[ "$INSTALL_UIUX" -eq 1 ]]; then
+    claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill 2>/dev/null \
+      || echo "  (run 'claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill' manually if this failed)"
+    claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill 2>/dev/null \
+      || echo "  (run 'claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill' manually if this failed)"
   fi
 fi
 
@@ -382,7 +405,9 @@ merge_settings_json() {
   local target="$HOME/.claude/settings.json"
   local source="$SETTINGS_SOURCE"
   local skip_caveman=false
+  local skip_uiux=false
   [[ "$INSTALL_CAVEMAN" -eq 0 ]] && skip_caveman=true
+  [[ "$INSTALL_UIUX" -eq 0 ]] && skip_uiux=true
 
   if [[ ! -f "$target" ]]; then
     cp "$source" "$target"
@@ -401,7 +426,7 @@ merge_settings_json() {
   local backup_suffix
   backup_suffix="$(date +%s).$$"
 
-  if jq -s --argjson skipCaveman "$skip_caveman" --arg modelProfile "$MODEL_PROFILE" '
+  if jq -s --argjson skipCaveman "$skip_caveman" --argjson skipUiux "$skip_uiux" --arg modelProfile "$MODEL_PROFILE" '
     .[0] as $ours | .[1] as $theirs |
     ($ours * $theirs)
     | .hooks = $ours.hooks
@@ -414,6 +439,9 @@ merge_settings_json() {
     | .statusLine //= $ours.statusLine
     | if $skipCaveman then
         del(.enabledPlugins["caveman@caveman"]) | del(.extraKnownMarketplaces.caveman)
+      else . end
+    | if $skipUiux then
+        del(.enabledPlugins["ui-ux-pro-max@ui-ux-pro-max-skill"]) | del(.extraKnownMarketplaces["ui-ux-pro-max-skill"])
       else . end
     | if $modelProfile == "sonnet" then
         .model = "sonnet" | .effortLevel = "high"
@@ -573,6 +601,11 @@ if [[ "$INSTALL_CAVEMAN" -eq 1 ]]; then
 else
   echo "  - Caveman plugin skipped (--no-caveman)"
 fi
+if [[ "$INSTALL_UIUX" -eq 1 ]]; then
+  echo "  ✓ ui-ux-pro-max plugin (UI/UX design intelligence)"
+else
+  echo "  - ui-ux-pro-max plugin skipped (--no-ui-ux-pro-max)"
+fi
 echo "  ✓ All enforcement hooks from repo hooks/"
 echo "  ✓ All slash commands from repo commands/"
 echo "  ✓ Private agent definitions left untouched in ~/.claude/agents/"
@@ -603,11 +636,17 @@ if [[ "$INSTALL_CAVEMAN" -eq 1 ]]; then
 else
   echo "  4. Caveman skipped; re-run './install.sh' without --no-caveman to add it"
 fi
-echo "  5. Re-run './install.sh --check' anytime to validate config"
+if [[ "$INSTALL_UIUX" -eq 1 ]]; then
+  echo "  5. ui-ux-pro-max is ready — ask Claude for UI/UX design guidance in any project"
+else
+  echo "  5. ui-ux-pro-max skipped; re-run './install.sh' without --no-ui-ux-pro-max to add it"
+fi
+echo "  6. Re-run './install.sh --check' anytime to validate config"
 echo ""
 echo "Repos:"
-echo "  Headroom:  https://github.com/chopratejas/headroom"
-echo "  CBM:       https://github.com/DeusData/codebase-memory-mcp"
-echo "  ctx-mode:  https://github.com/mksglu/context-mode"
-echo "  Caveman:   https://github.com/JuliusBrussee/caveman"
-echo "  RTK:       https://github.com/rtk-ai/rtk (bundled in Headroom)"
+echo "  Headroom:      https://github.com/chopratejas/headroom"
+echo "  CBM:           https://github.com/DeusData/codebase-memory-mcp"
+echo "  ctx-mode:      https://github.com/mksglu/context-mode"
+echo "  Caveman:       https://github.com/JuliusBrussee/caveman"
+echo "  ui-ux-pro-max: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+echo "  RTK:           https://github.com/rtk-ai/rtk (bundled in Headroom)"
