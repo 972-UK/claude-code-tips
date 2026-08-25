@@ -1,0 +1,322 @@
+<title>Parth's Creations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --ink:#0B0B0D;
+  --panel:#141317;
+  --panel-2:#1C1A20;
+  --line:#2A2730;
+  --gold:#C9A227;
+  --gold-lit:#E9CE78;
+  --cream:#F3EEE4;
+  --muted:#95908A;
+  --pla:#7FB5C9;
+  --step:clamp(1rem,2.4vw,1.5rem);
+  --maxw:1120px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--cream);
+  font-family:"Outfit",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;
+  font-size:clamp(1rem,0.95rem + 0.2vw,1.075rem);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{width:min(100% - 2.5rem,var(--maxw));margin-inline:auto}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;text-wrap:balance;margin:0;line-height:1.1}
+a{color:inherit}
+.eyebrow{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin:0;
+}
+
+/* ---------- masthead ---------- */
+header.top{
+  position:sticky;top:0;z-index:20;
+  backdrop-filter:blur(14px);
+  background:color-mix(in srgb,var(--ink) 82%,transparent);
+  border-bottom:1px solid var(--line);
+}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 0}
+.mark{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+.mono-badge{
+  width:2.1rem;height:2.1rem;flex:none;border-radius:50%;
+  display:grid;place-items:center;
+  border:1px solid var(--gold);
+  font-family:"Cormorant Garamond",serif;font-size:1.05rem;color:var(--gold-lit);
+  background:radial-gradient(circle at 30% 25%,#2b2413,#0d0c0e);
+}
+.mark b{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:1.2rem;letter-spacing:.05em}
+nav{display:flex;gap:1.4rem;font-size:.9rem}
+nav a{text-decoration:none;color:var(--muted);transition:color .2s}
+nav a:hover,nav a:focus-visible{color:var(--gold-lit)}
+@media (max-width:720px){nav{display:none}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;isolation:isolate;border-bottom:1px solid var(--line)}
+.hero video,.hero .fallback{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;
+}
+.hero .fallback{
+  background:
+    radial-gradient(60% 80% at 75% 20%,rgba(201,162,39,.22),transparent 60%),
+    conic-gradient(from 200deg at 30% 60%,#191720,#0d0c10,#231d13,#0d0c10);
+}
+.hero::after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(100deg,rgba(11,11,13,.94) 12%,rgba(11,11,13,.72) 55%,rgba(11,11,13,.5));
+}
+.hero-in{padding:clamp(4.5rem,13vh,8.5rem) 0 clamp(3.5rem,9vh,6rem)}
+.hero h1{
+  font-size:clamp(3rem,10vw,6.6rem);
+  letter-spacing:.005em;margin:.5rem 0 0;
+}
+.hero h1 .gold{
+  background:linear-gradient(96deg,var(--gold-lit),#a5811b 60%,var(--gold-lit));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lede{max-width:34ch;color:var(--muted);margin:1.2rem 0 0;font-size:1.08rem}
+.cta-row{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.55rem;
+  padding:.72rem 1.4rem;border-radius:2px;text-decoration:none;
+  font-size:.9rem;letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid var(--gold);transition:background .2s,color .2s,transform .2s;
+}
+.btn.solid{background:var(--gold);color:#14100a;font-weight:500}
+.btn.solid:hover{background:var(--gold-lit)}
+.btn.ghost{color:var(--gold-lit)}
+.btn.ghost:hover{background:rgba(201,162,39,.12)}
+.btn:focus-visible{outline:2px solid var(--gold-lit);outline-offset:3px}
+.hero-facts{
+  display:flex;flex-wrap:wrap;gap:0;margin-top:3rem;
+  border-top:1px solid var(--line);
+}
+.hero-facts div{
+  padding:1rem 1.6rem 0 0;margin-right:1.6rem;border-right:1px solid var(--line);
+}
+.hero-facts div:last-child{border-right:0}
+.hero-facts strong{display:block;font-family:"JetBrains Mono",monospace;font-size:1.05rem;color:var(--cream);font-weight:500}
+.hero-facts span{font-size:.8rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+
+/* ---------- sections ---------- */
+section{padding:clamp(3.5rem,8vw,6rem) 0}
+.head{max-width:52ch;margin-bottom:2.5rem}
+.head h2{font-size:clamp(1.9rem,4vw,2.9rem);margin:.4rem 0 .6rem}
+.head p{color:var(--muted);margin:0}
+
+.grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+@media (min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:960px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--panel);padding:1.9rem 1.6rem;transition:background .25s}
+.card:hover{background:var(--panel-2)}
+.card h3{font-size:1.45rem;margin-bottom:.4rem}
+.card p{margin:0;color:var(--muted);font-size:.95rem}
+.card .tag{
+  font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.15em;
+  color:var(--gold);text-transform:uppercase;
+}
+
+/* ---------- process (a real sequence) ---------- */
+.steps{display:grid;gap:2rem}
+@media (min-width:800px){.steps{grid-template-columns:repeat(4,1fr);gap:1.5rem}}
+.step{position:relative;padding-top:2rem;border-top:1px solid var(--line)}
+.step::before{
+  content:attr(data-n);
+  position:absolute;top:-.05rem;left:0;transform:translateY(-50%);
+  background:var(--ink);padding-right:.7rem;
+  font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--gold);letter-spacing:.15em;
+}
+.step h3{font-size:1.3rem;margin-bottom:.35rem}
+.step p{margin:0;color:var(--muted);font-size:.93rem}
+
+/* ---------- specs ---------- */
+.specs{border:1px solid var(--line);background:var(--panel);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.93rem;min-width:520px}
+th,td{padding:.95rem 1.3rem;text-align:left;border-bottom:1px solid var(--line)}
+th{
+  font-family:"JetBrains Mono",monospace;font-weight:500;font-size:.72rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--gold);
+}
+tbody tr:last-child td{border-bottom:0}
+td:first-child{color:var(--cream)}
+td{color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* ---------- order ---------- */
+.order{background:var(--panel);border:1px solid var(--line)}
+.order-in{display:grid;gap:2.5rem;padding:clamp(2rem,5vw,3.5rem)}
+@media (min-width:860px){.order-in{grid-template-columns:1.1fr .9fr;gap:4rem}}
+.order h2{font-size:clamp(2rem,4vw,3rem)}
+.contact{display:grid;gap:1.1rem;align-content:start}
+.contact a{
+  display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+  text-decoration:none;padding-bottom:.9rem;border-bottom:1px solid var(--line);
+  transition:border-color .2s;
+}
+.contact a:hover{border-color:var(--gold)}
+.contact .label{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.contact .value{font-size:1.05rem;color:var(--gold-lit);font-variant-numeric:tabular-nums}
+.note{color:var(--muted);font-size:.9rem}
+
+footer{border-top:1px solid var(--line);padding:2.2rem 0;color:var(--muted);font-size:.85rem}
+.foot-in{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="#top"><span class="mono-badge">PC</span><b>Parth's Creations</b></a>
+    <nav>
+      <a href="#work">What we print</a>
+      <a href="#process">Process</a>
+      <a href="#specs">Specs</a>
+      <a href="#order">Order</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="fallback" aria-hidden="true"></div>
+    <video autoplay muted loop playsinline aria-hidden="true"
+      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_171521_25968ba2-b594-4b32-aab7-f6b69398a6fa.mp4"></video>
+    <div class="wrap hero-in">
+      <p class="eyebrow">Ideas · Design · Creation</p>
+      <h1>Turn your idea<br>into <span class="gold">reality</span></h1>
+      <p class="lede">Custom 3D printing from Gujarat — keychains, idols, phone stands, nameplates and functional parts, printed layer by layer to your design.</p>
+      <div class="cta-row">
+        <a class="btn solid" href="https://wa.me/916354386145">Start a custom order</a>
+        <a class="btn ghost" href="https://instagram.com/3dlayerbylayer_">See the prints</a>
+      </div>
+      <div class="hero-facts">
+        <div><strong>0.12 mm</strong><span>Layer height</span></div>
+        <div><strong>2–5 days</strong><span>Typical turnaround</span></div>
+        <div><strong>220 × 220 × 250</strong><span>Build volume (mm)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="work" class="wrap">
+    <div class="head">
+      <p class="eyebrow">What we print</p>
+      <h2>One printer, a lot of different jobs</h2>
+      <p>Bring a photo, a sketch, a logo or a broken part. If it can be modelled, it can be printed.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <p class="tag">Gifting</p>
+        <h3>Custom keychains</h3>
+        <p>Names, logos, bike and car silhouettes, hospital and college tags. Batch orders welcome for events and clinics.</p>
+      </article>
+      <article class="card">
+        <p class="tag">Decor</p>
+        <h3>Idols &amp; showpieces</h3>
+        <p>Ganesha, elephants, and other decor pieces with a smooth finish, ready for paint or gold detailing.</p>
+      </article>
+      <article class="card">
+        <p class="tag">Desk</p>
+        <h3>Phone stands &amp; holders</h3>
+        <p>Flexible, one-piece printed stands, cable clips, pen holders and desk organisers that arrive fully assembled.</p>
+      </article>
+      <article class="card">
+        <p class="tag">Personal</p>
+        <h3>Pendants &amp; nameplates</h3>
+        <p>Lockets, door nameplates and small jewellery pieces printed in colour, no painting needed.</p>
+      </article>
+      <article class="card">
+        <p class="tag">Functional</p>
+        <h3>Spares &amp; prototypes</h3>
+        <p>Replacement knobs, brackets, jigs and enclosures. Send the measurements or the broken piece and we model it.</p>
+      </article>
+      <article class="card">
+        <p class="tag">Modelling</p>
+        <h3>Design from scratch</h3>
+        <p>No 3D file? We draw the model for you from a reference image and share a preview before anything is printed.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="process" class="wrap">
+    <div class="head">
+      <p class="eyebrow">How an order runs</p>
+      <h2>From message to finished print</h2>
+      <p>Every order follows the same four stages, so you always know where yours is.</p>
+    </div>
+    <div class="steps">
+      <div class="step" data-n="STAGE 01">
+        <h3>Share the idea</h3>
+        <p>WhatsApp a photo, sketch or STL file with the size you want and how many pieces.</p>
+      </div>
+      <div class="step" data-n="STAGE 02">
+        <h3>Model &amp; quote</h3>
+        <p>You get a 3D preview and a fixed price covering material, print time and finishing.</p>
+      </div>
+      <div class="step" data-n="STAGE 03">
+        <h3>Print</h3>
+        <p>Printed in your chosen colour and material, with a photo sent once it comes off the bed.</p>
+      </div>
+      <div class="step" data-n="STAGE 04">
+        <h3>Finish &amp; ship</h3>
+        <p>Supports removed, edges cleaned, packed and dispatched anywhere in India.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="specs" class="wrap">
+    <div class="head">
+      <p class="eyebrow">Materials</p>
+      <h2>Pick the material for the job</h2>
+      <p>Not sure which one? Say what the part is for and we'll choose it for you.</p>
+    </div>
+    <div class="specs">
+      <table>
+        <caption class="note" style="caption-side:bottom;padding:.9rem 1.3rem;text-align:left">Colours available in each material on request — ask before ordering large batches.</caption>
+        <thead>
+          <tr><th scope="col">Material</th><th scope="col">Best for</th><th scope="col">Strength</th><th scope="col">Finish</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>PLA+</td><td>Idols, showpieces, keychains</td><td>Medium</td><td>Smooth, matte</td></tr>
+          <tr><td>PETG</td><td>Outdoor and daily-use parts</td><td>High</td><td>Slight gloss</td></tr>
+          <tr><td>ABS</td><td>Heat-exposed spares</td><td>High</td><td>Matte, paintable</td></tr>
+          <tr><td>TPU (flexible)</td><td>Phone stands, grips, straps</td><td>Flexible</td><td>Soft touch</td></tr>
+          <tr><td>Silk PLA</td><td>Pendants, gifting pieces</td><td>Medium</td><td>Metallic sheen</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="order" id="order">
+      <div class="order-in">
+        <div>
+          <p class="eyebrow">Order</p>
+          <h2>Send the idea. We'll handle the rest.</h2>
+          <p class="note" style="margin-top:1rem;max-width:44ch">Custom orders open every day. Message on WhatsApp or DM on Instagram with your reference image, the size in millimetres, and the quantity — a quote comes back the same day.</p>
+          <div class="cta-row">
+            <a class="btn solid" href="https://wa.me/916354386145">Message on WhatsApp</a>
+          </div>
+        </div>
+        <div class="contact">
+          <a href="tel:+916354386145"><span class="label">Phone / WhatsApp</span><span class="value">+91 63543 86145</span></a>
+          <a href="https://instagram.com/3dlayerbylayer_"><span class="label">Instagram</span><span class="value">@3dlayerbylayer_</span></a>
+          <a href="https://wa.me/916354386145"><span class="label">Custom quote</span><span class="value">Same-day reply</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>Parth's Creations — turning ideas into 3D prints.</span>
+    <span>Custom designs · High quality · Perfect for gifting</span>
+  </div>
+</footer>
