@@ -1,0 +1,11 @@
+[
+ {"id":"ava-sterling","name":"Ava Sterling","role":"Chief of Staff","lastTask":"Set up deadline calendar","status":"idle"},
+ {"id":"rohan-mehta","name":"Rohan Mehta","role":"Sales","lastTask":"Pipeline template ready","status":"idle"},
+ {"id":"maya-okafor","name":"Maya Okafor","role":"Onboarding & AML","lastTask":"Onboarded DEMO Harrow Hill Café","status":"idle"},
+ {"id":"leo-hartley","name":"Leo Hartley","role":"Senior Bookkeeper","lastTask":"DEMO September books loaded","status":"waiting"},
+ {"id":"nia-brooks","name":"Nia Brooks","role":"Credit Control","lastTask":"Invoice log set up","status":"idle"},
+ {"id":"arjun-patel","name":"Arjun Patel","role":"Reporting Analyst","lastTask":"VAT and MTD templates","status":"idle"},
+ {"id":"zara-quinn","name":"Zara Quinn","role":"Marketing","lastTask":"Awaiting first /post","status":"idle"},
+ {"id":"victor-hale","name":"Victor Hale","role":"Legal & Compliance","lastTask":"Drafted 10 policies","status":"waiting"},
+ {"id":"iris-bell","name":"Iris Bell","role":"AAT Tutor","lastTask":"Level 2 academy built","status":"idle"}
+]

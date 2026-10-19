@@ -1,0 +1,3 @@
+invoice_no,date,client,description,amount,due_date,paid_date
+LP-2026-001,01/09/2026,DEMO Harrow Hill Café,Business package September 2026,325.00,15/09/2026,30/09/2026
+LP-2026-002,01/10/2026,DEMO Harrow Hill Café,Business package October 2026,325.00,15/10/2026,

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LedgerPeak Office</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><span class="logo">▲</span> LedgerPeak Office</div>
+  <div class="meta" id="generated"></div>
+</header>
+
+<section class="kpis" id="kpis"></section>
+
+<nav id="tabs">
+  <button data-tab="floor" class="on">Floor</button>
+  <button data-tab="pipeline">Pipeline</button>
+  <button data-tab="clients">Clients</button>
+  <button data-tab="deadlines">Deadlines</button>
+  <button data-tab="academy">Academy</button>
+  <button data-tab="compliance">Compliance</button>
+  <button data-tab="log">Work log</button>
+</nav>
+
+<main>
+  <section id="floor" class="tab on">
+    <div class="floor" id="floorplan"></div>
+  </section>
+  <section id="pipeline" class="tab"><div class="board" id="board"></div></section>
+  <section id="clients" class="tab"><div class="tablewrap"><table id="clientTable"></table></div></section>
+  <section id="deadlines" class="tab"><ul class="list" id="deadlineList"></ul></section>
+  <section id="academy" class="tab"><div class="tablewrap"><table id="unitTable"></table></div></section>
+  <section id="compliance" class="tab"><ul class="list" id="checkList"></ul></section>
+  <section id="log" class="tab"><ul class="list mono" id="logList"></ul></section>
+</main>
+
+<footer>Data from the office files. Run <code>scripts/refresh-dashboard.sh</code> (or <code>.ps1</code>) then reload.</footer>
+
+<script src="data/data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
