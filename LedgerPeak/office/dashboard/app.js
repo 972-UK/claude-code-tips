@@ -63,7 +63,7 @@
 
   // Re-read data/live.js every 3 seconds (a fresh <script> tag works offline from file://)
   let demo = false;
-  setInterval(() => {
+  if (location.protocol === 'file:') setInterval(() => {
     if (demo) return;
     const s = document.createElement('script');
     s.src = 'data/live.js?t=' + Date.now();
