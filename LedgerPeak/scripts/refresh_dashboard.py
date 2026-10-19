@@ -41,6 +41,15 @@ def read(p):
 
 
 agents = json.loads(read(D / "agents.json") or "[]")
+for a in agents:
+    md = read(ROOT / ".claude" / "agents" / f"{a['id']}.md")
+    m = re.search(r"^model:\s*(\S+)", md, re.M)
+    a["model"] = m[1] if m else ""
+    m = re.search(r"## Expertise\n(.*?)(?:\n## |\Z)", md, re.S)
+    a["skills"] = m[1].strip().split(" You are highly skilled")[0] if m else ""
+    m = re.search(r"^description:\s*(.+)$", md, re.M)
+    a["description"] = m[1].strip() if m else ""
+    a["briefings"] = [l[2:] for l in read(ROOT / "knowledge" / "briefings" / f"{a['id']}.md").splitlines() if l.startswith("- ")][:5]
 
 with open(ROOT / "leads" / "pipeline.csv", newline="", encoding="utf-8") as f:
     leads = list(csv.DictReader(f))
@@ -110,6 +119,8 @@ data = {
     },
     "agents": agents, "leads": leads, "clients": clients,
     "deadlines": [d for d in deadlines if -7 <= d["days"] <= 30],
+    "tasks": [l for l in read(ROOT / "office" / "tasks" / "active.md").splitlines() if l.startswith("T-")],
+    "updates": [l[2:] for l in read(ROOT / "knowledge" / "updates.md").splitlines() if l.startswith("- ")][:8],
     "units": units, "checklist": checklist, "log": log[-25:][::-1],
 }
 (D / "data.js").write_text("window.LP_DATA = " + json.dumps(data, indent=1, ensure_ascii=False) + ";\n", encoding="utf-8")

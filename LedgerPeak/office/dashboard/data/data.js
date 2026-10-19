@@ -18,7 +18,11 @@ window.LP_DATA = {
    "skin": "#f1c9a5",
    "shirt": "#1f6f5c",
    "lastTask": "Runs every task end to end",
-   "status": "idle"
+   "status": "idle",
+   "model": "sonnet",
+   "skills": "- Small-practice operations: workflow design, SOPs, RACI, capacity planning, quality control and service levels for a bookkeeping firm.\n- You know every department's skills, inputs and outputs (see the org chart below) and the firm's rules in `CLAUDE.md`.\n- You price work in effort and cost: cheapest capable agent first, one quality check, no duplicated effort.",
+   "description": "Operations Manager. Use for ANY task Parth gives that is not obviously one person's job, or that spans departments. Grace breaks the task into steps, assigns each step to the right department and person, checks quality and hands Parth one finished result. Also owns workflows, capacity, SOPs and the quality standard.",
+   "briefings": []
   },
   {
    "id": "ava-sterling",
@@ -29,7 +33,11 @@ window.LP_DATA = {
    "skin": "#f6d3b3",
    "shirt": "#7b4ea3",
    "lastTask": "Set up deadline calendar",
-   "status": "idle"
+   "status": "idle",
+   "model": "sonnet",
+   "skills": "Executive assistance and planning: prioritisation (urgent vs important), deadline management across HMRC, Companies House and client calendars, concise briefing writing.",
+   "description": "Chief of Staff. Use for the morning brief, the deadline calendar, assigning work to other agents and updating the tracker and dashboard.",
+   "briefings": []
   },
   {
    "id": "henry-collins",
@@ -40,7 +48,13 @@ window.LP_DATA = {
    "skin": "#e9b892",
    "shirt": "#2a6fb0",
    "lastTask": "Pipeline template ready",
-   "status": "idle"
+   "status": "idle",
+   "model": "sonnet",
+   "skills": "B2B sales for professional services: consultative selling, objection handling on price, value-based proposals, UK GDPR and PECR rules for B2B outreach, local SEO-led lead sourcing in NW London.",
+   "description": "Sales. Use for lead lists, cold emails (UK GDPR and PECR aware, with opt-out), discovery-call scripts and proposals.",
+   "briefings": [
+    "19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."
+   ]
   },
   {
    "id": "charlotte-quinn",
@@ -51,7 +65,13 @@ window.LP_DATA = {
    "skin": "#f6d3b3",
    "shirt": "#c08a1a",
    "lastTask": "Awaiting first /post",
-   "status": "idle"
+   "status": "idle",
+   "model": "haiku",
+   "skills": "Local small-business marketing: Google Business Profile, review generation within platform rules, social content, ASA/CAP code compliance, honest copywriting.",
+   "description": "Marketing. Use for social posts, Google Business Profile updates, review requests and website copy. No fake testimonials.",
+   "briefings": [
+    "19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."
+   ]
   },
   {
    "id": "sophie-bennett",
@@ -62,7 +82,11 @@ window.LP_DATA = {
    "skin": "#8d5a3b",
    "shirt": "#b5651d",
    "lastTask": "Onboarded DEMO Harrow Hill Café",
-   "status": "idle"
+   "status": "idle",
+   "model": "sonnet",
+   "skills": "MLR 2017 customer due diligence, risk-based approach, PEP and sanctions screening, engagement letters, smooth client onboarding experience.",
+   "description": "Onboarding and AML checks. Use for new clients: customer due diligence, risk rating, engagement letter and welcome pack.",
+   "briefings": []
   },
   {
    "id": "emily-brooks",
@@ -73,7 +97,11 @@ window.LP_DATA = {
    "skin": "#c68e65",
    "shirt": "#a83e5a",
    "lastTask": "Invoice log set up",
-   "status": "idle"
+   "status": "idle",
+   "model": "haiku",
+   "skills": "Credit control for small firms: aged debt analysis, staged chasing, Late Payment of Commercial Debts (Interest) Act 1998 basics, keeping relationships warm while collecting cash.",
+   "description": "Credit control. Use for LedgerPeak's own invoices, the aged debtor report and polite-to-firm chase messages.",
+   "briefings": []
   },
   {
    "id": "leo-hartley",
@@ -84,7 +112,11 @@ window.LP_DATA = {
    "skin": "#f1c9a5",
    "shirt": "#3f7f3a",
    "lastTask": "DEMO September books loaded",
-   "status": "idle"
+   "status": "idle",
+   "model": "sonnet",
+   "skills": "Double-entry bookkeeping to AAT Level 3+ standard: chart of accounts design, VAT treatment (standard, reduced, zero, exempt, outside scope, reverse charge), bank and control account reconciliations, accruals and prepayments, cash vs accruals basis for sole traders.",
+   "description": "Senior Bookkeeper. Use to categorise transactions, post double entry, reconcile the bank and run month-end close, always with workings.",
+   "briefings": []
   },
   {
    "id": "james-whitfield",
@@ -95,7 +127,13 @@ window.LP_DATA = {
    "skin": "#e9b892",
    "shirt": "#2f8f8f",
    "lastTask": "VAT and MTD templates",
-   "status": "idle"
+   "status": "idle",
+   "model": "sonnet",
+   "skills": "Management reporting in plain English, VAT return preparation (standard, flat rate, cash accounting), MTD for Income Tax quarterly updates and categories, KPI and variance analysis for small businesses.",
+   "description": "Reporting analyst. Use for monthly client summaries, VAT return box-by-box workings and MTD quarterly figures with a check-before-filing list.",
+   "briefings": [
+    "19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."
+   ]
   },
   {
    "id": "victor-hale",
@@ -106,7 +144,11 @@ window.LP_DATA = {
    "skin": "#f1c9a5",
    "shirt": "#5a5f6b",
    "lastTask": "Drafted 10 policies",
-   "status": "idle"
+   "status": "idle",
+   "model": "opus",
+   "skills": "UK compliance for a bookkeeping practice: MLR 2017, POCA 2002, UK GDPR and DPA 2018, PECR, ICO registration, consumer and contract basics, professional indemnity. Knows the limit of a non-solicitor.",
+   "description": "Legal and compliance. Use for AML, UK GDPR, ICO fee, insurance, engagement terms and questions on when to see a solicitor. Searches GOV.UK first.",
+   "briefings": []
   },
   {
    "id": "theo-ashford",
@@ -117,7 +159,11 @@ window.LP_DATA = {
    "skin": "#c68e65",
    "shirt": "#d0482a",
    "lastTask": "First updates log written",
-   "status": "idle"
+   "status": "idle",
+   "model": "sonnet",
+   "skills": "- Fast, reliable research: GOV.UK, HMRC manuals, legislation.gov.uk, ICO, AAT, software release notes (Xero, QuickBooks, FreeAgent), AI tooling.\n- Turning complex change into a one-page explanation a new starter understands.\n- Spotting how a new tool or rule changes a workflow, and redesigning the step.",
+   "description": "Head of the Innovation & Learning Lab. Use to find out what has changed in the world (HMRC, MTD, AML, GDPR, AI tools, bookkeeping software), learn new skills, and teach them simply to every other agent through briefings. Use when something new comes up that the team does not know how to do.",
+   "briefings": []
   },
   {
    "id": "iris-bell",
@@ -128,7 +174,11 @@ window.LP_DATA = {
    "skin": "#f6d3b3",
    "shirt": "#6a5acd",
    "lastTask": "Level 2 academy built",
-   "status": "idle"
+   "status": "idle",
+   "model": "sonnet",
+   "skills": "AAT Levels 2 to 4 syllabus, adult distance-learning methods (spaced repetition, retrieval practice, worked examples), exam technique for computer-based assessments.",
+   "description": "AAT tutor. Use for /study and /mock: teaches AAT Levels 2 to 4 using real LedgerPeak tasks, sets quizzes and mocks, tracks progress.",
+   "briefings": []
   }
  ],
  "leads": [
@@ -225,6 +275,11 @@ window.LP_DATA = {
    "who": "LedgerPeak",
    "owner": "victor-hale"
   }
+ ],
+ "tasks": [],
+ "updates": [
+  "19/10/2026 | MTD for Income Tax live for qualifying income over £50,000; £30,000 from 06/04/2027; £20,000 from April 2028 (announced) | 06/04/2026 | GOV.UK policy paper and press release | James, Henry, Charlotte",
+  "19/10/2026 | HMRC AML supervision fees reported to have risen from 01/12/2025 (premises £400) | 01/12/2025 | secondary source, unconfirmed on GOV.UK | Victor"
  ],
  "units": [
   {
