@@ -1,91 +1,99 @@
-# LedgerPeak Office
+# LedgerPeak
 
-Your bookkeeping firm as a folder. Eleven AI staff in six departments live in `.claude/agents/`, and you give them work with slash commands in Claude Code. They prepare drafts only. Nothing is sent to anyone until you approve it.
+LedgerPeak is a bookkeeping practice for small businesses in Harrow and North West London, operated by Parth Prajapati with a team of seventeen AI specialists across twelve departments. The team prepares, reviews and drafts. Parth approves every deliverable before it leaves the firm.
 
-## Your team
+**Current status: pre-registration.** The firm is in its build-and-test stage. Every workflow runs on DEMO clients, and the brand, systems, pricing and roadmap are prepared in full. When Parth registers, one setting in `CLAUDE.md` changes and the firm is ready to take clients.
 
-| Department | Person | What they do |
+## Organisation
+
+| Department | Staff | Responsibilities |
 |---|---|---|
-| Leadership | Grace Whitmore, Operations Manager | Takes any task, plans it, gives each part to the right department, checks quality, hands you one result |
-| Leadership | Ava Sterling, Chief of Staff | Morning brief, deadlines, tracker |
-| Growth | Henry Collins, Sales | Leads, outreach emails, proposals |
-| Growth | Charlotte Quinn, Marketing | Posts, Google Business Profile, reviews |
-| Client Services | Sophie Bennett, Onboarding & AML | New clients, ID and risk checks, engagement letters |
-| Client Services | Emily Brooks, Credit Control | Invoices, chasers |
-| Bookkeeping & Reporting | Leo Hartley, Senior Bookkeeper | Books, reconciliations, month-end close |
-| Bookkeeping & Reporting | James Whitfield, Reporting Analyst | Summaries, VAT, MTD |
-| Legal & Compliance | Victor Hale | Legal questions, policies, when to see a solicitor |
-| Innovation & Learning Lab | Theo Ashford, Head of Innovation | Finds what's new in the world, learns new skills, teaches the whole team simply |
-| Innovation & Learning Lab | Iris Bell, AAT Tutor | Teaches you AAT |
+| Executive Office | Parth Prajapati, Chief Executive | Direction, approvals, signing officer |
+| | Grace Whitmore, Operations Manager | Receives every task, plans it, assigns departments, signs off |
+| | Ava Sterling, Chief of Staff | Daily brief, calendar, roadmap tracking |
+| Strategy & Business Development | Eleanor Price, Director of Strategy | Market research, competitors, pricing strategy, growth plan, roadmap |
+| Sales & Marketing | Henry Collins, Head of Sales | Lead generation, outreach, discovery calls, proposals |
+| | Charlotte Quinn, Marketing Manager | Brand, website copy, social posts, Google Business Profile |
+| Client Experience | Amelia Hart, Client Relationship Manager | Client communication, check-ins, complaints, waiting list |
+| Client Onboarding & AML | Sophie Bennett, Onboarding and AML Manager | Due diligence, risk rating, engagement letters |
+| Bookkeeping & Accounts | Leo Hartley, Senior Bookkeeper | Transaction processing, double entry, reconciliations, month-end |
+| | James Whitfield, Reporting Analyst | Management summaries, VAT returns, MTD quarterly updates |
+| Tax & Payroll | Daniel Foster, Tax and Payroll Support Specialist | Self Assessment packs, CIS records, landlord schedules, payroll records |
+| Finance & Credit Control | Edward Lancaster, Finance Director | The firm's budget, cash flow, margins and management accounts |
+| | Emily Brooks, Credit Controller | Invoicing, aged debtors, payment reminders |
+| Quality & Risk | Harriet Ellis, Head of Quality and Risk | Reviews every deliverable, maintains the risk register |
+| Legal & Compliance | Victor Hale, Head of Legal and Compliance | AML, UK GDPR, contracts, policies, when to instruct a solicitor |
+| Technology & Automation | William Hayes, Head of Technology | Software, bank feeds, data security, automation |
+| Innovation & Learning | Theo Ashford, Head of Innovation | Monitors regulatory and industry change, briefs every department |
+| | Iris Bell, AAT Tutor | AAT study programme, quizzes and mock assessments |
 
-## Give the office any task
+## How work flows
 
-Type `/task` and say what you want, for example `/task onboard a new plumber client and prepare their first MTD update`. Grace plans it, each department does its part, Grace checks it, and you get one summary to approve.
+1. Parth assigns a task (`/task …`).
+2. Grace Whitmore checks the firm's current mode, plans the work and assigns each step to the right department.
+3. Departments complete their steps. Independent steps run in parallel.
+4. Harriet Ellis reviews the output against the quality checklist.
+5. Grace signs off and gives Parth one summary with the decisions required.
+6. Parth approves. Nothing is sent or filed without that approval.
 
-Keeping the team up to date: `/learn` (Theo checks what has changed) and `/teach <skill>` (Theo teaches everyone). Every agent reads its own file in `knowledge/briefings/` before each task, so what Theo teaches sticks.
+Theo Ashford keeps the firm current: `/learn` records what has changed, and `/teach` briefs each affected department. Every staff member reads their briefing before starting work.
 
-## Watch them work
+## Starting each evening
 
-Open `office/dashboard/index.html` and stay on **Live office**. When you give a task in Claude Code, the person doing each step lights up at their desk. They type, their screen scrolls, and a speech bubble shows what they're doing. A green tick appears when they finish. The page updates itself every 3 seconds. This works through the hooks in `.claude/settings.json`, which call `scripts/office_hook.py`. Press **Watch a demo task** to see a full task play out without running anything.
-
-On Windows, if `python3` isn't recognised, change `python3` to `python` in `.claude/settings.json`.
-
-## How to start tomorrow morning
-
-1. Open a terminal in this `LedgerPeak` folder and type `claude`.
-2. Open `office/dashboard/index.html` beside it so you can watch the team.
-3. Type `/morning`. Ava gives you today's priorities, deadlines in the next 14 days, leads to chase and tonight's study task.
-4. Try the DEMO client end to end with `/close-month demo-harrow-hill-cafe`. Leo does the books with workings, James writes the summary, then it stops for your approval. Read `clients/demo-harrow-hill-cafe/README-DEMO.md` first to see the traps it should catch.
-5. Spend 30 minutes on `/study`. Iris teaches one AAT topic and marks five questions.
-6. Before you take a real client, work through `office/policies/pre-launch-legal-checklist.md`. Item 1 is reading your employment contract.
-7. At the end of the evening, type `/log`.
+1. Open a terminal in this folder and run `claude`.
+2. Open `office/dashboard/office.html` beside it to watch the office.
+3. Run `/morning` for the daily brief, which leads with the next roadmap actions.
+4. Choose one roadmap action and assign it with `/task`.
+5. Spend 30 minutes on `/study`.
+6. Close with `/log`.
 
 ## Commands
 
-| Command | Who | What it does |
+| Command | Department | Purpose |
 |---|---|---|
-| `/morning` | Ava | Morning brief |
-| `/new-client <name>` | Sophie | Client folder, AML checks, risk rating, engagement letter, welcome email draft |
-| `/close-month <client>` | Leo then James | Books, reconciliation, summary, then stops for your approval |
-| `/vat <client>` | James | VAT boxes 1 to 9 with workings and a check-before-filing list |
-| `/mtd <client>` | James | MTD quarterly figures with workings |
-| `/chase` | Emily | Aged debtors and chaser drafts |
-| `/outreach <trade> <area>` | Henry | Lead list plan and three PECR-aware emails |
-| `/post` | Charlotte | This week's posts and a Google Business update |
-| `/legal <question>` | Victor | GOV.UK-sourced answer, and when you need a solicitor |
-| `/study` | Iris | Tonight's AAT lesson and quiz |
-| `/mock <unit>` | Iris | Timed mock, e.g. `/mock introduction-to-bookkeeping` |
-| `/log` | any | Adds today's work to the work log |
-| `/task <anything>` | Grace and the departments | Any task, planned, delegated, checked |
-| `/learn [topic]` | Theo | What's new in the world, recorded and taught to the team |
-| `/teach <skill>` | Theo | Teaches the team a new skill with a playbook |
+| `/task <description>` | Operations | Any task, planned, assigned, reviewed and signed off |
+| `/morning` | Executive Office | Daily brief |
+| `/roadmap` | Executive Office, Strategy | Progress on the road to launch |
+| `/strategy <topic>` | Strategy | Market, competitor, pricing or growth brief |
+| `/outreach <trade> <area>` | Sales | Lead plan and compliant outreach drafts |
+| `/post` | Marketing | The week's posts and a Google Business update |
+| `/client-care <message>` | Client Experience | Client or waiting-list message drafts |
+| `/new-client <name>` | Onboarding and AML | Client file, due diligence, engagement letter, welcome draft |
+| `/practice <DEMO client>` | All departments | Full practice month on a DEMO client |
+| `/close-month <client>` | Bookkeeping | Books, reconciliation, summary, then approval |
+| `/vat <client>` | Bookkeeping | VAT return workings and pre-filing checks |
+| `/mtd <client>` | Bookkeeping | MTD quarterly update workings |
+| `/tax-pack <client>` | Tax and Payroll | Self Assessment or CIS preparation pack |
+| `/finance [request]` | Finance | Budget, cash flow, margin checks |
+| `/chase` | Credit Control | Aged debtors and payment reminders |
+| `/review <file>` | Quality and Risk | Quality review with a pass or return decision |
+| `/legal <question>` | Legal and Compliance | Sourced answer and when to instruct a solicitor |
+| `/systems <request>` | Technology | Software, security and automation guidance |
+| `/learn [topic]` | Innovation | What has changed, with briefings |
+| `/teach <skill>` | Innovation | Teaches a new skill to the departments affected |
+| `/study`, `/mock <unit>` | Innovation (AAT) | AAT lessons and timed mocks |
+| `/log` | Any | Records the day's work |
 
-## Scripts
+## Pre-registration mode
 
-- New client by hand: `scripts/new-client.sh "Client Name"` (Mac/Linux) or `.\scripts\new-client.ps1 "Client Name"` (Windows).
-- Refresh the dashboard: `scripts/refresh-dashboard.sh` or `.\scripts\refresh-dashboard.ps1`, then reload the page. This needs Python 3.
-- Check the office still works: `python3 scripts/self_test.py`.
+While the mode is ON (see `CLAUDE.md`), the firm can build the brand, systems, pricing and policies; research the market; practise on DEMO clients; keep its own books; hold a consent-based waiting list; and support AAT study. It does not do bookkeeping, tax or payroll work for real people or businesses, take fees, collect identity documents, or advertise as open for business. Anti-money laundering supervision must be in place before bookkeeping services are provided. The steps are listed in `office/roadmap.md`, stage 4.
 
-## Where to edit things yourself
+## The office view
 
-- Agents' desk status on the dashboard: `office/dashboard/data/agents.json`
-- Leads: `leads/pipeline.csv` (status: lead, contacted, call booked, proposal, won, lost)
-- Deadlines: `compliance/deadlines.md` (one line each: `DD/MM/YYYY | item | who | owner`)
-- AAT results: `academy/progress.md`
-- Compliance ticks: change `[ ]` to `[x]` in `office/policies/pre-launch-legal-checklist.md`
+- `office/dashboard/office.html`: the pixel-art office. It shows thirteen rooms and every staff member, with a Command Centre (live feed, task board, expertise, briefings, work log, team) and a staff roster. It updates live while Claude Code runs, through the hooks in `.claude/settings.json`.
+- `office/dashboard/index.html`: the reports view, with KPIs, pipeline, clients, deadlines, academy and compliance.
+- On Windows, if `python3` is not recognised, change it to `python` in `.claude/settings.json`.
 
-## Watching your staff work (Pixel Agents)
+## Claude Project
 
-Pixel Agents shows every Claude Code session and subagent as a pixel character at a desk. When Leo is reconciling, you will see him typing.
+The `claude-project/` folder contains everything needed to run the firm from a Project on claude.ai, including from a phone. See `claude-project/SETUP.md`.
 
-- VS Code: install "Pixel Agents" from the VS Code Marketplace, open the Pixel Agents panel, click **+ Agent**, and pick this `LedgerPeak` folder.
-- Without VS Code: run `npx pixel-agents` in a terminal and open the address it prints. Needs Node.js 20 or later.
+## Maintenance
 
-Subagents (Ava, Leo and the rest) appear as extra characters while a command is running.
+- New client folder: `scripts/new-client.sh "Client Name"` (Mac/Linux) or `.\scripts\new-client.ps1 "Client Name"` (Windows).
+- Refresh dashboard data: `scripts/refresh-dashboard.sh` or `.\scripts\refresh-dashboard.ps1`.
+- Office health check: `python3 scripts/self_test.py`.
 
-## Before you go live
+## Before going live
 
-- Every policy in `office/policies/` is marked DRAFT. Have a solicitor check them.
-- Figures marked "verify" (ICO fee, HMRC AML fees, filing deadlines) came from secondary sources checked on 19/10/2026. Confirm them on GOV.UK.
-- The AAT unit list came from secondary sources checked on 19/10/2026. Confirm it on aat.org.uk before you book exams.
-- Delete the DEMO client and DEMO leads once you have real ones.
+All policies in `office/policies/` are drafts for a solicitor to review. Fees and figures marked "verify" come from secondary sources checked on 19/10/2026 and must be confirmed on GOV.UK, the ICO website or the AAT website.

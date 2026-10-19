@@ -1,4 +1,4 @@
-# DEMO client and LedgerPeak's own books (fictional, for practice)
+# DEMO clients and LedgerPeak's own books (fictional, for practice)
 
 
 

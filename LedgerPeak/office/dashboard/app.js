@@ -18,7 +18,7 @@
   ].map(([l, v]) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join('');
 
   // Live office: department rooms, one character per desk, driven by data/live.js (written by scripts/office_hook.py)
-  const DEPTS = ['Leadership', 'Growth', 'Client Services', 'Bookkeeping & Reporting', 'Legal & Compliance', 'Innovation & Learning Lab'];
+  const DEPTS = ['Executive Office', 'Strategy & Business Development', 'Sales & Marketing', 'Client Experience', 'Client Onboarding & AML', 'Bookkeeping & Accounts', 'Tax & Payroll', 'Finance & Credit Control', 'Quality & Risk', 'Legal & Compliance', 'Technology & Automation', 'Innovation & Learning'];
   const person = (p) => `<div class="person" style="--hair:${p.hair};--skin:${p.skin};--shirt:${p.shirt}">
       <div class="hair"></div><div class="head"></div><div class="body"><i class="arm l"></i><i class="arm r"></i></div></div>`;
   const deskHtml = (a) => `<div class="seat idle" id="seat-${esc(a.id)}">

@@ -29,14 +29,15 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
 @media (max-width: 900px) { .main { grid-template-columns: minmax(0, 1fr); } }
 .stage { position: relative; padding: 10px; background: #1d1a16; min-width: 0; }
 .stage canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; border: 2px solid #000; }
-.labels { position: absolute; inset: 10px; pointer-events: none; }
+.board { position: relative; }
+.labels { position: absolute; inset: 2px; pointer-events: none; }
 .tag { position: absolute; translate: -50% -100%; font-family: var(--mono); font-size: 10px; white-space: nowrap; pointer-events: auto; cursor: pointer; }
 .tag .bubble { display: block; background: #fff; color: #111; border: 2px solid #111; border-radius: 4px; padding: 1px 6px; margin-bottom: 3px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
 .tag .bubble:empty { display: none; }
 .tag .name { display: inline-block; background: rgba(0,0,0,.55); color: #fff; padding: 0 4px; border-radius: 2px; font-family: var(--pixel); font-size: 9px; }
 .tag.done .name { background: var(--work); }
 .tag.sel .name { background: var(--accent); color: var(--accent-ink); }
-.roomtag { position: absolute; font-family: var(--pixel); font-size: 9px; color: #3a4a3d; opacity: .75; pointer-events: none; text-transform: uppercase; }
+.roomtag { position: absolute; font-family: var(--pixel); font-size: 9px; color: #2e3d31; opacity: .85; background: rgba(244,241,232,.7); padding: 0 3px; border-radius: 2px; pointer-events: none; text-transform: uppercase; }
 .side { border-left: 3px solid var(--frame-edge); display: flex; flex-direction: column; min-width: 0; }
 @media (max-width: 900px) { .side { border-left: 0; border-top: 3px solid var(--frame-edge); } }
 .cc-head { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 2px solid var(--line); }
@@ -75,29 +76,29 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
 <body>
 <div class="wrap">
 <div class="app">
-  <div class="topbar"><span class="logo">▲</span> LedgerPeak HQ <span class="ver" id="mode">auto mode on</span>
+  <div class="topbar"><span class="logo">▲</span> LedgerPeak HQ <span class="ver" id="mode">Pre-registration mode</span>
     <div class="kpi" id="kpi"></div></div>
   <div class="main">
-    <div class="stage" id="stage"><canvas id="cv" width="640" height="368" aria-label="Pixel office floor plan"></canvas><div class="labels" id="labels"></div></div>
+    <div class="stage" id="stage"><div class="board"><canvas id="cv" width="768" height="480" aria-label="Pixel office floor plan"></canvas><div class="labels" id="labels"></div></div></div>
     <aside class="side">
       <div class="cc-head"><canvas id="ccAvatar" width="16" height="16"></canvas>
-        <div style="min-width:0"><div class="t">Command Center</div><div class="s" id="ccWho"></div></div></div>
+        <div style="min-width:0"><div class="t">Command Centre</div><div class="s" id="ccWho"></div></div></div>
       <div class="tabs" id="tabs">
-        <button data-p="terminal" class="on" type="button">terminal</button><button data-p="tasks" type="button">tasks</button><button data-p="skills" type="button">skills</button>
-        <button data-p="memory" type="button">memory</button><button data-p="activity" type="button">activity</button><button data-p="workers" type="button">workers</button>
+        <button data-p="terminal" class="on" type="button">Live feed</button><button data-p="tasks" type="button">Task board</button><button data-p="skills" type="button">Expertise</button>
+        <button data-p="memory" type="button">Briefings</button><button data-p="activity" type="button">Work log</button><button data-p="workers" type="button">Team</button>
       </div>
       <div class="pane" id="pane" tabindex="0"></div>
       <div class="queue">
-        <label for="q">Queue a task</label>
-        <textarea id="q" placeholder="e.g. onboard a new plumber client in Wealdstone and prepare their first MTD update"></textarea>
-        <div class="row"><button type="button" id="demoBtn">watch demo</button><button type="button" class="primary" id="sendBtn">send →</button></div>
+        <label for="q">Assign a task</label>
+        <textarea id="q" placeholder="e.g. Prepare a market brief on landlords in Harrow and draft our MTD Ready offer"></textarea>
+        <div class="row"><button type="button" id="demoBtn">Run demonstration</button><button type="button" class="primary" id="sendBtn">Submit task →</button></div>
         <div class="note" id="qnote"></div>
       </div>
     </aside>
   </div>
   <div class="roster" id="roster"></div>
 </div>
-<div class="foot" id="foot">Live when opened from your LedgerPeak folder while Claude Code runs. <a href="index.html">Reports view</a></div>
+<div class="foot" id="foot">Live activity appears while Claude Code is running in your LedgerPeak folder. <a href="index.html">Reports view</a></div>
 </div>
 
 <script src="data/data.js"></script>
@@ -107,41 +108,51 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
   const D = window.LP_DATA || { agents: [], kpi: {}, log: [], tasks: [], updates: [] };
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-  const T = 16, W = 40, H = 23;
+  const T = 16, W = 48, H = 30;
   const cv = $('cv'), g = cv.getContext('2d');
   g.imageSmoothingEnabled = false;
 
   // ---------- map ----------
-  // zones: rooms with a door onto the corridor (rows 7-9)
+  // Three bands of rooms. Corridor A (walk row 8) serves the top and middle bands, corridor B (walk row 19)
+  // serves the bottom band, and a spine hallway at x 45.5 links the two corridors.
+  const ROW_A = 8, ROW_B = 19, SPINE = 45.5;
   const Z = {
-    ceo:   { x: 1, y: 1, w: 8, h: 5, door: 5, name: "Parth's office", top: true },
-    meet:  { x: 10, y: 1, w: 13, h: 5, door: 16, name: 'Meeting room', top: true },
-    lead:  { x: 24, y: 1, w: 15, h: 5, door: 31, name: 'Leadership', top: true },
-    grow:  { x: 1, y: 11, w: 8, h: 11, door: 4, name: 'Growth' },
-    cs:    { x: 10, y: 11, w: 7, h: 11, door: 13, name: 'Client Services' },
-    book:  { x: 18, y: 11, w: 7, h: 11, door: 21, name: 'Bookkeeping' },
-    legal: { x: 26, y: 11, w: 5, h: 11, door: 28, name: 'Legal' },
-    lab:   { x: 32, y: 11, w: 7, h: 11, door: 35, name: 'Innovation Lab' },
+    ceo:     { x: 1, y: 1, w: 8, h: 5, door: 5, row: ROW_A, inY: 5.4, name: "CEO's office" },
+    board:   { x: 10, y: 1, w: 12, h: 5, door: 16, row: ROW_A, inY: 5.4, name: 'Boardroom' },
+    exec:    { x: 23, y: 1, w: 13, h: 5, door: 29, row: ROW_A, inY: 5.4, name: 'Executive Office' },
+    strat:   { x: 37, y: 1, w: 10, h: 5, door: 41, row: ROW_A, inY: 5.4, name: 'Strategy' },
+    sales:   { x: 1, y: 11, w: 8, h: 6, door: 4, row: ROW_A, inY: 11.6, name: 'Sales & Marketing' },
+    cx:      { x: 10, y: 11, w: 7, h: 6, door: 13, row: ROW_A, inY: 11.6, name: 'Client Experience' },
+    onb:     { x: 18, y: 11, w: 7, h: 6, door: 21, row: ROW_A, inY: 11.6, name: 'Onboarding & AML' },
+    book:    { x: 26, y: 11, w: 10, h: 6, door: 30, row: ROW_A, inY: 11.6, name: 'Bookkeeping & Accounts' },
+    tax:     { x: 37, y: 11, w: 7, h: 6, door: 40, row: ROW_A, inY: 11.6, name: 'Tax & Payroll' },
+    fin:     { x: 1, y: 22, w: 9, h: 7, door: 5, row: ROW_B, inY: 22.6, name: 'Finance & Credit' },
+    qa:      { x: 11, y: 22, w: 7, h: 7, door: 14, row: ROW_B, inY: 22.6, name: 'Quality & Risk' },
+    legal:   { x: 19, y: 22, w: 6, h: 7, door: 22, row: ROW_B, inY: 22.6, name: 'Legal & Compliance' },
+    tech:    { x: 26, y: 22, w: 6, h: 7, door: 29, row: ROW_B, inY: 22.6, name: 'Technology' },
+    lab:     { x: 33, y: 22, w: 8, h: 7, door: 37, row: ROW_B, inY: 22.6, name: 'Innovation & Learning' },
+    kitchen: { x: 42, y: 22, w: 5, h: 7, door: 44, row: ROW_B, inY: 22.6, name: 'Kitchen' },
   };
-  const DEPT_ZONE = { 'Leadership': 'lead', 'Growth': 'grow', 'Client Services': 'cs', 'Bookkeeping & Reporting': 'book', 'Legal & Compliance': 'legal', 'Innovation & Learning Lab': 'lab' };
-  const CORR = 8;            // corridor walking row
-  const KITCHEN = { x: 37, y: 8 };
+  const DEPT_ZONE = { 'Executive Office': 'exec', 'Strategy & Business Development': 'strat', 'Sales & Marketing': 'sales', 'Client Experience': 'cx',
+    'Client Onboarding & AML': 'onb', 'Bookkeeping & Accounts': 'book', 'Tax & Payroll': 'tax', 'Finance & Credit Control': 'fin',
+    'Quality & Risk': 'qa', 'Legal & Compliance': 'legal', 'Technology & Automation': 'tech', 'Innovation & Learning': 'lab' };
 
-  // desks: [x, y] top-left tile of a 2-wide desk; seat is one row below
+  // desks: [x, y] top-left tile of a 2-wide desk; the seat is one row below
   const DESKS = {
     parth: [4, 2],
-    'grace-whitmore': [26, 2], 'ava-sterling': [30, 2],
-    'henry-collins': [2, 13], 'charlotte-quinn': [5, 13],
-    'sophie-bennett': [11, 13], 'emily-brooks': [14, 13],
-    'leo-hartley': [19, 13], 'james-whitfield': [22, 13],
-    'victor-hale': [27, 13],
-    'theo-ashford': [33, 13], 'iris-bell': [36, 13],
+    'grace-whitmore': [25, 2], 'ava-sterling': [29, 2], 'eleanor-price': [39, 2],
+    'henry-collins': [2, 12], 'charlotte-quinn': [5, 12], 'amelia-hart': [12, 12], 'sophie-bennett': [19, 12],
+    'leo-hartley': [27, 12], 'james-whitfield': [31, 12], 'daniel-foster': [38, 12],
+    'edward-lancaster': [2, 24], 'emily-brooks': [6, 24], 'harriet-ellis': [13, 24], 'victor-hale': [20, 24],
+    'william-hayes': [27, 24], 'theo-ashford': [34, 24], 'iris-bell': [37, 24],
   };
-  const SPARE = [[34, 2], [2, 18], [5, 18], [11, 18], [14, 18], [19, 18], [22, 18], [27, 18], [33, 18], [36, 18]];
+  const SPARE = [[33, 2], [43, 2], [2, 14.6], [5, 14.6], [12, 14.6], [22, 12], [19, 14.6], [27, 14.6], [31, 14.6], [41, 12],
+    [2, 26.6], [6, 26.6], [13, 26.6], [20, 26.6], [27, 26.6], [34, 26.6], [37, 26.6]];
 
   const C = { floor: '#a9c1a8', floor2: '#9fb89f', grid: '#94ad94', wall: '#f4f1e8', wallEdge: '#3a3a3a', wallTop: '#ffffff',
     desk: '#d6a35c', deskEdge: '#8a5f2b', chair: '#e0b56b', mon: '#2a2d33', screen: '#2d3b4f', screenOn: '#7fd6b4',
-    plant: '#4c8c3f', pot: '#b86a3c', rug: '#c9a7b8', table: '#c48a4f', seat: '#a4486a', corridor: '#b7cbb5', window: '#8fb7d6' };
+    plant: '#4c8c3f', pot: '#b86a3c', rug: '#c9a7b8', table: '#c48a4f', seat: '#a4486a', corridor: '#b7cbb5', corridor2: '#adc3ab', window: '#8fb7d6',
+    kitchen: '#e4dccb', kitchen2: '#d9cfba' };
 
   function rect(x, y, w, h, c) { g.fillStyle = c; g.fillRect(x, y, w, h); }
   function drawFloor() {
@@ -149,74 +160,86 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
       rect(x * T, y * T, T, T, (x + y) % 2 ? C.floor : C.floor2);
       rect(x * T, y * T, T, 1, C.grid); rect(x * T, y * T, 1, T, C.grid);
     }
-    for (let x = 1; x < W - 1; x++) for (let y = 7; y <= 9; y++) rect(x * T, y * T, T, T, (x + y) % 2 ? C.corridor : '#adc3ab');
+    const corr = (x0, x1, y0, y1) => { for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) rect(x * T, y * T, T, T, (x + y) % 2 ? C.corridor : C.corridor2); };
+    corr(1, W - 2, 7, 9); corr(1, W - 2, 18, 20); corr(45, 46, 10, 17);
+    const k = Z.kitchen; for (let x = k.x; x < k.x + k.w; x++) for (let y = k.y; y < k.y + k.h; y++) rect(x * T, y * T, T, T, (x + y) % 2 ? C.kitchen : C.kitchen2);
   }
   function wallH(x0, x1, y, gaps = []) { for (let x = x0; x <= x1; x++) if (!gaps.includes(x)) { rect(x * T, y * T, T, T, C.wall); rect(x * T, y * T + T - 3, T, 3, C.wallEdge); rect(x * T, y * T, T, 2, C.wallTop); } }
   function wallV(x, y0, y1) { for (let y = y0; y <= y1; y++) { rect(x * T + 4, y * T, 8, T, C.wall); rect(x * T + 4, y * T, 1, T, C.wallEdge); rect(x * T + 11, y * T, 1, T, C.wallEdge); } }
   function windowAt(x) { rect(x * T + 2, 3, T * 2 - 4, 9, C.wallEdge); rect(x * T + 3, 4, T - 4, 7, C.window); rect(x * T + T + 1, 4, T - 4, 7, C.window); }
   function plant(x, y) { rect(x * T + 5, y * T + 9, 6, 6, C.pot); rect(x * T + 3, y * T + 2, 10, 8, C.plant); rect(x * T + 6, y * T, 4, 4, '#5fa34f'); }
+  function cabinet(x, y) { rect(x * T + 2, y * T, 12, T + 6, '#9aa3ad'); rect(x * T + 4, y * T + 4, 8, 2, '#5b636b'); rect(x * T + 4, y * T + 12, 8, 2, '#5b636b'); }
   function desk(x, y, on) {
-    rect(x * T, y * T + 4, T * 2, T - 2, C.deskEdge); rect(x * T + 1, y * T + 4, T * 2 - 2, T - 5, C.desk);
-    rect(x * T + 10, y * T - 3, 12, 9, C.mon); rect(x * T + 11, y * T - 2, 10, 6, on ? C.screenOn : C.screen);
-    if (on) { const t = (Date.now() / 120 | 0) % 4; rect(x * T + 12, y * T - 1 + t, 6, 1, '#1e5a45'); }
-    rect(x * T + 14, y * T + 6, 4, 2, C.mon);
-    rect(x * T + 9, y * T + T + 3, 14, 10, C.chair); rect(x * T + 9, y * T + T + 3, 14, 2, C.deskEdge);
+    x = x * T; y = y * T;
+    rect(x, y + 4, T * 2, T - 2, C.deskEdge); rect(x + 1, y + 4, T * 2 - 2, T - 5, C.desk);
+    rect(x + 10, y - 3, 12, 9, C.mon); rect(x + 11, y - 2, 10, 6, on ? C.screenOn : C.screen);
+    if (on) { const t = (Date.now() / 120 | 0) % 4; rect(x + 12, y - 1 + t, 6, 1, '#1e5a45'); }
+    rect(x + 14, y + 6, 4, 2, C.mon);
+    rect(x + 9, y + T + 3, 14, 10, C.chair); rect(x + 9, y + T + 3, 14, 2, C.deskEdge);
   }
   function drawStatic(liveSet) {
     drawFloor();
-    // outer walls
-    wallH(0, W - 1, 0); wallH(0, W - 1, H - 1);
-    wallV(0, 0, H - 1); wallV(W - 1, 0, H - 1);
-    [3, 13, 19, 28, 34].forEach(windowAt);
-    // top rooms
-    wallH(1, W - 2, 6, [Z.ceo.door, Z.meet.door, Z.lead.door]);
-    wallV(9, 1, 6); wallV(23, 1, 6);
-    // bottom departments
-    wallH(1, W - 2, 10, [Z.grow.door, Z.cs.door, Z.book.door, Z.legal.door, Z.lab.door]);
-    [9, 17, 25, 31].forEach((x) => wallV(x, 10, H - 2));
-    // meeting room table and chairs
-    rect(13 * T, 2 * T + 4, 7 * T, 2 * T, C.deskEdge); rect(13 * T + 2, 2 * T + 6, 7 * T - 4, 2 * T - 4, C.table);
-    for (let i = 0; i < 5; i++) { rect((13.6 + i * 1.3) * T, 1 * T + 10, 10, 8, C.seat); rect((13.6 + i * 1.3) * T, 4 * T + 8, 10, 8, C.seat); }
-    plant(11, 2); plant(21, 4);
-    // ceo rug + water cooler + kitchen
-    rect(2 * T, 4 * T, 5 * T, 1.6 * T, C.rug);
-    rect(KITCHEN.x * T, 7 * T, T, 2 * T, '#e9eef0'); rect(KITCHEN.x * T + 3, 7 * T + 2, 10, 8, '#7fb3d9'); // cooler
-    rect(35 * T, 7 * T - 2, 2 * T, 10, '#8a8f96'); rect(35 * T + 4, 7 * T, 8, 5, '#3a3a3a'); // coffee bar
-    plant(1, 7); plant(38, 21); plant(1, 21); plant(24, 7);
-    // noticeboards
-    rect(12 * T, 10 * T + 3, 3 * T, 9, '#e7c3b3'); rect(20 * T, 10 * T + 3, 3 * T, 9, '#f1dd8c');
+    wallH(0, W - 1, 0); wallH(0, W - 1, H - 1); wallV(0, 0, H - 1); wallV(W - 1, 0, H - 1);
+    [3, 13, 19, 27, 32, 40].forEach(windowAt);
+    // top band
+    wallH(1, W - 2, 6, [Z.ceo.door, Z.board.door, Z.exec.door, Z.strat.door]);
+    [9, 22, 36].forEach((x) => wallV(x, 1, 6));
+    // middle band (ends at x 44; the spine hallway is to its right)
+    wallH(1, 44, 10, [Z.sales.door, Z.cx.door, Z.onb.door, Z.book.door, Z.tax.door]);
+    wallH(1, 44, 17);
+    [9, 17, 25, 36, 44].forEach((x) => wallV(x, 10, 17));
+    // bottom band
+    wallH(1, W - 2, 21, [Z.fin.door, Z.qa.door, Z.legal.door, Z.tech.door, Z.lab.door, Z.kitchen.door]);
+    [10, 18, 25, 32, 41].forEach((x) => wallV(x, 21, H - 2));
+    // boardroom
+    rect(12 * T, 2 * T + 4, 8 * T, 2 * T, C.deskEdge); rect(12 * T + 2, 2 * T + 6, 8 * T - 4, 2 * T - 4, C.table);
+    for (let i = 0; i < 6; i++) { rect((12.5 + i * 1.3) * T, 1 * T + 10, 10, 8, C.seat); rect((12.5 + i * 1.3) * T, 4 * T + 8, 10, 8, C.seat); }
+    rect(10 * T + 6, 1 * T + 6, 6, 3 * T, '#f7f7f2'); // whiteboard
+    // CEO rug, plants
+    rect(2 * T, 4 * T, 5 * T, 1.4 * T, C.rug);
+    [[1, 7], [24, 7], [44, 7], [1, 18], [24, 18], [1, 27], [40, 27], [21, 15], [34, 15], [43, 15], [8, 4], [46, 4]].forEach(([x, y]) => plant(x, y));
+    // kitchen: counter, coffee, fridge, table
+    rect(42 * T, 22 * T, 5 * T, 12, '#8a8f96'); rect(42 * T + 6, 22 * T + 2, 10, 8, '#3a3a3a'); rect(44 * T + 4, 22 * T + 2, 12, 8, '#c94f3d');
+    rect(46 * T + 1, 23 * T, 14, 2 * T, '#e9eef0'); rect(46 * T + 3, 23 * T + 8, 2, 6, '#9aa3ad');
+    rect(43 * T, 26 * T, 2.5 * T, T, C.table); rect(43 * T - 6, 26 * T + 2, 5, 10, C.seat); rect(45.5 * T + 2, 26 * T + 2, 5, 10, C.seat);
+    // noticeboards and cabinets
+    rect(11 * T, 10 * T + 3, 3 * T, 9, '#e7c3b3'); rect(27 * T, 10 * T + 3, 3 * T, 9, '#f1dd8c'); rect(12 * T, 21 * T + 3, 3 * T, 9, '#cfe0f0');
+    [[34, 12], [42, 15], [23, 15], [8, 26], [16, 26], [23, 26], [30, 26]].forEach(([x, y]) => cabinet(x, y));
     // desks
     Object.entries(DESKS).forEach(([id, [x, y]]) => desk(x, y, liveSet.has(id)));
     SPARE.forEach(([x, y]) => desk(x, y, false));
-    // filing cabinets
-    [[24, 15], [24, 17], [16, 20]].forEach(([x, y]) => { rect(x * T + 2, y * T, 12, T + 6, '#9aa3ad'); rect(x * T + 4, y * T + 4, 8, 2, '#5b636b'); rect(x * T + 4, y * T + 12, 8, 2, '#5b636b'); });
   }
 
   // ---------- people ----------
-  const PEOPLE = [{ id: 'parth', name: 'Parth Prajapati', role: 'CEO · signing officer', dept: 'CEO', hair: '#1d1a18', skin: '#b07a52', shirt: '#2b2f3a' }]
-    .concat(D.agents.map((a) => Object.assign({}, a)));
+  const PEOPLE = [{ id: 'parth', name: 'Parth Prajapati', role: 'Chief Executive and signing officer', dept: 'CEO', hair: '#1d1a18', skin: '#b07a52', shirt: '#2b2f3a' }]
+    .concat(D.agents.filter((a) => DESKS[a.id]).map((a) => Object.assign({}, a)));
   const seatOf = (id) => { const d = DESKS[id]; return { x: d[0] + 1, y: d[1] + 1.55 }; };
   const zoneOf = (p) => p.id === 'parth' ? Z.ceo : Z[DEPT_ZONE[p.dept]];
   PEOPLE.forEach((p, i) => {
     const s = seatOf(p.id); p.x = s.x; p.y = s.y; p.path = []; p.status = 'idle'; p.task = ''; p.sitting = true;
-    p.nextWander = Date.now() + 4000 + i * 2300 + Math.random() * 9000; p.where = 'desk';
+    p.nextWander = Date.now() + 4000 + i * 1900 + Math.random() * 9000; p.where = 'desk'; p.row = zoneOf(p).row;
   });
   const byId = Object.fromEntries(PEOPLE.map((p) => [p.id, p]));
 
-  function route(p, tx, ty, tzone) {
-    const fz = p.where === 'desk' ? zoneOf(p) : null;
+  // Walk out of the current room to its corridor, cross to the other corridor by the spine if needed, then into the target.
+  function route(p, tx, ty, tzone, trow) {
     const pts = [];
-    if (fz) { pts.push({ x: p.x, y: fz.top ? 5.5 : 12 }); pts.push({ x: fz.door + 0.5, y: fz.top ? 5.5 : 12 }); pts.push({ x: fz.door + 0.5, y: CORR }); }
-    else pts.push({ x: p.x, y: CORR });
-    if (tzone) { pts.push({ x: tzone.door + 0.5, y: CORR }); pts.push({ x: tzone.door + 0.5, y: tzone.top ? 5.5 : 12 }); pts.push({ x: tx, y: tzone.top ? 5.5 : 12 }); pts.push({ x: tx, y: ty }); }
-    else { pts.push({ x: tx, y: CORR }); pts.push({ x: tx, y: ty }); }
-    p.path = pts; p.sitting = false;
+    const fz = p.where === 'desk' || p.where === 'room' ? (p.inZone || zoneOf(p)) : null;
+    let row = p.row;
+    if (fz) { pts.push({ x: p.x, y: fz.inY }, { x: fz.door + 0.5, y: fz.inY }, { x: fz.door + 0.5, y: fz.row }); row = fz.row; }
+    else pts.push({ x: p.x, y: row });
+    const toRow = tzone ? tzone.row : trow;
+    if (toRow !== row) { pts.push({ x: SPINE, y: row }, { x: SPINE, y: toRow }); }
+    if (tzone) pts.push({ x: tzone.door + 0.5, y: toRow }, { x: tzone.door + 0.5, y: tzone.inY }, { x: tx, y: tzone.inY }, { x: tx, y: ty });
+    else pts.push({ x: tx, y: toRow }, { x: tx, y: ty });
+    p.path = pts; p.sitting = false; p.row = toRow; p.inZone = tzone || null;
   }
   function goToDesk(p) { if (p.where === 'desk' && !p.path.length) { p.sitting = true; return; } const s = seatOf(p.id); route(p, s.x, s.y, zoneOf(p)); p.where = 'desk'; }
   function wander(p) {
-    const spots = [{ x: KITCHEN.x - 0.5, y: 8.6 }, { x: 35.5, y: 8.4 }, { x: 18 + Math.random() * 6, y: 7.6 + Math.random() * 1.6 }, { x: 6 + Math.random() * 8, y: 8 }];
-    const s = spots[(Math.random() * spots.length) | 0];
-    route(p, s.x, s.y, null); p.where = 'out';
+    const r = Math.random();
+    if (r < 0.4) { route(p, 43 + Math.random() * 2.5, 24 + Math.random() * 1.5, Z.kitchen); p.where = 'room'; }
+    else if (r < 0.7) { const x = 3 + Math.random() * 40; route(p, x, ROW_A - 0.6 + Math.random() * 1.2, null, ROW_A); p.where = 'out'; }
+    else { const x = 3 + Math.random() * 40; route(p, x, ROW_B - 0.6 + Math.random() * 1.2, null, ROW_B); p.where = 'out'; }
   }
 
   function sprite(ctx, p, px, py, sc, t) {
@@ -238,7 +261,7 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
   // ---------- labels ----------
   const labels = $('labels');
   Object.values(Z).forEach((z) => { const d = document.createElement('div'); d.className = 'roomtag'; d.textContent = z.name;
-    d.style.left = (z.x / W * 100 + 0.4) + '%'; d.style.top = ((z.y + (z.top ? 3.9 : 0.1)) / H * 100) + '%'; labels.appendChild(d); });
+    d.style.left = (z.x / W * 100 + 0.4) + '%'; d.style.top = ((z.y + 0.15) / H * 100) + '%'; labels.appendChild(d); });
   PEOPLE.forEach((p) => {
     const d = document.createElement('div'); d.className = 'tag'; d.innerHTML = '<span class="bubble"></span><span class="name"></span>';
     d.querySelector('.name').textContent = p.name.split(' ')[0];
@@ -254,7 +277,7 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
       if (p.id === 'parth') {
         const st = (L.parth || {}).status || 'idle';
         p.status = st === 'giving task' ? 'working' : st === 'reviewing' ? 'done' : 'idle';
-        p.task = st === 'giving task' ? 'New task!' : st === 'reviewing' ? 'Review time' : '';
+        p.task = st === 'giving task' ? 'New task received' : st === 'reviewing' ? 'Awaiting your approval' : '';
       } else {
         const s = ag[p.id]; const before = p.status;
         p.status = s ? s.status : 'idle'; p.task = s ? s.task : '';
@@ -262,7 +285,7 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
       }
     });
     feed = (L.feed || []).slice(-60);
-    $('mode').textContent = Date.now() < demoUntil ? 'demo running' : (L.updated ? 'live · ' + L.updated.slice(11) : 'auto mode on');
+    $('mode').textContent = Date.now() < demoUntil ? 'Demonstration running' : (L.updated ? 'Live · updated ' + L.updated.slice(11) : 'Pre-registration mode');
   }
   applyLive(window.LP_LIVE);
 
@@ -302,26 +325,26 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
     avatar(b.querySelector('canvas'), p); b.addEventListener('click', () => select(p.id)); roster.appendChild(b);
   });
   function paintRoster() {
-    PEOPLE.forEach((p) => { const b = $('r-' + p.id); const pl = b.querySelector('.pill'); pl.className = 'pill ' + p.status; pl.textContent = p.status; b.classList.toggle('sel', p.id === selected); });
+    PEOPLE.forEach((p) => { const b = $('r-' + p.id); const pl = b.querySelector('.pill'); pl.className = 'pill ' + p.status; pl.textContent = ({ working: 'Working', done: 'Complete', idle: 'Available', waiting: 'Waiting' })[p.status] || p.status; b.classList.toggle('sel', p.id === selected); });
   }
 
   // ---------- command center ----------
   function select(id) { selected = id; const p = byId[id]; avatar($('ccAvatar'), p);
-    $('ccWho').innerHTML = `<span class="pill ${p.status}">${esc(p.status)}</span> ${esc(p.name)} · ${esc(p.role)}`; paintPane(); paintRoster(); }
+    $('ccWho').innerHTML = `<span class="pill ${p.status}">${esc(({ working: 'Working', done: 'Complete', idle: 'Available' })[p.status] || p.status)}</span> ${esc(p.name)} · ${esc(p.role)}`; paintPane(); paintRoster(); }
   const nameOf = (id) => (byId[id] || { name: id }).name;
   function paintPane() {
     const p = byId[selected]; let h = '';
     if (pane === 'terminal') {
       const mine = selected === 'grace-whitmore' || selected === 'parth' ? feed : feed.filter((f) => f.who === selected);
       h = `<p class="dim">live · ${esc(p.name)}</p>` + (mine.length ? mine.slice(-25).map((f) => `<p><span class="dim">${esc((f.time || '').slice(-8))}</span> <span class="${/^Finished|done|ready/i.test(f.text) ? 'ok' : 'go'}">●</span> <b>${esc(nameOf(f.who).split(' ')[0])}</b> ${esc(f.text)}</p>`).join('')
-        : '<p class="dim">Nothing yet. Queue a task below, or press watch demo.</p>');
+        : '<p class="dim">No activity yet. Assign a task below, or run the demonstration.</p>');
     } else if (pane === 'tasks') {
-      h = '<h4>Active tasks (office/tasks/active.md)</h4>' + ((D.tasks || []).map((t) => `<p>${esc(t)}</p>`).join('') || '<p class="dim">No tasks on the board. Grace adds one for every /task.</p>');
+      h = '<h4>Active tasks</h4>' + ((D.tasks || []).map((t) => `<p>${esc(t)}</p>`).join('') || '<p class="dim">The task board is clear. Grace Whitmore adds an entry for every task assigned.</p>');
     } else if (pane === 'skills') {
-      h = `<h4>${esc(p.name)}</h4><p>${esc(p.skills || (p.id === 'parth' ? 'CEO and signing officer. Approves everything before it leaves the office. AAT student.' : ''))}</p>` + (p.model ? `<p class="dim">model: ${esc(p.model)}</p>` : '') + (p.description ? `<h4>When to call them</h4><p>${esc(p.description)}</p>` : '');
+      h = `<h4>${esc(p.name)}</h4><p>${esc(p.skills || (p.id === 'parth' ? 'Chief Executive and signing officer. Approves every deliverable before it leaves the firm. AAT student.' : ''))}</p>` + (p.model ? `<p class="dim">model: ${esc(p.model)}</p>` : '') + (p.description ? `<h4>Responsibilities</h4><p>${esc(p.description)}</p>` : '');
     } else if (pane === 'memory') {
-      h = `<h4>Briefings from Theo</h4>` + ((p.briefings || []).map((b) => `<p>${esc(b)}</p>`).join('') || '<p class="dim">No lessons yet. Run /teach.</p>') +
-        '<h4>What is new (knowledge/updates.md)</h4>' + (D.updates || []).map((u) => `<p>${esc(u)}</p>`).join('');
+      h = `<h4>Briefings from the Innovation & Learning team</h4>` + ((p.briefings || []).map((b) => `<p>${esc(b)}</p>`).join('') || '<p class="dim">No briefings yet. Theo Ashford adds them when something changes.</p>') +
+        '<h4>Latest regulatory and industry updates</h4>' + (D.updates || []).map((u) => `<p>${esc(u)}</p>`).join('');
     } else if (pane === 'activity') {
       h = '<h4>Work log</h4>' + (D.log || []).map((l) => `<p>${esc(l)}</p>`).join('');
     } else if (pane === 'workers') {
@@ -340,28 +363,37 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
 
   // ---------- queue + demo ----------
   function playDemo(taskText) {
-    const task = taskText || 'Onboard a new café client and prepare their first VAT return';
+    const task = taskText || 'Run a full practice month for a DEMO landlord and draft our MTD Ready offer';
     const L = { agents: {}, feed: [], parth: { status: 'giving task' } };
     const steps = [
       ['parth', null, 'New task: ' + task],
-      ['grace-whitmore', 'working', 'Planning: split into steps by department'],
-      ['theo-ashford', 'working', 'Checking latest GOV.UK guidance'],
-      ['sophie-bennett', 'working', 'AML checks and risk rating'],
-      ['theo-ashford', 'done', 'Briefed the team on what changed'],
-      ['leo-hartley', 'working', 'Categorising bank lines, double entry'],
-      ['sophie-bennett', 'done', 'Engagement letter drafted'],
-      ['henry-collins', 'working', 'Drafting welcome call notes'],
-      ['leo-hartley', 'done', 'Bank reconciled, 1 query raised'],
-      ['james-whitfield', 'working', 'VAT boxes 1 to 9 with workings'],
-      ['victor-hale', 'working', 'Checking engagement terms'],
-      ['henry-collins', 'done', 'Call notes ready'],
-      ['james-whitfield', 'done', 'VAT draft and check-before-filing list'],
-      ['victor-hale', 'done', 'Terms OK, no solicitor needed'],
-      ['grace-whitmore', 'working', 'Quality check against office rules'],
-      ['grace-whitmore', 'done', 'Passed. One summary sent to Parth'],
-      ['parth', 'review', 'Results ready for your review'],
+      ['grace-whitmore', 'working', 'Planning the work by department'],
+      ['eleanor-price', 'working', 'Researching the Harrow market'],
+      ['theo-ashford', 'working', 'Checking current GOV.UK guidance'],
+      ['william-hayes', 'working', 'Setting up the DEMO client file'],
+      ['theo-ashford', 'done', 'Briefed affected departments'],
+      ['william-hayes', 'done', 'DEMO file and bank data ready'],
+      ['leo-hartley', 'working', 'Categorising transactions, double entry'],
+      ['edward-lancaster', 'working', 'Checking margin on the proposed price'],
+      ['eleanor-price', 'done', 'Market brief completed'],
+      ['leo-hartley', 'done', 'Bank reconciled, one query raised'],
+      ['james-whitfield', 'working', 'Preparing the monthly summary'],
+      ['daniel-foster', 'working', 'Drafting the tax preparation pack'],
+      ['charlotte-quinn', 'working', 'Drafting the service page copy'],
+      ['edward-lancaster', 'done', 'Margin confirmed at target'],
+      ['james-whitfield', 'done', 'Summary ready for review'],
+      ['daniel-foster', 'done', 'Tax pack ready for review'],
+      ['charlotte-quinn', 'done', 'Copy ready for review'],
+      ['harriet-ellis', 'working', 'Quality review against the checklist'],
+      ['victor-hale', 'working', 'Confirming pre-registration compliance'],
+      ['victor-hale', 'done', 'Compliant: DEMO data only'],
+      ['harriet-ellis', 'done', 'Passed with two minor notes'],
+      ['grace-whitmore', 'done', 'Signed off and summarised for Parth'],
+      ['amelia-hart', 'working', 'Drafting the waiting-list update'],
+      ['amelia-hart', 'done', 'Draft ready for approval'],
+      ['parth', 'review', 'Results ready for your approval'],
     ];
-    demoUntil = Date.now() + steps.length * 2600 + 8000;
+    demoUntil = Date.now() + steps.length * 2200 + 8000;
     let i = 0;
     const tick = () => {
       if (i >= steps.length) { setTimeout(() => { if (Date.now() >= demoUntil) applyLive(window.LP_LIVE || { agents: {}, feed: [] }); }, 8200); return; }
@@ -369,18 +401,18 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
       if (who === 'parth') L.parth = { status: st === 'review' ? 'reviewing' : 'giving task' }; else L.agents[who] = { status: st, task: text };
       L.feed.push({ time: new Date().toLocaleTimeString('en-GB'), who, text });
       L.updated = '';
-      applyLive(L); $('mode').textContent = 'demo running'; paintPane(); paintRoster(); select(selected);
-      setTimeout(tick, 2600);
+      applyLive(L); $('mode').textContent = 'Demonstration running'; paintPane(); paintRoster(); select(selected);
+      setTimeout(tick, 2200);
     };
     tick();
   }
   $('demoBtn').addEventListener('click', () => playDemo());
   $('sendBtn').addEventListener('click', () => {
     const v = $('q').value.trim(); const note = $('qnote');
-    if (!v) { note.textContent = 'Type a task first.'; return; }
+    if (!v) { note.textContent = 'Please describe the task first.'; return; }
     const cmd = '/task ' + v;
-    const done = () => { note.textContent = 'Copied. Paste it into Claude Code in your LedgerPeak folder and the team gets to work here.'; };
-    try { navigator.clipboard.writeText(cmd).then(done, () => { $('q').value = cmd; $('q').select(); note.textContent = 'Select-all copy this and paste into Claude Code.'; }); }
+    const done = () => { note.textContent = 'Task copied. Paste it into Claude Code (or your LedgerPeak Project) and the team will begin.'; };
+    try { navigator.clipboard.writeText(cmd).then(done, () => { $('q').value = cmd; $('q').select(); note.textContent = 'Copy this command and paste it into Claude Code.'; }); }
     catch (e) { $('q').value = cmd; $('q').select(); }
   });
 
@@ -391,7 +423,7 @@ html, body { margin: 0; background: #e9dfc6; color: var(--ink); font: 14px/1.4 v
     s.onload = () => { applyLive(window.LP_LIVE); paintRoster(); if (pane === 'terminal' || pane === 'workers') paintPane(); s.remove(); };
     s.onerror = () => s.remove(); document.body.appendChild(s);
   }, 2500);
-  else { $('foot').textContent = 'Snapshot of the office. Live updates run on your laptop copy (office/dashboard/office.html). Press watch demo to see a task flow through the team.'; setTimeout(() => playDemo(), 1500); }
+  else { $('foot').textContent = 'Office snapshot. Live activity appears when this page is opened from your LedgerPeak folder while Claude Code is running. Use Run demonstration to see a task move through the firm.'; setTimeout(() => playDemo(), 1500); }
 
   select(selected);
   requestAnimationFrame(frame);

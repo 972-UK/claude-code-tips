@@ -1,14 +1,17 @@
-# Set up your LedgerPeak Project on claude.ai (10 minutes)
+# Setting up the LedgerPeak Project on claude.ai
 
-1. Go to claude.ai and choose Projects, then Create project. Name it "LedgerPeak".
-2. Open the project's instructions and paste in everything from `01-PROJECT-INSTRUCTIONS.md`.
-3. In the project's knowledge, upload files 02 to 08 from this folder.
-4. Make sure web search is on, so Theo and Victor can check GOV.UK.
-5. Start a chat in the project and type: morning
-6. Try: task: onboard the DEMO Harrow Hill Café and prepare their September close
-7. Keep the pixel office pinned in your sidebar: https://claude.ai/artifact/CVkf7SPzwczqqRqb78Qbnj
+Time needed: about 10 minutes.
 
-The Project is for talking to your team from any device, including your phone, with all the rules and templates already loaded.
-Claude Code is for the same team working on real files in your LedgerPeak folder, with the live pixel office showing who is working. Use the Project for quick questions and drafts on the go, and Claude Code at your laptop for real client books.
+1. Open claude.ai, choose Projects, then Create project. Name it "LedgerPeak".
+2. Open the project instructions and paste the full contents of `01-PROJECT-INSTRUCTIONS.md`.
+3. Add files 02 to 09 from this folder to the project knowledge.
+4. Turn on web search, so the team can check GOV.UK.
+5. Start a new chat in the project and type: roadmap
+6. Then follow `09-first-30-evenings.md`, one evening at a time.
+7. Keep the office view pinned in your sidebar: https://claude.ai/artifact/CVkf7SPzwczqqRqb78Qbnj
 
-When you change the office (new prices, new staff, new lessons), ask Claude Code to rebuild this folder and re-upload the changed files.
+Project or Claude Code?
+- The Project is for conversation, drafts and planning from any device, with all rules and templates loaded. It does not edit files on your computer, so copy anything you want to keep into your LedgerPeak folder or a document.
+- Claude Code works directly on the LedgerPeak folder: client files, books, the live office view and the dashboard. Use it at your laptop for DEMO practice runs you want saved.
+
+Keeping the Project up to date: when the office changes (prices, staff, rules, roadmap progress), run `python3 scripts/build_project_pack.py` in Claude Code, then re-upload the changed files.

@@ -1,4 +1,4 @@
-# Policies (all DRAFT, check with a solicitor) and deadlines
+# Policies (drafts for solicitor review), registers and deadlines
 
 
 
@@ -229,3 +229,19 @@ Format: `DD/MM/YYYY | item | client or LedgerPeak | owner`. Dates marked (verify
 ## Clients
 - 07/11/2026 | DEMO VAT return due quarter to 30/09/2026 (one month and 7 days rule, verify) | DEMO Harrow Hill Café | james-whitfield
 - 07/11/2026 | DEMO MTD quarterly update to 05/10/2026 (verify) | DEMO Harrow Hill Café | james-whitfield
+
+
+
+---
+
+<!-- file: compliance/registers/risk-register.md -->
+
+# Risk register
+
+| Risk | Likelihood | Impact | Control | Owner |
+|---|---|---|---|---|
+| Doing regulated work before registration | Low | High | Pre-registration mode rule 13; Grace mode check | Victor |
+| Conflict with day job | Medium | High | Rule 6; contract review (roadmap 1.1) | Parth |
+| Wrong figure reaches a client | Medium | High | Harriet review on every deliverable | Harriet |
+| Data breach | Low | High | Security set-up, no sensitive numbers in files | William |
+| Not enough evening time | Medium | Medium | Small client cap; daily brief priorities | Grace |

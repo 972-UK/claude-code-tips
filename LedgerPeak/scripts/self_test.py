@@ -10,10 +10,10 @@ def check(ok, msg):
     if not ok:
         fails.append(msg)
 
-for c in "morning new-client close-month vat mtd chase outreach post legal study mock log task learn teach".split():
+for c in "morning new-client close-month vat mtd chase outreach post legal study mock log task learn teach strategy roadmap review finance client-care tax-pack systems practice".split():
     check((ROOT / ".claude/commands" / f"{c}.md").exists(), f"command /{c}")
 
-for a in "ava-sterling henry-collins sophie-bennett leo-hartley emily-brooks james-whitfield charlotte-quinn victor-hale iris-bell".split():
+for a in "grace-whitmore ava-sterling eleanor-price henry-collins charlotte-quinn amelia-hart sophie-bennett leo-hartley james-whitfield daniel-foster edward-lancaster emily-brooks harriet-ellis victor-hale william-hayes theo-ashford iris-bell".split():
     t = (ROOT / ".claude/agents" / f"{a}.md").read_text() if (ROOT / ".claude/agents" / f"{a}.md").exists() else ""
     fm = re.match(r"---\n(.*?)\n---\n", t, re.S)
     keys = dict(l.split(":", 1) for l in fm[1].splitlines() if ":" in l) if fm else {}
@@ -47,7 +47,7 @@ for p in ROOT.rglob("*.md"):
         bad.append(str(p))
 check(not bad, "no NI-number-shaped strings in files " + ", ".join(bad))
 
-for a in "grace-whitmore ava-sterling henry-collins charlotte-quinn sophie-bennett emily-brooks leo-hartley james-whitfield victor-hale theo-ashford iris-bell".split():
+for a in "grace-whitmore ava-sterling eleanor-price henry-collins charlotte-quinn amelia-hart sophie-bennett leo-hartley james-whitfield daniel-foster edward-lancaster emily-brooks harriet-ellis victor-hale william-hayes theo-ashford iris-bell".split():
     check((ROOT / "knowledge/briefings" / f"{a}.md").exists(), f"briefing file {a}")
 
 live = ROOT / "office/dashboard/data/live.json"
@@ -62,6 +62,9 @@ if had:
 else:
     live.unlink(missing_ok=True); (ROOT / "office/dashboard/data/live.js").unlink(missing_ok=True)
 json.loads((ROOT / ".claude/settings.json").read_text())
+check("Pre-registration mode (current status:" in (ROOT / "CLAUDE.md").read_text(), "pre-registration mode stated in CLAUDE.md")
+for f in ["office/roadmap.md", "office/quality/review-checklist.md", "finance/budget.md", "leads/waitlist.csv"]:
+    check((ROOT / f).exists(), f"file {f}")
 check(True, "hooks settings.json is valid JSON")
 
 print("\nAll checks passed." if not fails else f"\n{len(fails)} check(s) failed.")

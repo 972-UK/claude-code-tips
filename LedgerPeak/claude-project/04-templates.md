@@ -1,6 +1,6 @@
-# Templates (client folder and office)
+# Templates: client file and office
 
-The engagement letter is a Word file in the Claude Code version; its headings are: scope, fees, your responsibilities, our responsibilities, anti-money laundering, data protection, termination, complaints, limitation of liability, signatures.
+The engagement letter is a Word file in the Claude Code version. Its sections: scope, fees, your responsibilities, our responsibilities, anti-money laundering, data protection, termination, complaints, limitation of liability, signatures.
 
 
 ---
