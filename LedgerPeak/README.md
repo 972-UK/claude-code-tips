@@ -41,7 +41,7 @@ Theo Ashford keeps the firm current: `/learn` records what has changed, and `/te
 ## Starting each evening
 
 1. Open a terminal in this folder and run `claude`.
-2. Open `office/dashboard/office.html` beside it to watch the office.
+2. Open `office/dashboard/hq.html` beside it to watch the office.
 3. Run `/morning` for the daily brief, which leads with the next roadmap actions.
 4. Choose one roadmap action and assign it with `/task`.
 5. Spend 30 minutes on `/study`.
@@ -80,6 +80,7 @@ While the mode is ON (see `CLAUDE.md`), the firm can build the brand, systems, p
 
 ## The office view
 
+- `office/dashboard/hq.html`: LedgerPeak HQ, the main office. A 3D building with every department in a glass-walled room around the Brain, plus specialist screens, the road to launch, the skills library and the team directory with Grace's updates. It goes live while Claude Code runs. Rebuild it after changes with `python3 scripts/build_hq.py`.
 - `office/dashboard/office.html`: the pixel-art office. It shows thirteen rooms and every staff member, with a Command Centre (live feed, task board, expertise, briefings, work log, team) and a staff roster. It updates live while Claude Code runs, through the hooks in `.claude/settings.json`.
 - `office/dashboard/index.html`: the reports view, with KPIs, pipeline, clients, deadlines, academy and compliance.
 - On Windows, if `python3` is not recognised, change it to `python` in `.claude/settings.json`.

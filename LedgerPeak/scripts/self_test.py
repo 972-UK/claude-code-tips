@@ -63,6 +63,8 @@ else:
     live.unlink(missing_ok=True); (ROOT / "office/dashboard/data/live.js").unlink(missing_ok=True)
 json.loads((ROOT / ".claude/settings.json").read_text())
 check("Pre-registration mode (current status:" in (ROOT / "CLAUDE.md").read_text(), "pre-registration mode stated in CLAUDE.md")
+r = subprocess.run([sys.executable, str(ROOT / "scripts/build_hq.py")], capture_output=True, text=True)
+check(r.returncode == 0 and "window.LP_HQ" in (ROOT / "office/dashboard/hq.html").read_text(), "HQ page builds")
 for f in ["office/roadmap.md", "office/quality/review-checklist.md", "finance/budget.md", "leads/waitlist.csv"]:
     check((ROOT / f).exists(), f"file {f}")
 check(True, "hooks settings.json is valid JSON")

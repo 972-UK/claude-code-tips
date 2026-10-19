@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>LedgerPeak HQ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Layout: header and KPIs, 3D building with the Brain at its centre, order-of-work strip, guide and Project Brain, agent screens, road to launch, skills library, then the team directory with a profile card and Grace's updates. */
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --line:#d9dde3; --fg:#1b2333; --muted:#5d6676; --accent:#1f4a3d; --accent-soft:#e3efe9;
+  --ok:#2f8a6a; --ok-soft:#e1f1ea; --warn:#7a5410; --warn-soft:#fbeccd;
+  --display:"Source Serif 4",Georgia,serif; --body:"Public Sans",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11151c;--surface:#1a202b;--line:#2c3442;--fg:#e6e9ee;--muted:#9aa3b2;--accent:#7fcfae;--accent-soft:#1c3a30;--ok:#5fc39b;--ok-soft:#173327;--warn:#f0c46b;--warn-soft:#3a2e14;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#11151c;--surface:#1a202b;--line:#2c3442;--fg:#e6e9ee;--muted:#9aa3b2;--accent:#7fcfae;--accent-soft:#1c3a30;--ok:#5fc39b;--ok-soft:#173327;--warn:#f0c46b;--warn-soft:#3a2e14;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:grid;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:10px 12px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:600}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,6vw,38px);margin:0;line-height:1.1;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.date{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.mode{font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--warn-soft);color:var(--warn)}
+.mode.live{background:var(--ok-soft);color:var(--ok)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:2px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--k)}
+.kpi b{font-family:var(--display);font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.viewbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.small-btn{all:unset;cursor:pointer;padding:10px 14px;font-size:13px;font-weight:600;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg)}
+.small-btn[aria-pressed="true"]{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+.small-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.standby{margin:0;padding:10px 14px;border-radius:10px;background:var(--accent-soft);font-size:14px}
+.stage3d{position:relative;background:#d3dccf;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:clamp(440px,60vw,660px)}
+#o3d{position:absolute;inset:0}#o3d canvas{display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}
+#o3d.dragging canvas{cursor:grabbing}
+#o3dLabels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.o3-tag{all:unset;box-sizing:border-box;position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;display:flex;gap:7px;align-items:center;padding:6px 10px 6px 7px;border-radius:9px;background:rgba(255,255,255,.94);border:1px solid rgba(40,50,45,.1);color:#24302b;font:600 12px/1.25 var(--body);white-space:nowrap;box-shadow:0 6px 18px rgba(40,60,50,.18);will-change:transform}
+.o3-tag i{width:16px;height:16px;border-radius:50%;background:var(--c);flex:none}
+.o3-tag small{display:block;font-weight:400;font-size:11px;color:#66706b;font-variant-numeric:tabular-nums}
+.o3-tag em{display:inline-block;width:6px;height:6px;border-radius:50%;background:#c3c9c5;margin-right:5px;vertical-align:1px}
+.o3-tag.on em{background:#2fb37a;box-shadow:0 0 6px #2fb37a}
+.o3-tag:hover{border-color:var(--c)}.o3-tag:focus-visible{outline:2px solid #8fe8c8}
+.o3-tag.brain{flex-direction:column;gap:1px;text-align:center;letter-spacing:.14em;font-size:11px;color:#1d6a55;border-color:rgba(29,106,85,.25);padding:6px 12px}
+.o3-tag.brain small{letter-spacing:0}
+.o3-ctl{position:absolute;right:max(10px,env(safe-area-inset-right,0px));bottom:10px;display:grid;gap:6px}
+.o3-ctl button{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:rgba(255,255,255,.94);color:#24302b;font:700 16px var(--body);border:1px solid rgba(40,50,45,.12);box-shadow:0 4px 12px rgba(40,60,50,.15)}
+.o3-ctl button:focus-visible{outline:2px solid #8fe8c8}
+.nogl{display:grid;place-items:center;height:100%;padding:20px;text-align:center;color:#24302b}
+@media (max-width:640px){.o3-tag{font-size:10.5px;padding:4px 7px 4px 5px;gap:5px}.o3-tag i{width:10px;height:10px;border-radius:3px}.o3-tag small{display:none}.o3-tag.brain small{display:block;font-size:9.5px}.stage3d{height:540px}}
+.hint{font-size:13px;color:var(--muted);margin:-6px 0 0}
+.flow{display:flex;gap:6px;list-style:none;margin:0;padding:0 0 4px;overflow-x:auto}
+.flow li{flex:1 0 118px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;display:grid;gap:2px}
+.flow b{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400;white-space:nowrap}
+.flow li.now{border-color:var(--ok);background:var(--ok-soft)}.flow li.now b{color:var(--ok)}
+.flow li.done{opacity:.7}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px;min-width:0}
+.panel h2{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:8px}
+.panel h2 i{width:10px;height:10px;border-radius:2px;display:inline-block;flex:none}
+.note{font-size:13px;color:var(--muted);margin:0}
+.guide summary{cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.guide .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.guide .cols>*{min-width:0}
+.guide h3{font-size:14px;margin:0 0 6px}
+.guide p{margin:0;max-width:72ch}
+.guide ol,.guide ul{margin:0;padding-left:20px;display:grid;gap:8px;max-width:72ch}
+.guide ol li b{display:block}
+.say{font-family:var(--mono);font-size:13px;background:var(--accent-soft);padding:1px 6px;border-radius:4px}
+.tree{max-width:100%;box-sizing:border-box;margin:8px 0 0;font-family:var(--mono);font-size:12px;line-height:1.6;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;white-space:pre}
+.full{grid-column:1/-1}
+.tw{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;font-size:13px;width:100%;min-width:620px}
+th,td{text-align:left;vertical-align:top;padding:6px 10px 6px 0;border-bottom:1px solid var(--line)}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+td:first-child{font-weight:600;white-space:nowrap}
+td:last-child{font-family:var(--mono);font-size:12px}
+.sgrp h3{margin:0 0 8px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+.sgrp h3 i{width:10px;height:10px;border-radius:2px}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px 12px}
+.scr{all:unset;cursor:pointer;display:grid;justify-items:center;min-width:0}
+.scr:focus-visible .mon{outline:2px solid var(--accent);outline-offset:2px}
+.mon{width:100%;aspect-ratio:16/10;max-width:100%;box-sizing:border-box;background:#14171f;border:6px solid #23262e;border-bottom-width:9px;border-radius:8px;display:grid;grid-template-rows:auto 1fr;overflow:hidden;box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.scr.on .mon{box-shadow:0 0 0 2px var(--c),0 6px 18px rgba(0,0,0,.22)}
+.bar{display:flex;align-items:center;gap:6px;padding:3px 6px;background:var(--c);color:#fff;font:600 10px/1.2 var(--body);min-width:0}
+.bar b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bar .app{margin-left:auto;opacity:.85;font-weight:400;white-space:nowrap}
+.bar em{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);flex:none}.scr.on .bar em{background:#7fe0b4;box-shadow:0 0 5px #7fe0b4}
+.stand{width:22%;height:10px;background:linear-gradient(#2b2f38,#1d2027);clip-path:polygon(30% 0,70% 0,100% 100%,0 100%)}
+.cap{font-size:12px;text-align:center;line-height:1.3;padding-top:4px;max-width:100%}
+.cap small{display:block;color:var(--muted);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vw{min-height:0;position:relative}
+.v{position:absolute;inset:0;padding:6px 7px;font:10px/1.35 var(--body);color:#dfe6ef;overflow:hidden}
+.v p{margin:0 0 4px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v.lock{background:linear-gradient(160deg,#24413a,#141f1c);display:grid;place-content:center;text-align:center;gap:1px}
+.v.lock b{font:600 20px var(--display);color:#fff}.v.lock span{font-weight:600;font-size:10px}.v.lock small{color:#9ab4aa;font-size:9px}
+.v.doc{background:#f7f6f2;color:#2b2a28}.v.doc .ln{display:grid;gap:5px}
+.v.doc i{display:block;height:4px;border-radius:2px;background:#c8ccd4;width:0;animation:type 2.6s var(--d) ease-out infinite}
+@keyframes type{0%{width:0}60%,100%{width:var(--w)}}
+.v.term{background:#0d1117}.v.term pre{margin:0;font:9.5px/1.45 var(--mono);color:#b9c4d4;white-space:pre-wrap}.v.term u{text-decoration:none;color:#5fdc9b}
+.caret{animation:blink 1s steps(1) infinite;color:#5fdc9b}@keyframes blink{50%{opacity:0}}
+.v.sheet{background:#fff;color:#1f5130}.v.sheet .cells{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:#d7dfd9;border:1px solid #d7dfd9}
+.v.sheet i{display:block;height:9px;background:#fff}.v.sheet i.hl{background:#cdeedb;animation:pulse 1.6s ease-in-out infinite}@keyframes pulse{50%{background:#8fdcae}}
+.v.list{background:#f4f6fb;color:#253048}.v.list ul{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+.v.list li{padding-left:13px;position:relative;color:#7a8396;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v.list li::before{content:"○";position:absolute;left:0}.v.list li.ok{color:#253048}.v.list li.ok::before{content:"✓";color:#2f8a6a}
+.v.list li.now{color:#1f4a3d;font-weight:600}.v.list li.now::before{content:"▸";color:#d98a1c;animation:blink 1s steps(1) infinite}
+.v.dash{background:#15302a;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;align-content:center;text-align:center}
+.v.dash b{display:block;font:600 18px var(--display);color:#fff}.v.dash small{color:#9fd3bf;font-size:9px}.v.dash p{grid-column:1/-1;color:#f2c94c;margin:4px 0 0;font-weight:400;text-align:center}
+@media (prefers-reduced-motion:reduce){.v *,.flow *,.caret{animation:none!important}.v.doc i{width:var(--w)}}
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.stg{border:1px solid var(--line);border-top:4px solid var(--b);border-radius:8px;padding:10px;display:grid;gap:6px;align-content:start;min-width:0}
+.stg h3{margin:0;font-size:15px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;color:var(--b)}
+.stg h3 span{font-size:12px;color:var(--muted);font-weight:600}
+.ms{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 8px;align-items:baseline;font-size:13px;padding:6px 0;border-top:1px solid var(--line)}
+.ms code{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.ms .who{grid-column:2/4;color:var(--muted);font-size:12px}
+.chip{font-size:11px;font-weight:600;padding:1px 8px;border-radius:99px;background:var(--accent-soft);white-space:nowrap}
+.chip.done{background:var(--ok-soft);color:var(--ok)}.chip.open{background:var(--warn-soft);color:var(--warn)}
+.books{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px}
+.books button{all:unset;cursor:pointer;display:grid;gap:2px;width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--line);border-left:4px solid var(--c);border-radius:6px}
+.books button:hover{background:var(--accent-soft)}.books button:focus-visible{outline:2px solid var(--accent)}
+.books code{font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}.books small{color:var(--muted);font-size:12px}
+.lessons{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:13px}.lessons li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px}.lessons time{font-family:var(--mono);color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);gap:16px;align-items:start}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr)}}
+.depts{display:grid;gap:12px}
+.dept ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2px 8px}
+.dept button{all:unset;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;box-sizing:border-box;padding:8px;border-radius:6px;font-size:15px}
+.dept button small{display:block;color:var(--muted);font-size:12px}
+.dept button:hover,.dept button[aria-pressed="true"]{background:var(--accent-soft)}
+.dept button:focus-visible{outline:2px solid var(--accent)}
+.st{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;text-align:right}
+.st.task{color:var(--ok)}
+.side{display:grid;gap:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+@media (max-width:820px){.side{position:static}}
+.card h3{font-family:var(--display);font-weight:600;font-size:21px;margin:0}
+.card p{margin:0}
+.role{color:var(--muted);font-size:14px}
+.pill{font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--accent-soft);justify-self:start}
+.pill.task{background:var(--ok-soft);color:var(--ok)}
+.kv{display:grid;gap:2px;font-size:13px}
+.kv span{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kv code{font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}
+.log ol{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:300px;overflow:auto;font-size:13px}
+.log li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px}
+.log time{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">Bookkeeping practice · Harrow, North West London · 17 specialists in 12 departments</p>
+      <h1>LedgerPeak HQ</h1>
+    </div>
+    <div class="meta">
+      <span class="mode" id="mode">Pre-registration</span>
+      <span class="date" id="date"></span>
+    </div>
+  </header>
+
+  <div class="kpis" aria-live="polite">
+    <div class="kpi" style="--k:#25a065"><b id="kWork">0</b><span>Specialists working now</span></div>
+    <div class="kpi" style="--k:#2f6fa7"><b id="kRoad">0/0</b><span>Roadmap milestones done</span></div>
+    <div class="kpi" style="--k:#d98a1c"><b id="kDemo">0</b><span>DEMO clients for practice</span></div>
+    <div class="kpi" style="--k:#7a5ab0"><b id="kAat">0/4</b><span>AAT Level 2 units passed</span></div>
+  </div>
+
+  <div class="viewbar">
+    <p class="note" style="margin:0">Drag to turn the building. Use + and − to zoom. Tap a room to meet the people in it.</p>
+    <button class="small-btn" id="demoBtn" aria-pressed="false">Play example</button>
+  </div>
+  <p class="standby" id="standbyNote"><b>Standby.</b> Nothing here runs on its own. Real work happens in your LedgerPeak Project or in Claude Code, and the office moves when that work is running. Use "Play example" to see a task travel through the firm.</p>
+  <div class="stage3d"><div id="o3d" aria-label="3D office: twelve departments and the CEO office in glass-walled rooms around a central hall, with the Brain in the middle"></div><div id="o3dLabels"></div>
+    <div class="o3-ctl"><button id="o3In" aria-label="Zoom in">+</button><button id="o3Out" aria-label="Zoom out">−</button><button id="o3Reset" aria-label="Reset view" style="font-size:12px">⟲</button></div></div>
+
+  <ol class="flow" id="flow" aria-label="Order of work for every task"></ol>
+
+  <details class="panel guide" id="guide" open>
+    <summary>How your office works</summary>
+    <div class="cols">
+      <div>
+        <h3>Your evening</h3>
+        <ol>
+          <li><b>Open the office</b>Open your LedgerPeak Project on claude.ai, or Claude Code in the LedgerPeak folder. Say <span class="say">morning</span>. Ava gives today's three priorities, starting with the roadmap.</li>
+          <li><b>Give one task</b>Say <span class="say">task: …</span>. Grace plans it, assigns each step to a department, and the people involved light up here.</li>
+          <li><b>Practise on DEMO clients</b>Say <span class="say">practice: DEMO Harrow Hill Café</span>. Leo does the books with double entry workings, James summarises, Harriet reviews.</li>
+          <li><b>Study</b>Say <span class="say">study</span>. Iris teaches one AAT topic using that evening's work.</li>
+          <li><b>Approve</b>Grace hands you one summary with the decisions you need to make. Nothing leaves the firm without your approval.</li>
+          <li><b>Close</b>Say <span class="say">log</span>. The day's work goes in the work log.</li>
+        </ol>
+      </div>
+      <div class="cols" style="grid-template-columns:1fr">
+        <div><h3>Chain of command</h3><p><b>Parth (Chief Executive)</b> → <b>Grace Whitmore (Operations Manager)</b> → every department → <b>Harriet Ellis (Quality)</b> → Grace signs off → Parth approves. You only give instructions to Grace. She plans, assigns and checks every task and is accountable for what reaches you.</p></div>
+        <div><h3>Pre-registration mode</h3><p>LedgerPeak is in its build-and-test stage. The firm builds the brand, systems, prices and roadmap and practises on DEMO clients. It does no bookkeeping, tax or payroll work for real people, takes no fees and collects no ID until you register. Victor confirms the registration steps when you are ready.</p></div>
+        <div><h3>How the office learns</h3><p>When something changes in the world (HMRC, MTD, anti-money laundering rules, software), Theo Ashford checks official sources and writes a short briefing for each department affected. When you edit a document, the lesson goes into the style lessons file and is applied next time. Harriet turns repeated errors into checklist items.</p></div>
+        <div><h3>Where things live</h3><pre class="tree">LedgerPeak\
+├─ CLAUDE.md ........... the rules and the mode switch
+├─ .claude\agents ...... the 17 job descriptions
+├─ office\roadmap.md ... road to launch
+├─ office\dashboard .... this office and the reports
+├─ clients\_TEMPLATE ... 12-document client file
+├─ clients\demo-* ...... DEMO practice clients
+├─ finance\ ............ LedgerPeak's own books and budget
+├─ knowledge\ .......... updates and briefings
+└─ academy\ ............ AAT Level 2 course</pre></div>
+      </div>
+    </div>
+  </details>
+
+  <details class="panel guide" id="brain" open>
+    <summary>Project Brain · LedgerPeak rules and team</summary>
+    <p class="note">The short version of the firm's rules, order of work and team. If it ever disagrees with CLAUDE.md, CLAUDE.md wins and this page is rebuilt.</p>
+    <div class="cols">
+      <div><h3>Purpose</h3><p>Become the highest-rated bookkeeper in Harrow by giving sole traders, landlords, tradespeople, cafés and shops clear, accurate books and Making Tax Digital readiness, run by Parth in evenings and weekends, with every set of books teaching him double entry on the way to AAT.</p>
+        <h3 style="margin-top:12px">Packages (starting prices)</h3><ul><li>Starter £95 a month</li><li>MTD Ready £165 a month</li><li>Business £325 a month</li><li>Catch-up from £250 one-off</li></ul></div>
+      <div><h3>Golden rules</h3><ol id="rules"></ol></div>
+      <div><h3>Order of work for every task</h3><ol>
+        <li><b>Mode check</b>Grace confirms the task is allowed in the current mode.</li>
+        <li><b>Plan</b>Grace sets out each step, who does it and what they produce.</li>
+        <li><b>Check what is current</b>Theo or Victor confirms any rule, fee or deadline on GOV.UK, with the date checked.</li>
+        <li><b>Do</b>Departments complete their steps, in parallel where they can.</li>
+        <li><b>Review</b>Harriet checks the work against the quality checklist: pass, pass with notes, or return.</li>
+        <li><b>Sign-off</b>Grace summarises and lists the decisions for Parth.</li>
+        <li><b>Approve</b>Parth approves. Only then can anything be sent or filed.</li>
+        <li><b>Log and learn</b>Work log updated; lessons go to the briefings.</li></ol></div>
+      <div class="full"><h3>The team</h3><div class="tw"><table><thead><tr><th>Specialist</th><th>Department</th><th>Responsible for</th><th>Ask with</th></tr></thead><tbody id="teamRows"></tbody></table></div></div>
+    </div>
+  </details>
+
+  <section class="panel" aria-labelledby="sh">
+    <h2 id="sh">Specialist screens</h2>
+    <p class="note">Every specialist's computer. A lit screen with a green light means that person is working right now, and shows what they have open. A lock screen means they are available. Tap a screen to see who it is and what they do.</p>
+    <div id="screens"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="rh">
+    <h2 id="rh"><i style="background:#2f6fa7"></i>Road to launch</h2>
+    <p class="note">From office/roadmap.md. Eleanor owns it and Ava reports on it every evening. Tick a milestone in the file and rebuild this page to update it.</p>
+    <div class="stages" id="stages"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="lh">
+    <h2 id="lh"><i style="background:#2f5a46"></i>Skills library</h2>
+    <p class="note">Every specialist is a job description in .claude/agents. Tap one to see their expertise.</p>
+    <ul class="books" id="books"></ul>
+    <h2>Latest briefings from Theo</h2>
+    <ol class="lessons" id="lessons"></ol>
+  </section>
+
+  <div class="grid">
+    <div class="depts" id="depts"></div>
+    <div class="side">
+      <aside class="panel card" id="card" aria-live="polite"></aside>
+      <section class="panel log"><h2>Grace's updates</h2><ol id="log"></ol></section>
+    </div>
+  </div>
+  <p class="note" id="footnote"></p>
+</div>
+
+<script src="data/live.js" onerror="this.remove()"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+window.LP_HQ = {"agents": [{"id": "grace-whitmore", "name": "Grace Whitmore", "role": "Operations Manager", "dept": "Executive Office", "hair": "#6b3e26", "skin": "#f1c9a5", "shirt": "#1f6f5c", "lastTask": "Runs every task end to end", "status": "idle", "model": "sonnet", "skills": "- Small-practice operations: workflow design, SOPs, RACI, capacity planning, quality control and service levels for a bookkeeping firm.\n- You know every department's skills, inputs and outputs (see the org chart below) and the firm's rules in `CLAUDE.md`.\n- You price work in effort and cost: cheapest capable agent first, one quality check, no duplicated effort.", "description": "Operations Manager. Use for ANY task Parth gives that is not obviously one person's job, or that spans departments. Grace breaks the task into steps, assigns each step to the right department and person, checks quality and hands Parth one finished result. Also owns workflows, capacity, SOPs and the quality standard.", "briefings": [], "duty": "routes every task, plans, delegates, signs off quality"}, {"id": "ava-sterling", "name": "Ava Sterling", "role": "Chief of Staff", "dept": "Executive Office", "hair": "#e2b04a", "skin": "#f6d3b3", "shirt": "#7b4ea3", "lastTask": "Set up deadline calendar", "status": "idle", "model": "sonnet", "skills": "Executive assistance and planning: prioritisation (urgent vs important), deadline management across HMRC, Companies House and client calendars, concise briefing writing.", "description": "Chief of Staff. Use for the morning brief, the deadline calendar, assigning work to other agents and updating the tracker and dashboard.", "briefings": [], "duty": "daily brief, calendar, roadmap tracking"}, {"id": "eleanor-price", "lastTask": "Joined the firm", "status": "idle", "hair": "#3b2a1e", "skin": "#f1c9a5", "shirt": "#2c4a7a", "name": "Eleanor Price", "role": "Director of Strategy", "dept": "Strategy & Business Development", "model": "sonnet", "skills": "Small professional-services strategy: market sizing from public data (ONS business counts, local directories), competitor benchmarking (pricing pages, review scores, service mix), positioning, pricing architecture, partnership channels (local accountants who do not want bookkeeping, business networks, trade associations, software partner directories) and growth planning for a solo-run firm.", "description": "Director of Strategy and Business Development. Use for market research in Harrow and North West London, competitor analysis, pricing strategy, service design, partnerships, the growth plan and the road-to-launch roadmap.", "briefings": [], "duty": "market research, competitors, pricing strategy, growth plan, roadmap"}, {"id": "henry-collins", "name": "Henry Collins", "role": "Head of Sales", "dept": "Sales & Marketing", "hair": "#3b2a1e", "skin": "#e9b892", "shirt": "#2a6fb0", "lastTask": "Pipeline template ready", "status": "idle", "model": "sonnet", "skills": "B2B sales for professional services: consultative selling, objection handling on price, value-based proposals, UK GDPR and PECR rules for B2B outreach, local SEO-led lead sourcing in NW London.", "description": "Sales. Use for lead lists, cold emails (UK GDPR and PECR aware, with opt-out), discovery-call scripts and proposals.", "briefings": ["19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."], "duty": "leads, outreach, discovery calls, proposals"}, {"id": "charlotte-quinn", "name": "Charlotte Quinn", "role": "Marketing Manager", "dept": "Sales & Marketing", "hair": "#a8452a", "skin": "#f6d3b3", "shirt": "#c08a1a", "lastTask": "Awaiting first /post", "status": "idle", "model": "haiku", "skills": "Local small-business marketing: Google Business Profile, review generation within platform rules, social content, ASA/CAP code compliance, honest copywriting.", "description": "Marketing. Use for social posts, Google Business Profile updates, review requests and website copy. No fake testimonials.", "briefings": ["19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."], "duty": "brand, posts, Google Business Profile, website copy"}, {"id": "amelia-hart", "lastTask": "Joined the firm", "status": "idle", "hair": "#c8783a", "skin": "#f6d3b3", "shirt": "#d77fa1", "name": "Amelia Hart", "role": "Client Relationship Manager", "dept": "Client Experience", "model": "haiku", "skills": "Client service in professional practices: onboarding journeys, expectation setting, plain-English writing, complaint handling to the firm's complaints procedure, satisfaction checks, review requests within Google's rules.", "description": "Client Relationship Manager. Use for client communication: welcome journeys, monthly check-ins, plain-English explanations, feedback and complaints handling, review requests and the waiting list.", "briefings": [], "duty": "client communication, check-ins, complaints, waiting list"}, {"id": "sophie-bennett", "name": "Sophie Bennett", "role": "Onboarding and AML Manager", "dept": "Client Onboarding & AML", "hair": "#1d1a18", "skin": "#8d5a3b", "shirt": "#b5651d", "lastTask": "Onboarded DEMO Harrow Hill Café", "status": "idle", "model": "sonnet", "skills": "MLR 2017 customer due diligence, risk-based approach, PEP and sanctions screening, engagement letters, smooth client onboarding experience.", "description": "Onboarding and AML checks. Use for new clients: customer due diligence, risk rating, engagement letter and welcome pack.", "briefings": [], "duty": "due diligence, risk rating, engagement letters"}, {"id": "leo-hartley", "name": "Leo Hartley", "role": "Senior Bookkeeper", "dept": "Bookkeeping & Accounts", "hair": "#2b2b2b", "skin": "#f1c9a5", "shirt": "#3f7f3a", "lastTask": "DEMO September books loaded", "status": "idle", "model": "sonnet", "skills": "Double-entry bookkeeping to AAT Level 3+ standard: chart of accounts design, VAT treatment (standard, reduced, zero, exempt, outside scope, reverse charge), bank and control account reconciliations, accruals and prepayments, cash vs accruals basis for sole traders.", "description": "Senior Bookkeeper. Use to categorise transactions, post double entry, reconcile the bank and run month-end close, always with workings.", "briefings": [], "duty": "categorising, double entry, reconciliations, month-end"}, {"id": "james-whitfield", "name": "James Whitfield", "role": "Reporting Analyst", "dept": "Bookkeeping & Accounts", "hair": "#8a6a48", "skin": "#e9b892", "shirt": "#2f8f8f", "lastTask": "VAT and MTD templates", "status": "idle", "model": "sonnet", "skills": "Management reporting in plain English, VAT return preparation (standard, flat rate, cash accounting), MTD for Income Tax quarterly updates and categories, KPI and variance analysis for small businesses.", "description": "Reporting analyst. Use for monthly client summaries, VAT return box-by-box workings and MTD quarterly figures with a check-before-filing list.", "briefings": ["19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."], "duty": "monthly summaries, VAT returns, MTD updates"}, {"id": "daniel-foster", "lastTask": "Joined the firm", "status": "idle", "hair": "#1d1a18", "skin": "#8d5a3b", "shirt": "#4b6b3a", "name": "Daniel Foster", "role": "Tax and Payroll Support Specialist", "dept": "Tax & Payroll", "model": "sonnet", "skills": "Self Assessment supporting schedules (self-employment and UK property pages), allowable vs disallowable expenses as a records question, CIS deduction statements and reconciliations for subcontractors, landlord income and expense schedules, basic payroll processing and RTI submission records, key HMRC deadlines.", "description": "Tax and Payroll Support Specialist. Use for Self Assessment preparation packs, Construction Industry Scheme (CIS) records for tradespeople, landlord income schedules, and basic payroll and RTI support.", "briefings": [], "duty": "Self Assessment packs, CIS, landlord schedules, payroll records"}, {"id": "edward-lancaster", "lastTask": "Joined the firm", "status": "idle", "hair": "#7a7a7a", "skin": "#e9b892", "shirt": "#20334f", "name": "Edward Lancaster", "role": "Finance Director", "dept": "Finance & Credit Control", "model": "sonnet", "skills": "Small-firm financial management: start-up budgets, 12-month cash flow forecasts, break-even analysis, contribution per client, pricing margins, management accounts and the self-employed tax set-aside.", "description": "Finance Director. Use for LedgerPeak's own finances: budget, cash flow forecast, pricing margin checks, monthly management accounts, start-up costs and the break-even point.", "briefings": [], "duty": "LedgerPeak's budget, cash flow, margins, management accounts"}, {"id": "emily-brooks", "name": "Emily Brooks", "role": "Credit Controller", "dept": "Finance & Credit Control", "hair": "#5a3a22", "skin": "#c68e65", "shirt": "#a83e5a", "lastTask": "Invoice log set up", "status": "idle", "model": "haiku", "skills": "Credit control for small firms: aged debt analysis, staged chasing, Late Payment of Commercial Debts (Interest) Act 1998 basics, keeping relationships warm while collecting cash.", "description": "Credit control. Use for LedgerPeak's own invoices, the aged debtor report and polite-to-firm chase messages.", "briefings": [], "duty": "invoices, aged debtors, chasers"}, {"id": "harriet-ellis", "lastTask": "Joined the firm", "status": "idle", "hair": "#5a3a22", "skin": "#f1c9a5", "shirt": "#8a2f3f", "name": "Harriet Ellis", "role": "Head of Quality and Risk", "dept": "Quality & Risk", "model": "sonnet", "skills": "Professional quality control: review checklists, sampling, error classification, root-cause notes, risk registers, and the firm's rules in `CLAUDE.md`.", "description": "Head of Quality and Risk. Use to review any deliverable before it reaches Parth, run checklists, keep the risk register and catch errors, missing sources or rule breaches.", "briefings": [], "duty": "reviews every deliverable, risk register"}, {"id": "victor-hale", "name": "Victor Hale", "role": "Head of Legal and Compliance", "dept": "Legal & Compliance", "hair": "#9a9a9a", "skin": "#f1c9a5", "shirt": "#5a5f6b", "lastTask": "Drafted 10 policies", "status": "idle", "model": "opus", "skills": "UK compliance for a bookkeeping practice: MLR 2017, POCA 2002, UK GDPR and DPA 2018, PECR, ICO registration, consumer and contract basics, professional indemnity. Knows the limit of a non-solicitor.", "description": "Legal and compliance. Use for AML, UK GDPR, ICO fee, insurance, engagement terms and questions on when to see a solicitor. Searches GOV.UK first.", "briefings": [], "duty": "AML, UK GDPR, contracts, policies, when to see a solicitor"}, {"id": "william-hayes", "lastTask": "Joined the firm", "status": "idle", "hair": "#2b2b2b", "skin": "#c68e65", "shirt": "#36506b", "name": "William Hayes", "role": "Head of Technology", "dept": "Technology & Automation", "model": "sonnet", "skills": "Cloud bookkeeping software (Xero, QuickBooks Online, FreeAgent), receipt capture (Dext, Hubdoc), bank feeds and CSV imports, MTD-compatible software lists, password managers and two-factor authentication, UK GDPR security basics, spreadsheet design and simple scripting.", "description": "Head of Technology and Automation. Use for software choice and set-up (Xero, QuickBooks, FreeAgent, Dext, bank feeds), data security, file structure, automations and the office systems.", "briefings": [], "duty": "software, bank feeds, security, automation"}, {"id": "theo-ashford", "name": "Theo Ashford", "role": "Head of Innovation", "dept": "Innovation & Learning", "hair": "#e2b04a", "skin": "#c68e65", "shirt": "#d0482a", "lastTask": "First updates log written", "status": "idle", "model": "sonnet", "skills": "- Fast, reliable research: GOV.UK, HMRC manuals, legislation.gov.uk, ICO, AAT, software release notes (Xero, QuickBooks, FreeAgent), AI tooling.\n- Turning complex change into a one-page explanation a new starter understands.\n- Spotting how a new tool or rule changes a workflow, and redesigning the step.", "description": "Head of the Innovation & Learning Lab. Use to find out what has changed in the world (HMRC, MTD, AML, GDPR, AI tools, bookkeeping software), learn new skills, and teach them simply to every other agent through briefings. Use when something new comes up that the team does not know how to do.", "briefings": [], "duty": "tracks what is new, teaches every department"}, {"id": "iris-bell", "name": "Iris Bell", "role": "AAT Tutor", "dept": "Innovation & Learning", "hair": "#4a2c1a", "skin": "#f6d3b3", "shirt": "#6a5acd", "lastTask": "Level 2 academy built", "status": "idle", "model": "sonnet", "skills": "AAT Levels 2 to 4 syllabus, adult distance-learning methods (spaced repetition, retrieval practice, worked examples), exam technique for computer-based assessments.", "description": "AAT tutor. Use for /study and /mock: teaches AAT Levels 2 to 4 using real LedgerPeak tasks, sets quizzes and mocks, tracks progress.", "briefings": [], "duty": "Parth's AAT study, quizzes and mocks"}], "rules": ["Parth is the signing officer.", "Never invent facts, fees, deadlines, thresholds or legal rules.", "Never store passport numbers, full bank account numbers, card numbers, passwords or National Insurance numbers in any file.", "Do not change Parth's wording in documents he has edited.", "If a client needs a related document Parth forgot to list, work it out, prepare it anyway, and tell him.", "Keep LedgerPeak completely separate from Parth's day job.", "Keep usage low.", "Show workings on all bookkeeping (debits, credits, account names) so Parth learns double entry from every set of books.", "\"Chartered accountant\" and \"certified accountant\" are restricted titles.", "After finishing any piece of work, add one line to office/work-log.md in the form DD/MM/YYYY | what | agent.", "Before every task, read your own knowledge/briefings/<your-id>.md.", "Any task from Parth that spans departments goes to Grace Whitmore, who plans, delegates, checks and hands back one result.", "Pre-registration mode is ON (see below)."], "roadmap": [{"title": "Stage 1: Foundations", "items": [{"id": "1.1", "text": "Read the day-job employment contract for second-job clauses", "owner": "Parth", "target": "26/10/2026", "done": false}, {"id": "1.2", "text": "Run the DEMO café month-end close end to end and review it", "owner": "Leo, James, Harriet", "target": "26/10/2026", "done": false}, {"id": "1.3", "text": "Brand basics: name check, logo brief, tone of voice, one-line promise", "owner": "Charlotte", "target": "02/11/2026", "done": false}, {"id": "1.4", "text": "Harrow market brief: target trades, competitor prices and review scores", "owner": "Eleanor", "target": "02/11/2026", "done": false}, {"id": "1.5", "text": "Start-up budget and 12-month cash flow forecast", "owner": "Edward", "target": "02/11/2026", "done": false}, {"id": "1.6", "text": "Choose bookkeeping software to learn first; free trial set-up guide", "owner": "William", "target": "09/11/2026", "done": false}, {"id": "1.7", "text": "AAT Level 2: Introduction to Bookkeeping studied, mock passed", "owner": "Iris", "target": "23/11/2026", "done": false}]}, {"title": "Stage 2: Prove the service", "items": [{"id": "2.1", "text": "Three more DEMO clients (plumber, landlord, corner shop) built and closed", "owner": "Leo, Daniel", "target": "30/11/2026", "done": false}, {"id": "2.2", "text": "DEMO VAT return and DEMO MTD quarterly update prepared and reviewed", "owner": "James, Harriet", "target": "30/11/2026", "done": false}, {"id": "2.3", "text": "Website copy and Google Business Profile drafted (not published)", "owner": "Charlotte", "target": "07/12/2026", "done": false}, {"id": "2.4", "text": "Pricing confirmed with time-per-client from the DEMO runs", "owner": "Edward, Eleanor", "target": "07/12/2026", "done": false}, {"id": "2.5", "text": "Waiting list form wording (consent-based) ready", "owner": "Amelia, Victor", "target": "07/12/2026", "done": false}, {"id": "2.6", "text": "Systems register and security set-up (password manager, 2FA)", "owner": "William", "target": "14/12/2026", "done": false}]}, {"title": "Stage 3: Readiness decision", "items": [{"id": "3.1", "text": "Go / not yet decision: time available, costs, confidence from DEMO runs", "owner": "Parth, Grace", "target": "", "done": false}, {"id": "3.2", "text": "Confirm current registration steps and fees on GOV.UK and ICO", "owner": "Victor", "target": "", "done": false}]}, {"title": "Stage 4: Registration", "items": [{"id": "4.1", "text": "Register self-employed for Self Assessment (HMRC)", "owner": "Parth", "target": "", "done": false}, {"id": "4.2", "text": "AML supervision registration (before any client work)", "owner": "Parth, Victor", "target": "", "done": false}, {"id": "4.3", "text": "ICO data protection fee", "owner": "Parth", "target": "", "done": false}, {"id": "4.4", "text": "Professional indemnity insurance", "owner": "Parth, Victor", "target": "", "done": false}, {"id": "4.5", "text": "Business bank account", "owner": "Parth, Edward", "target": "", "done": false}, {"id": "4.6", "text": "Solicitor check of engagement letter, terms, privacy notice", "owner": "Victor", "target": "", "done": false}, {"id": "4.7", "text": "HMRC agent services account", "owner": "Parth", "target": "", "done": false}, {"id": "4.8", "text": "Switch pre-registration mode to OFF in CLAUDE.md", "owner": "Parth", "target": "", "done": false}]}, {"title": "Stage 5: Launch and first clients", "items": [{"id": "5.1", "text": "Publish website and Google Business Profile", "owner": "Charlotte", "target": "", "done": false}, {"id": "5.2", "text": "Contact the waiting list", "owner": "Amelia, Henry", "target": "", "done": false}, {"id": "5.3", "text": "First three clients onboarded with full AML checks", "owner": "Sophie", "target": "", "done": false}, {"id": "5.4", "text": "First month-end closes delivered and reviewed", "owner": "Leo, James, Harriet", "target": "", "done": false}, {"id": "5.5", "text": "First three reviews requested", "owner": "Amelia", "target": "", "done": false}]}], "lessons": [{"date": "19/10/2026", "text": "MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."}], "log": ["19/10/2026 | New client folder created: DEMO Harrow Hill Café | new-client.sh", "19/10/2026 | Office built: rules, agents, commands, templates, policies, dashboard, academy, demo | build team"], "kpi": {"leads": 4}, "demoClients": 1, "aatPassed": 0, "built": "19/10/2026"};
+</script>
+<script>
+(function(){
+const D = window.LP_HQ;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+$('date').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
+
+/* ---------- departments and people ---------- */
+const DEPTS = [
+  { id: 'exec', name: 'Executive Office', color: '#3d5a80', app: 'Dashboard', view: 'dash' },
+  { id: 'strat', name: 'Strategy & Business Development', short: 'Strategy', color: '#5a6fb5', app: 'Research', view: 'dash' },
+  { id: 'sales', name: 'Sales & Marketing', color: '#d9826b', app: 'CRM', view: 'list' },
+  { id: 'cx', name: 'Client Experience', color: '#c25d8a', app: 'Messages', view: 'doc' },
+  { id: 'onb', name: 'Client Onboarding & AML', short: 'Onboarding & AML', color: '#b0485e', app: 'Checklist', view: 'list' },
+  { id: 'book', name: 'Bookkeeping & Accounts', short: 'Bookkeeping', color: '#2f8a6a', app: 'Ledger', view: 'sheet' },
+  { id: 'tax', name: 'Tax & Payroll', color: '#4f8f3a', app: 'Schedules', view: 'sheet' },
+  { id: 'fin', name: 'Finance & Credit Control', short: 'Finance & Credit', color: '#c88410', app: 'Forecast', view: 'dash' },
+  { id: 'qa', name: 'Quality & Risk', color: '#8a2f3f', app: 'Review', view: 'list' },
+  { id: 'legal', name: 'Legal & Compliance', short: 'Legal', color: '#5a5f6b', app: 'Policy', view: 'doc' },
+  { id: 'tech', name: 'Technology & Automation', short: 'Technology', color: '#36506b', app: 'Terminal', view: 'term' },
+  { id: 'lab', name: 'Innovation & Learning', color: '#2b8a9e', app: 'Research', view: 'term' },
+];
+const deptOf = Object.fromEntries(DEPTS.map((d) => [d.name, d]));
+const ASK = { 'grace-whitmore': 'task: …', 'ava-sterling': 'morning, roadmap', 'eleanor-price': 'strategy: …', 'henry-collins': 'outreach: trade, area', 'charlotte-quinn': 'post',
+  'amelia-hart': 'client care: …', 'sophie-bennett': 'new client: … (after registration)', 'leo-hartley': 'practice: …, close month: …', 'james-whitfield': 'vat: …, mtd: …',
+  'daniel-foster': 'tax pack: …', 'edward-lancaster': 'finance: …', 'emily-brooks': 'chase', 'harriet-ellis': 'review: …', 'victor-hale': 'legal: …', 'william-hayes': 'systems: …',
+  'theo-ashford': 'learn, teach: …', 'iris-bell': 'study, mock: …' };
+const staff = D.agents.map((a) => Object.assign({}, a, { dept: deptOf[a.dept] || DEPTS[0], state: 'idle', task: '' }));
+const byId = Object.fromEntries(staff.map((s) => [s.id, s]));
+const CEO = { id: 'parth', name: 'Parth', fullName: 'Parth Prajapati', role: 'Chief Executive', ceo: true, dept: { color: '#24344d', name: 'CEO office' }, state: 'idle', task: '' };
+const grace = byId['grace-whitmore'];
+
+/* ---------- golden rules, team table, KPIs ---------- */
+$('rules').innerHTML = D.rules.map((r) => `<li>${esc(r)}</li>`).join('');
+$('teamRows').innerHTML = staff.map((s) => `<tr><td>${esc(s.name)} · ${esc(s.role)}</td><td>${esc(s.dept.name)}</td><td>${esc(s.duty)}</td><td>${esc(ASK[s.id] || '')}</td></tr>`).join('');
+const msAll = D.roadmap.flatMap((s) => s.items), msDone = msAll.filter((m) => m.done).length;
+$('kRoad').textContent = `${msDone}/${msAll.length}`;
+$('kDemo').textContent = D.demoClients;
+$('kAat').textContent = `${D.aatPassed}/4`;
+
+/* ---------- flow strip ---------- */
+const FLOW = [['Task', 'Parth assigns'], ['Plan', 'Grace'], ['Check rules', 'Theo, Victor'], ['Do', 'Departments'], ['Review', 'Harriet'], ['Sign-off', 'Grace'], ['Approve', 'Parth'], ['Log', 'Work log']];
+$('flow').innerHTML = FLOW.map(([a, b], i) => `<li id="fl${i}"><b>${String(i + 1).padStart(2, '0')} ${esc(b)}</b>${esc(a)}</li>`).join('');
+function setFlow(i) { FLOW.forEach((_, j) => { const el = $('fl' + j); el.classList.toggle('now', j === i); el.classList.toggle('done', i >= 0 && j < i); }); }
+
+/* ---------- screens ---------- */
+function view(s) {
+  if (s.state !== 'working') {
+    const t = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    return `<div class="v lock"><b>${t}</b><span>${esc(s.name.split(' ')[0])}</span><small>Available</small></div>`;
+  }
+  const task = esc(s.task), k = s.dept.view;
+  if (k === 'doc') return `<div class="v doc"><p>${task}</p><div class="ln">${[90, 75, 82, 60, 70].map((w, i) => `<i style="--w:${w}%;--d:${i * .35}s"></i>`).join('')}</div></div>`;
+  if (k === 'term') return `<div class="v term"><pre><u>$</u> ${task}\nchecking sources…\nGOV.UK  <u>ok</u>\nwriting briefing<span class="caret">▋</span></pre></div>`;
+  if (k === 'sheet') return `<div class="v sheet"><p>${task}</p><div class="cells">${Array.from({ length: 36 }, (_, i) => `<i class="${i % 7 === 3 ? 'hl' : ''}"></i>`).join('')}</div></div>`;
+  if (k === 'list') return `<div class="v list"><p>${task}</p><ul><li class="ok">Brief read</li><li class="ok">Sources checked</li><li class="now">${task}</li><li>Hand to Harriet</li></ul></div>`;
+  return `<div class="v dash"><div><b>${D.kpi.leads}</b><small>leads</small></div><div><b>${msDone}</b><small>milestones</small></div><div><b>${D.demoClients}</b><small>DEMO</small></div><p>${task}</p></div>`;
+}
+function renderScreens() {
+  $('screens').innerHTML = '<div class="sgrid">' + staff.map((s) => { const d = s.dept;
+    return `<button class="scr ${s.state === 'working' ? 'on' : ''}" style="--c:${d.color}" data-id="${s.id}"><div class="mon"><div class="bar"><em></em><b>${esc(s.name)}</b><span class="app">${esc(d.app)}</span></div><div class="vw">${view(s)}</div></div><div class="stand"></div><div class="cap">${esc(s.role)}<small>${esc(s.state === 'working' ? s.task : (d.short || d.name))}</small></div></button>`;
+  }).join('') + '</div>';
+}
+$('screens').addEventListener('click', (e) => { const b = e.target.closest('.scr'); if (b) { select(byId[b.dataset.id]); $('card').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); } });
+
+/* ---------- roadmap ---------- */
+const SCOL = ['#2f8a6a', '#2f6fa7', '#d98a1c', '#b0485e', '#7a5ab0'];
+$('stages').innerHTML = D.roadmap.map((s, i) => `<div class="stg" style="--b:${SCOL[i % SCOL.length]}"><h3>${esc(s.title)}<span>${s.items.filter((m) => m.done).length}/${s.items.length}</span></h3>` +
+  s.items.map((m) => `<div class="ms"><code>${esc(m.id)}</code><span>${esc(m.text)}</span><span class="chip ${m.done ? 'done' : 'open'}">${m.done ? 'Done' : (m.target || 'Open')}</span><span class="who">${esc(m.owner)}</span></div>`).join('') + '</div>').join('');
+
+/* ---------- skills library and briefings ---------- */
+$('books').innerHTML = staff.map((s) => `<li><button style="--c:${s.dept.color}" data-id="${s.id}"><code>${esc(s.id)}.md</code><small>${esc(s.name)} · ${esc(s.model)}</small></button></li>`).join('');
+$('books').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { select(byId[b.dataset.id]); $('card').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); } });
+$('lessons').innerHTML = D.lessons.length ? D.lessons.map((l) => `<li><time>${esc(l.date)}</time><span>${esc(l.text)}</span></li>`).join('') : '<li><span class="note">No briefings yet. Say "learn" to ask Theo for the latest changes.</span></li>';
+
+/* ---------- directory, card, log ---------- */
+let selected = grace;
+function stateLabel(s) { return s.state === 'working' ? s.task : 'Available'; }
+function renderDepts() {
+  $('depts').innerHTML = DEPTS.map((d) => `<section class="panel dept"><h2><i style="background:${d.color}"></i>${esc(d.name)}</h2><ul>` +
+    staff.filter((s) => s.dept === d).map((s) => `<li><button data-id="${s.id}" aria-pressed="${s === selected}"><span>${esc(s.name)}<small>${esc(s.role)}</small></span><span class="st ${s.state === 'working' ? 'task' : ''}">${esc(s.state === 'working' ? 'Working' : 'Available')}</span></button></li>`).join('') + '</ul></section>').join('');
+}
+$('depts').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) select(byId[b.dataset.id]); });
+function select(s) {
+  selected = s;
+  $('card').innerHTML = `<h3>${esc(s.fullName || s.name)}</h3><p class="role">${esc(s.role)} · ${esc(s.dept.name)}</p>
+    <span class="pill ${s.state === 'working' ? 'task' : ''}">${esc(stateLabel(s))}</span>
+    <p>${esc(s.ceo ? 'Chief Executive and signing officer. Approves every deliverable before it leaves the firm. AAT student, Level 2.' : s.description)}</p>
+    ${s.skills ? `<div class="kv"><span>Expertise</span><p>${esc(s.skills)}</p></div>` : ''}
+    ${ASK[s.id] ? `<div class="kv"><span>Ask with</span><code>${esc(ASK[s.id])}</code></div>` : ''}
+    ${s.model ? `<div class="kv"><span>Job description</span><code>.claude/agents/${esc(s.id)}.md · ${esc(s.model)}</code></div>` : ''}
+    ${(s.briefings || []).length ? `<div class="kv"><span>Latest briefing</span><p>${esc(s.briefings[0])}</p></div>` : ''}`;
+  renderDepts();
+}
+let LOG = D.log.slice(0, 12).map((l) => { const p = l.split('|').map((x) => x.trim()); return { t: p[0], text: p[1] + (p[2] ? ' · ' + p[2] : '') }; });
+function renderLog() { $('log').innerHTML = LOG.map((l) => `<li><time>${esc(l.t)}</time><span>${esc(l.text)}</span></li>`).join(''); }
+renderLog(); select(grace); renderScreens();
+
+/* ---------- live state ---------- */
+let demoRunning = false;
+function apply(L) {
+  const ag = (L && L.agents) || {};
+  staff.forEach((s) => { const x = ag[s.id]; s.state = x && x.status === 'working' ? 'working' : 'idle'; s.task = x ? x.task : ''; });
+  const p = (L && L.parth) || {}; CEO.state = p.status === 'giving task' || p.status === 'reviewing' ? 'working' : 'idle';
+  CEO.task = p.status === 'reviewing' ? 'Results to approve' : p.status === 'giving task' ? 'New task assigned' : '';
+  $('kWork').textContent = staff.filter((s) => s.state === 'working').length;
+  renderScreens(); renderDepts(); if (selected) select(selected);
+}
+apply(window.LP_LIVE);
+if (location.protocol === 'file:') setInterval(() => {
+  if (demoRunning) return;
+  const s = document.createElement('script'); s.src = 'data/live.js?t=' + Date.now();
+  s.onload = () => { apply(window.LP_LIVE); const L = window.LP_LIVE; if (L && L.updated) { $('mode').textContent = 'Live · ' + L.updated.slice(11, 16); $('mode').classList.add('live'); } s.remove(); };
+  s.onerror = () => s.remove(); document.body.appendChild(s);
+}, 2500);
+
+/* ---------- example ---------- */
+const STEPS = [
+  [0, 'parth', 'giving', 'Practice month for a DEMO landlord and our MTD Ready offer'],
+  [1, 'grace-whitmore', 'working', 'Planning the work by department'],
+  [2, 'theo-ashford', 'working', 'Checking MTD guidance on GOV.UK'],
+  [2, 'victor-hale', 'working', 'Confirming pre-registration rules'],
+  [3, 'theo-ashford', 'done'], [3, 'victor-hale', 'done'], [3, 'grace-whitmore', 'done'],
+  [3, 'william-hayes', 'working', 'Setting up the DEMO client file'],
+  [3, 'eleanor-price', 'working', 'Researching landlords in Harrow'],
+  [3, 'william-hayes', 'done'],
+  [3, 'leo-hartley', 'working', 'Categorising rents and repairs'],
+  [3, 'edward-lancaster', 'working', 'Margin check on £165 a month'],
+  [3, 'eleanor-price', 'done'],
+  [3, 'leo-hartley', 'done'],
+  [3, 'james-whitfield', 'working', 'MTD quarterly update draft'],
+  [3, 'daniel-foster', 'working', 'Property income schedule'],
+  [3, 'charlotte-quinn', 'working', 'MTD Ready service page copy'],
+  [3, 'edward-lancaster', 'done'], [3, 'james-whitfield', 'done'], [3, 'daniel-foster', 'done'], [3, 'charlotte-quinn', 'done'],
+  [4, 'harriet-ellis', 'working', 'Quality review against checklist'],
+  [5, 'harriet-ellis', 'done'],
+  [5, 'grace-whitmore', 'working', 'Sign-off and summary for Parth'],
+  [6, 'grace-whitmore', 'done'],
+  [6, 'parth', 'review'],
+  [7, 'amelia-hart', 'working', 'Waiting-list update draft'],
+  [7, 'amelia-hart', 'done'],
+];
+const DONE_TEXT = { 'grace-whitmore': ['Plan ready: 7 steps', 'Signed off and summarised'], 'theo-ashford': ['MTD briefing sent to James and Daniel'], 'victor-hale': ['DEMO data only: allowed'],
+  'william-hayes': ['DEMO file ready'], 'eleanor-price': ['Landlord market brief done'], 'leo-hartley': ['Books balanced, 1 query raised'], 'edward-lancaster': ['Margin confirmed'],
+  'james-whitfield': ['MTD draft ready'], 'daniel-foster': ['Schedule ready'], 'charlotte-quinn': ['Copy ready for review'], 'harriet-ellis': ['Passed with 2 notes'], 'amelia-hart': ['Draft ready for approval'] };
+$('demoBtn').addEventListener('click', () => {
+  if (demoRunning) return; demoRunning = true; $('demoBtn').setAttribute('aria-pressed', 'true');
+  $('mode').textContent = 'Example'; $('mode').classList.remove('live');
+  const L = { agents: {}, parth: {} }; let i = 0; const seen = {};
+  const tick = () => {
+    if (i >= STEPS.length) { setTimeout(() => { demoRunning = false; $('demoBtn').setAttribute('aria-pressed', 'false'); setFlow(-1); apply(window.LP_LIVE); $('mode').textContent = 'Pre-registration'; }, 6000); return; }
+    const [f, who, st, text] = STEPS[i++]; setFlow(f);
+    const t = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    if (who === 'parth') { L.parth = { status: st === 'review' ? 'reviewing' : 'giving task' }; LOG.unshift({ t, text: st === 'review' ? 'Results handed to Parth for approval' : 'New task from Parth: ' + text }); }
+    else if (st === 'working') { L.agents[who] = { status: 'working', task: text }; if (who === 'grace-whitmore' || f === 4) LOG.unshift({ t, text: `${byId[who].name}: ${text}` }); }
+    else { const n = seen[who] = (seen[who] || 0); seen[who]++; const dt = (DONE_TEXT[who] || ['Done'])[Math.min(n, (DONE_TEXT[who] || ['']).length - 1)];
+      L.agents[who] = { status: 'done', task: dt }; LOG.unshift({ t, text: `${byId[who].name}: ${dt}` }); }
+    LOG = LOG.slice(0, 14); renderLog(); apply(L);
+    setTimeout(tick, reduce ? 900 : 1500);
+  };
+  tick();
+});
+
+/* ---------- 3D office ---------- */
+const host = $('o3d'), labelsEl = $('o3dLabels');
+let ok = false;
+try { if (!window.THREE) throw 0; const t = document.createElement('canvas'); if (!(t.getContext('webgl') || t.getContext('experimental-webgl'))) throw 0; ok = true; } catch (e) { ok = false; }
+if (!ok) { host.innerHTML = '<div class="nogl">The 3D office needs WebGL, which this browser has turned off. Everything else on this page still works.</div>'; return; }
+
+const R = new THREE.WebGLRenderer({ antialias: true });
+R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); R.shadowMap.enabled = true; R.shadowMap.type = THREE.PCFSoftShadowMap;
+host.appendChild(R.domElement);
+const S = new THREE.Scene(); S.background = new THREE.Color('#d3dccf'); S.fog = new THREE.Fog('#d3dccf', 120, 240);
+const cam = new THREE.PerspectiveCamera(36, 1, .5, 400);
+S.add(new THREE.HemisphereLight('#fff6e8', '#7f8a74', .62));
+const sun = new THREE.DirectionalLight('#fff2dc', .6); sun.position.set(-30, 60, 40); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -60, right: 60, top: 60, bottom: -60, near: 1, far: 160 }); sun.shadow.bias = -.0005; S.add(sun);
+const hubLight = new THREE.PointLight('#a8f0d4', .8, 24, 2); hubLight.position.set(0, 6, 0); S.add(hubLight);
+const M = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: .85, metalness: .02 }, o || {}));
+const B = (c) => new THREE.MeshBasicMaterial({ color: c });
+function add(m, x, y, z, par) { m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; (par || S).add(m); return m; }
+const box = (w, h, d, mat, x, y, z, par) => add(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat), x, y, z, par);
+const cyl = (rt, rb, h, mat, x, y, z, par, seg) => add(new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg || 20), mat), x, y, z, par);
+const ball = (r, mat, x, y, z, par) => add(new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), mat), x, y, z, par);
+const white = new THREE.Color('#ffffff');
+const wood = M('#e2c9a6'), dark = M('#2a2f3b'), frameM = M('#f7f5f1'), greyM = M('#8c8a86');
+const glassM = new THREE.MeshStandardMaterial({ color: '#d6f2ea', transparent: true, opacity: .22, roughness: .1, metalness: .1, depthWrite: false });
+const extM = M('#ece7de'), winM = B('#c4e6e0');
+
+/* grounds */
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(320, 320), M('#7f9a63', { roughness: 1 })); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; S.add(ground);
+function tree(x, z, s) { const g = new THREE.Group(); g.position.set(x, 0, z); S.add(g); cyl(.25 * s, .35 * s, 2.2 * s, M('#8a6342'), 0, 1.1 * s, 0, g, 8);
+  const f = M(['#6f9e5a', '#7fae63', '#5d8f4e'][Math.floor(Math.abs(x * 7 + z * 3)) % 3]); ball(1.6 * s, f, 0, 3 * s, 0, g); ball(1.15 * s, f, .7 * s, 3.6 * s, .2 * s, g); ball(1 * s, f, -.6 * s, 3.5 * s, -.3 * s, g); }
+for (let i = 0; i < 44; i++) { const a = i * 2.399, r = 48 + ((i * 13) % 20), x = Math.cos(a) * r * 1.15, z = Math.sin(a) * r * .85; if (z > 20 && Math.abs(x) < 28) continue; tree(x, z, .9 + ((i * 7) % 5) / 8); }
+box(46, .05, 11, M('#5d6168', { roughness: 1 }), 0, .03, 33).castShadow = false;
+for (let x = -20; x <= 20; x += 4) box(.12, .02, 4, B('#f2f2f2'), x, .07, 31).castShadow = false;
+[[-14, '#2f8a6a'], [-6, '#d6dde3'], [10, '#3d5a80'], [18, '#c88410']].forEach(([x, c]) => { const g = new THREE.Group(); g.position.set(x + 2, 0, 31); S.add(g);
+  box(1.8, .7, 3.6, M(c, { roughness: .4, metalness: .3 }), 0, .6, 0, g); box(1.6, .6, 1.9, M('#2b3440', { roughness: .2 }), 0, 1.2, -.2, g);
+  [-1.1, 1.1].forEach((z) => [-.9, .9].forEach((xx) => { cyl(.32, .32, .25, dark, xx, .32, z, g, 12).rotation.z = Math.PI / 2; })); });
+box(9, .3, 3.4, frameM, 0, 3.4, 23.7); [-4.2, 4.2].forEach((x) => box(.2, 3.4, .2, frameM, x, 1.7, 25.2));
+{ const c = document.createElement('canvas'); c.width = 1024; c.height = 160; const x = c.getContext('2d'); x.fillStyle = '#1f4a3d'; x.fillRect(0, 0, 1024, 160);
+  x.fillStyle = '#ffffff'; x.font = '700 80px Public Sans, Arial, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('▲ LEDGERPEAK', 512, 84);
+  const sg = new THREE.Mesh(new THREE.PlaneGeometry(8.6, 1.35), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c) })); sg.position.set(0, 4.3, 25.42); S.add(sg); box(8.8, 1.5, .1, frameM, 0, 4.3, 25.34); }
+
+/* building shell */
+const X0 = -32, X1 = 32, Z0 = -22, Z1 = 22;
+box(X1 - X0 + 1, .4, Z1 - Z0 + 1, M('#d9d4cc'), 0, .2, 0);
+box(40, .02, 12, M('#e8e2d8', { roughness: .6 }), 0, .42, 0);
+for (let x = -20; x <= 20; x += 2) box(.03, .01, 12, B('#d6cfc3'), x, .435, 0).castShadow = false;
+for (let z = -6; z <= 6; z += 2) box(40, .01, .03, B('#d6cfc3'), 0, .435, z).castShadow = false;
+function solidWall(x0, z0, x1, z1, h, windows) { const hor = z0 === z1, len = hor ? x1 - x0 : z1 - z0, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
+  box(hor ? len : .4, h, hor ? .4 : len, extM, cx, .4 + h / 2, cz); box(hor ? len + .2 : .6, .15, hor ? .6 : len + .2, frameM, cx, .4 + h + .07, cz);
+  if (windows) for (let t = (hor ? x0 : z0) + 3; t < (hor ? x1 : z1) - 2; t += 5) { const w = new THREE.Mesh(new THREE.BoxGeometry(hor ? 3 : .04, 1.8, hor ? .04 : 3), winM); w.position.set(hor ? t : x0 + .22, 2.6, hor ? z0 + .22 : t); S.add(w); } }
+solidWall(X0, Z0, X1, Z0, 4.2, true); solidWall(X0, Z0, X0, Z1, 4.2, true);
+solidWall(X1, Z0, X1, Z1, 1.1, false); solidWall(X0, Z1, -3, Z1, 1.1, false); solidWall(3, Z1, X1, Z1, 1.1, false);
+function glassWall(x0, z0, x1, z1, doors) { const hor = z0 === z1, a = hor ? x0 : z0, b = hor ? x1 : z1, gaps = (doors || []).map((d) => [d - 1.3, d + 1.3]).sort((p, q) => p[0] - q[0]);
+  const segs = []; let s = a; gaps.forEach(([g0, g1]) => { if (g0 > s) segs.push([s, g0]); s = g1; }); if (s < b) segs.push([s, b]);
+  const P = (t) => hor ? [t, z0] : [x0, t];
+  segs.forEach(([s0, s1]) => { const len = s1 - s0, [cx, cz] = P((s0 + s1) / 2);
+    const pane = new THREE.Mesh(new THREE.BoxGeometry(hor ? len : .06, 2.6, hor ? .06 : len), glassM); pane.position.set(cx, 1.85, cz); S.add(pane);
+    box(hor ? len : .14, .12, hor ? .14 : len, frameM, cx, 3.2, cz); box(hor ? len : .12, .16, hor ? .12 : len, greyM, cx, .5, cz);
+    for (let t = s0; t <= s1 + .01; t += Math.max(1, len / Math.ceil(len / 3.6))) { const [px, pz] = P(Math.min(t, s1)); box(.12, 2.9, .12, frameM, px, 1.85, pz); } });
+  gaps.forEach(([g0, g1]) => { const [px, pz] = P((g0 + g1) / 2); box(hor ? 2.6 : .14, .16, hor ? .14 : 2.6, frameM, px, 3.2, pz); }); }
+
+/* room layout: six rooms along the back, six along the front, two either side of the hall */
+const ROOMS = [
+  { key: 'ceo', name: 'Parth · CEO', color: '#24344d', r: [-32, -22, -23, -6], door: [-27.5, -6], ceo: true },
+  { key: 'exec', r: [-23, -22, -12, -6], door: [-17.5, -6] },
+  { key: 'strat', r: [-12, -22, -1, -6], door: [-6.5, -6] },
+  { key: 'sales', r: [-1, -22, 11, -6], door: [5, -6] },
+  { key: 'cx', r: [11, -22, 21, -6], door: [16, -6] },
+  { key: 'onb', r: [21, -22, 32, -6], door: [26.5, -6] },
+  { key: 'book', r: [-32, 6, -17, 22], door: [-24.5, 6] },
+  { key: 'tax', r: [-17, 6, -6, 22], door: [-11.5, 6] },
+  { key: 'fin', r: [-6, 6, 6, 22], door: [0, 6] },
+  { key: 'qa', r: [6, 6, 15, 22], door: [10.5, 6] },
+  { key: 'legal', r: [15, 6, 23, 22], door: [19, 6] },
+  { key: 'tech', r: [23, 6, 32, 22], door: [27.5, 6] },
+  { key: 'lab', r: [-32, -6, -20, 6], door: [-20, 0] },
+  { key: 'kitchen', name: 'Kitchen & lounge', color: '#a67c52', r: [20, -6, 32, 6], door: [20, 0], kitchen: true },
+];
+ROOMS.forEach((c) => { const d = DEPTS.find((x) => x.id === c.key); if (d) { c.dept = d; c.name = d.short || d.name; c.color = d.color; } });
+glassWall(X0, -6, X1, -6, ROOMS.filter((r) => r.door[1] === -6).map((r) => r.door[0]));
+glassWall(X0, 6, X1, 6, ROOMS.filter((r) => r.door[1] === 6).map((r) => r.door[0]));
+[-23, -12, -1, 11, 21].forEach((x) => glassWall(x, Z0, x, -6));
+[-17, -6, 6, 15, 23].forEach((x) => glassWall(x, 6, x, Z1));
+glassWall(-20, -6, -20, 6, [0]); glassWall(20, -6, 20, 6, [0]);
+
+/* the Brain */
+const hub = new THREE.Group(); S.add(hub);
+cyl(4.3, 4.5, .4, M('#b48a5f'), 0, .6, 0, hub, 56); cyl(3.5, 3.7, .4, M('#d2b088'), 0, .95, 0, hub, 56);
+for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 + .39; cyl(.35, .28, .5, M('#f4efe6'), Math.cos(a) * 4.9, .67, Math.sin(a) * 4.9, hub, 12); ball(.45, M('#6f9e5a'), Math.cos(a) * 4.9, 1.15, Math.sin(a) * 4.9, hub); }
+const glow = (c) => new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: .9 });
+const rings = [[3.55, .07, 1.17], [2.7, .08, 1.18], [1.9, .06, 1.19]].map(([r, tb, y]) => { const t = new THREE.Mesh(new THREE.TorusGeometry(r, tb, 8, 100), glow('#6fe0b8')); t.rotation.x = -Math.PI / 2; t.position.y = y; hub.add(t); return t; });
+const disc = new THREE.Mesh(new THREE.CircleGeometry(2.6, 48), new THREE.MeshBasicMaterial({ color: '#9de8cc', transparent: true, opacity: .55 })); disc.rotation.x = -Math.PI / 2; disc.position.y = 1.165; hub.add(disc);
+const beam = new THREE.Mesh(new THREE.CylinderGeometry(.25, .7, 9, 28, 1, true), new THREE.MeshBasicMaterial({ color: '#8fffd8', transparent: true, opacity: .1, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending })); beam.position.y = 5.6; hub.add(beam);
+const core = ball(.95, new THREE.MeshStandardMaterial({ color: '#c8ffe9', emissive: '#3fdca0', emissiveIntensity: 1.2, roughness: .3 }), 0, 4.6, 0, hub); core.castShadow = false;
+const shell = new THREE.Mesh(new THREE.IcosahedronGeometry(1.8, 1), new THREE.MeshBasicMaterial({ color: '#5fd6a8', wireframe: true, transparent: true, opacity: .45 })); shell.position.y = 4.6; hub.add(shell);
+const orbits = [0, 1, 2].map((i) => { const t = new THREE.Mesh(new THREE.TorusGeometry(2.2 + i * .35, .03, 6, 80), glow('#8fefcf')); t.position.y = 4.6; t.rotation.set(Math.PI / 2 + i * .7, i * 1.1, 0); hub.add(t); return t; });
+
+/* people and furniture */
+const SKIN3 = ['#f1cfb0', '#e3b58f', '#c48e66', '#8d5a3b'], HAIR3 = ['#2b2018', '#6b4426', '#1c1814', '#c9a35a', '#8a3b22'];
+const SHIRT = ['#f08c3a', '#4dabf7', '#e64980', '#51cf66', '#fcc419', '#845ef7', '#ff6b6b', '#20c997'];
+function person(par, x, z, seated, k, look) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); par.add(g);
+  const y0 = seated ? .62 : 0;
+  if (!seated) { cyl(.12, .12, .8, dark, -.13, .4, 0, g, 8); cyl(.12, .12, .8, dark, .13, .4, 0, g, 8); }
+  cyl(.3, .34, .8, M(look && look.shirt || SHIRT[k % SHIRT.length]), 0, y0 + .82, 0, g, 14);
+  ball(.27, M(look && look.skin || SKIN3[k % SKIN3.length]), 0, y0 + 1.48, 0, g);
+  const h = new THREE.Mesh(new THREE.SphereGeometry(.29, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2), M(look && look.hair || HAIR3[(k * 3) % HAIR3.length])); h.position.y = y0 + 1.52; h.castShadow = true; g.add(h);
+  return g;
+}
+function plant(x, z, s) { s = s || 1; cyl(.32 * s, .25 * s, .55 * s, M('#f4efe6'), x, .68 * s, z, S, 12); ball(.55 * s, M('#5f9a52'), x, 1.3 * s, z); ball(.38 * s, M('#76b465'), x + .25 * s, 1.6 * s, z - .1); }
+function desk(x, z, rot, k, ag) { const g = new THREE.Group(); g.position.set(x, .42, z); g.rotation.y = rot || 0; S.add(g);
+  box(2.3, .1, 1.1, wood, 0, .73, 0, g); [[-1.05, -.45], [1.05, -.45], [-1.05, .45], [1.05, .45]].forEach(([a, b]) => box(.08, .73, .08, dark, a, .36, b, g));
+  box(1.15, .72, .06, M('#1b1f29'), 0, 1.26, -.32, g); box(.1, .25, .1, dark, 0, .88, -.32, g);
+  const cvs = document.createElement('canvas'); cvs.width = 256; cvs.height = 150; const tex = new THREE.CanvasTexture(cvs);
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(1.02, .6), new THREE.MeshBasicMaterial({ map: tex })); scr.position.set(0, 1.26, -.285); g.add(scr);
+  box(.8, .1, .8, dark, 0, .2, .95, g); box(.8, .8, .1, dark, 0, .63, 1.35, g);
+  const p = person(g, 0, .95, true, k, ag); p.position.y = -.42;
+  return { p, phase: Math.random() * 6, ag, cvs, tex, sig: '' }; }
+function sofa(x, z, rot, col) { const g = new THREE.Group(); g.position.set(x, .42, z); g.rotation.y = rot; S.add(g); const sm = M(new THREE.Color(col).lerp(new THREE.Color('#8a7f74'), .45));
+  box(2.6, .5, 1.1, sm, 0, .25, 0, g); box(2.6, .7, .3, sm, 0, .6, -.45, g); box(.3, .65, 1.1, sm, -1.3, .45, 0, g); box(.3, .65, 1.1, sm, 1.3, .45, 0, g); box(1.2, .35, .7, wood, 0, .17, 1.2, g); }
+function shelf(x, z, rot) { const g = new THREE.Group(); g.position.set(x, .42, z); g.rotation.y = rot || 0; S.add(g);
+  box(2.2, 1.9, .45, wood, 0, .95, 0, g); const cs = ['#2f8a6a', '#4dabf7', '#fcc419', '#e64980', '#845ef7', '#ff922b'];
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 6; i++) box(.2, .5, .3, M(cs[(i + r * 2) % 6]), -.8 + i * .32, .5 + r * .8, .1, g); }
+function wallScreen(x, z, col) { box(2.6, .5, .6, wood, x, .67, z); box(2.4, 1.3, .08, M('#1b1f29'), x, 1.75, z + .05);
+  const ch = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.1, .02), B(new THREE.Color(col).lerp(new THREE.Color('#0c1018'), .35))); ch.position.set(x, 1.75, z + .1); S.add(ch);
+  for (let i = 0; i < 6; i++) { const h = .2 + ((i * 37 + Math.abs(x | 0)) % 7) / 10; const b = new THREE.Mesh(new THREE.BoxGeometry(.22, h, .02), B(new THREE.Color(col).lerp(white, .55))); b.position.set(x - .85 + i * .34, 1.3 + h / 2, z + .12); S.add(b); } }
+
+const rooms = [];
+ROOMS.forEach((cfg, ri) => {
+  const [x0, z0, x1, z1] = cfg.r, w = x1 - x0, d = z1 - z0, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, col = new THREE.Color(cfg.color);
+  box(w - .1, .02, d - .1, M(cfg.kitchen ? '#e4dccb' : '#c69a6c'), cx, .42, cz).castShadow = false;
+  if (!cfg.kitchen) for (let x = x0 + 1.2; x < x1; x += 1.2) box(.03, .01, d - .2, B('#b0865b'), x, .435, cz).castShadow = false;
+  box(w * .6, .03, d * .5, M(col.clone().lerp(white, .25), { roughness: 1 }), cx + .3, .44, cz + .3).castShadow = false;
+  const room = { cfg, cx, cz, desks: [] };
+  const members = cfg.ceo ? [CEO] : cfg.dept ? staff.filter((s) => s.dept === cfg.dept) : [];
+  room.members = members;
+  if (cfg.kitchen) {
+    box(8, 1, .8, M('#f4efe6'), cx, .9, z0 + 1); box(8.2, .1, 1, wood, cx, 1.45, z0 + 1); box(1, 2.2, .9, M('#e9eef0'), x1 - 1, 1.5, z0 + 1.2);
+    box(.6, .5, .5, M('#3a3a3a'), cx - 2, 1.75, z0 + 1); cyl(1.1, 1.1, .08, wood, cx, 1.15, cz + 1, S, 24); cyl(.12, .12, .7, dark, cx, .78, cz + 1, S, 8);
+    sofa(cx + 3, z1 - 1.6, Math.PI, cfg.color); plant(x0 + 1, z1 - 1, .9); plant(x1 - 1, z1 - 1, .9);
+  } else if (cfg.ceo) {
+    room.desks.push(desk(cx + .5, cz - 1.5, 0, ri * 3 + 1, { shirt: '#24344d', skin: '#b07a52', hair: '#1d1a18' }));
+    box(3.2, .08, 1.6, M('#8b5e3c'), cx + .5, 1.2, cz - 1.5); sofa(cx, z1 - 2.2, Math.PI, cfg.color); shelf(x0 + .6, z0 + 3, Math.PI / 2); plant(x1 - 1, z0 + 1, .9); plant(x0 + 1, z1 - .9, .8);
+    room.desks[0].ag = CEO;
+  } else {
+    const n = Math.max(1, members.length), cols = Math.max(1, Math.min(n, Math.floor((w - 3) / 3.2))), rows = Math.ceil(n / cols);
+    const gx = cx + .6, gz = cz - (rows - 1) * 1.8 - .4;
+    members.forEach((m, i) => { const c = i % cols, r = Math.floor(i / cols); room.desks.push(desk(gx + (c - (cols - 1) / 2) * 3.2, gz + r * 3.6, 0, i + ri * 3, m)); });
+    const back = z0 < 0 ? z0 : z1, frontZ = z0 < 0 ? z1 : z0;
+    shelf(x0 + .6, cz, Math.PI / 2); plant(x1 - 1, back + (z0 < 0 ? 1 : -1), 1);
+    if (w >= 10) wallScreen(x1 - 3.4, back + (z0 < 0 ? .9 : -.9), cfg.color);
+    if (d >= 12 && w >= 11) sofa(x0 + 2.2, frontZ + (z0 < 0 ? -2.4 : 2.4), z0 < 0 ? Math.PI : 0, cfg.color);
+  }
+  rooms.push(room);
+});
+
+/* arcs and data packets from Grace's office (Executive) to every room */
+const links = [];
+const execRoom = rooms.find((r) => r.cfg.key === 'exec');
+rooms.forEach((r, i) => {
+  const end = r === execRoom ? new THREE.Vector3(0, 4.6, 0) : new THREE.Vector3(r.cx, 3.6, r.cz), start = new THREE.Vector3(execRoom.cx, 3.6, execRoom.cz);
+  const ctrl = start.clone().lerp(end, .5).add(new THREE.Vector3(0, 7 + (i % 3) * 1.5, 0));
+  const curve = new THREE.QuadraticBezierCurve3(start, ctrl, end);
+  S.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(50)), new THREE.LineBasicMaterial({ color: r.cfg.color, transparent: true, opacity: .5 })));
+  const pk = new THREE.Mesh(new THREE.SphereGeometry(.2, 10, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(r.cfg.color).lerp(white, .3) })); S.add(pk);
+  const node = new THREE.Mesh(new THREE.SphereGeometry(.28, 12, 10), new THREE.MeshBasicMaterial({ color: r.cfg.color })); node.position.copy(end); S.add(node);
+  const [dx, dz] = r.cfg.door, side = Math.abs(dx) === 20 ? 'x' : 'z';
+  const P1 = side === 'z' ? new THREE.Vector3(dx, 0, dz > 0 ? 4.6 : -4.6) : new THREE.Vector3(dx > 0 ? 18.6 : -18.6, 0, dz);
+  const P2 = side === 'z' ? new THREE.Vector3(dx, 0, dz > 0 ? 8.5 : -8.5) : new THREE.Vector3(dx > 0 ? 23 : -23, 0, dz);
+  const P0 = P1.clone().setY(0).normalize().multiplyScalar(5.6);
+  links.push({ curve, pk, off: i * .137, pts: [P0, P1, P2], room: r });
+});
+
+/* people walking between the hall and the rooms */
+const walkers = [0, 1, 2, 3, 4, 5, 6].map((k) => ({ g: person(S, 0, 0, false, k + 11), li: (k * 3) % links.length, t: Math.random(), sp: .06 + Math.random() * .04, back: k % 2 === 1 }));
+function along(pts, f) { const L1 = pts[0].distanceTo(pts[1]), L2 = pts[1].distanceTo(pts[2]), d = f * (L1 + L2);
+  return d < L1 ? [pts[0].clone().lerp(pts[1], d / L1), pts[1].clone().sub(pts[0])] : [pts[1].clone().lerp(pts[2], (d - L1) / L2), pts[2].clone().sub(pts[1])]; }
+
+/* labels */
+function tag(cls, html, color, onClick) { const b = document.createElement('button'); b.type = 'button'; b.className = 'o3-tag ' + cls; b.style.setProperty('--c', color); b.innerHTML = html; b.addEventListener('click', onClick); labelsEl.appendChild(b); return b; }
+const brainTag = tag('brain', '<b>THE BRAIN</b><small>CLAUDE.md · shared rules and memory</small>', '#6fe0b8', () => { const p = $('brain'); p.open = true; p.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); });
+rooms.forEach((r) => {
+  r.tag = tag('', `<i></i><span><b>${esc(r.cfg.name)}</b><small><em></em><span class="cnt"></span></small></span>`, r.cfg.color, () => {
+    if (r.cfg.kitchen) return;
+    const m = r.members[0]; if (m) { select(m); $('card').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); } });
+  r.cnt = r.tag.querySelector('.cnt');
+});
+function refreshCounts() {
+  rooms.forEach((r) => {
+    let on = 0, txt;
+    if (r.cfg.kitchen) { txt = 'Coffee and a break'; }
+    else if (r.cfg.ceo) { on = CEO.state === 'working' ? 1 : 0; txt = on ? CEO.task : 'Approves every deliverable'; }
+    else { on = r.members.filter((m) => m.state === 'working').length; txt = `${r.members.length} specialist${r.members.length === 1 ? '' : 's'} · ${on} working`; }
+    if (r.cnt.textContent !== txt) r.cnt.textContent = txt; r.tag.classList.toggle('on', on > 0);
+    r.desks.forEach((d) => {
+      const a = d.ag; d.run = a.state === 'working';
+      const st = d.run ? a.task : 'Available', sig = d.run + '|' + st; if (sig === d.sig) return; d.sig = sig;
+      const c = d.cvs.getContext('2d'), colr = a.ceo ? '#24344d' : a.dept.color;
+      c.fillStyle = d.run ? '#0f2f26' : '#1c2536'; c.fillRect(0, 0, 256, 150);
+      c.fillStyle = colr; c.fillRect(0, 0, 256, 40); c.fillStyle = '#fff'; c.font = '700 26px Arial,sans-serif'; c.textBaseline = 'middle'; c.fillText(a.name.split(' ')[0], 10, 21);
+      c.fillStyle = d.run ? '#7fe0b4' : '#8d99ad'; c.beginPath(); c.arc(238, 20, 7, 0, 7); c.fill();
+      c.fillStyle = d.run ? '#c9f5e2' : '#aab4c4'; c.font = '600 19px Arial,sans-serif'; c.fillText((a.role || '').slice(0, 22), 10, 62);
+      c.font = '18px Arial,sans-serif'; c.fillStyle = '#e6ecf4'; c.fillText(String(st).slice(0, 24), 10, 90);
+      if (d.run) { c.fillStyle = 'rgba(127,224,180,.55)'; [0, 1].forEach((j) => c.fillRect(10, 110 + j * 16, 150 + ((j * 53) % 80), 8)); }
+      d.tex.needsUpdate = true; });
+  });
+}
+refreshCounts(); setInterval(refreshCounts, 700);
+
+/* camera: drag to turn, buttons to zoom */
+let az = 0, el = .88, zoom = 1, drag = null, userMoved = false;
+function fit() { const w = host.clientWidth || 600, h = host.clientHeight || 480; R.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
+function placeCam() { const base = 82 * Math.max(1, (cam.aspect < 1 ? 1.05 : 1.45) / cam.aspect) * zoom; cam.position.set(Math.sin(az) * Math.sin(el) * base, Math.cos(el) * base, Math.cos(az) * Math.sin(el) * base - 2); cam.lookAt(0, 0, 1); }
+R.domElement.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, az, el, type: e.pointerType }; host.classList.add('dragging'); });
+addEventListener('pointermove', (e) => { if (!drag) return; userMoved = true; az = Math.max(-1.1, Math.min(1.1, drag.az - (e.clientX - drag.x) * .006)); if (drag.type === 'mouse') el = Math.min(1.15, Math.max(.5, drag.el - (e.clientY - drag.y) * .004)); });
+addEventListener('pointerup', () => { drag = null; host.classList.remove('dragging'); });
+$('o3In').addEventListener('click', () => { zoom = Math.max(.4, zoom * .82); });
+$('o3Out').addEventListener('click', () => { zoom = Math.min(1.5, zoom * 1.2); });
+$('o3Reset').addEventListener('click', () => { az = 0; el = .88; zoom = 1; userMoved = false; });
+new ResizeObserver(fit).observe(host); fit();
+
+const v = new THREE.Vector3();
+function placeTag(el2, p) { v.copy(p).project(cam); const w = host.clientWidth, h = host.clientHeight;
+  if (v.z > 1 || v.x < -1.15 || v.x > 1.15 || v.y < -1.15 || v.y > 1.15) { el2.style.visibility = 'hidden'; return; }
+  el2.style.visibility = 'visible'; el2.style.transform = `translate(${((v.x + 1) / 2 * w).toFixed(1)}px,${((1 - v.y) / 2 * h).toFixed(1)}px) translate(-50%,-100%)`; }
+const clock = new THREE.Clock(); let time = 0;
+function frame() {
+  requestAnimationFrame(frame);
+  if (document.hidden) return;
+  const dt = Math.min(clock.getDelta(), .05);
+  if (!reduce) {
+    time += dt;
+    if (!userMoved && !drag) az = Math.sin(time * .08) * .15;
+    rings.forEach((r, i) => { r.rotation.z += dt * (i % 2 ? -.25 : .35); });
+    shell.rotation.y += dt * .25; shell.rotation.x += dt * .1;
+    orbits.forEach((o, i) => { o.rotation.z += dt * (.5 + i * .2); });
+    const s = 1 + Math.sin(time * 2) * .06; core.scale.set(s, s, s); hubLight.intensity = .7 + Math.sin(time * 2) * .2;
+    links.forEach((l) => { l.pk.position.copy(l.curve.getPoint(((time * .18) + l.off) % 1)); });
+    rooms.forEach((r) => r.desks.forEach((d) => { d.p.position.y = -.42 + (d.run ? Math.abs(Math.sin(time * 6 + d.phase)) * .05 : 0); d.p.rotation.y = d.run ? Math.sin(time * 2 + d.phase) * .15 : 0; }));
+    walkers.forEach((w) => { w.t += dt * w.sp; if (w.t >= 1) { w.t = 0; w.back = !w.back; if (!w.back) w.li = Math.floor(Math.random() * links.length); }
+      const [p, dir] = along(links[w.li].pts, w.back ? 1 - w.t : w.t);
+      w.g.position.set(p.x, .42 + Math.abs(Math.sin(time * 9 + w.li)) * .07, p.z); w.g.rotation.y = Math.atan2(dir.x, dir.z) + (w.back ? Math.PI : 0); });
+  } else { links.forEach((l) => l.pk.position.copy(l.curve.getPoint(.5))); walkers.forEach((w, k) => { const [p] = along(links[w.li].pts, .3 + k * .1); w.g.position.set(p.x, .42, p.z); }); }
+  placeCam(); R.render(S, cam);
+  placeTag(brainTag, new THREE.Vector3(0, 8.2, 0));
+  rooms.forEach((r) => placeTag(r.tag, new THREE.Vector3(r.cx, 4.4, r.cfg.ceo ? r.cz + 5 : r.cz - 1)));
+}
+frame();
+$('footnote').textContent = `Built from the LedgerPeak folder on ${D.built}. Rebuild with: python3 scripts/build_hq.py`;
+})();
+</script>
+
+</body>
+</html>
