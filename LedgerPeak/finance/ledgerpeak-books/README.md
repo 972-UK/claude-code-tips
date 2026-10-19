@@ -6,5 +6,5 @@ Files:
 - `opening-journal.md` : starting position
 - `cash-book.csv` : every bank movement
 - `journal.md` : double entry for each cash book line, with reasons
-- `invoices.csv` : LedgerPeak's sales invoices (read by Nia and the dashboard)
+- `invoices.csv` : LedgerPeak's sales invoices (read by Emily and the dashboard)
 - `trial-balance.md` : check that debits equal credits

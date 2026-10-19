@@ -1,6 +1,6 @@
 # LedgerPeak invoices and payments: DEMO Harrow Hill Café
 
-> Guide: nia-brooks keeps this up to date. No bank details here.
+> Guide: emily-brooks keeps this up to date. No bank details here.
 
 | Invoice no | Date | Description | Amount | Due date | Paid date | Status |
 |---|---|---|---|---|---|---|

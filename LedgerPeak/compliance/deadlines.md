@@ -10,5 +10,5 @@ Format: `DD/MM/YYYY | item | client or LedgerPeak | owner`. Dates marked (verify
 - 31/01/2027 | Self Assessment online return and payment 2025/26 (verify) | LedgerPeak | Parth
 
 ## Clients
-- 07/11/2026 | DEMO VAT return due quarter to 30/09/2026 (one month and 7 days rule, verify) | DEMO Harrow Hill Café | arjun-patel
-- 07/11/2026 | DEMO MTD quarterly update to 05/10/2026 (verify) | DEMO Harrow Hill Café | arjun-patel
+- 07/11/2026 | DEMO VAT return due quarter to 30/09/2026 (one month and 7 days rule, verify) | DEMO Harrow Hill Café | james-whitfield
+- 07/11/2026 | DEMO MTD quarterly update to 05/10/2026 (verify) | DEMO Harrow Hill Café | james-whitfield

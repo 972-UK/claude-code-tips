@@ -2,7 +2,7 @@
 
 > Guide: complete before any work starts. Record that checks were done and where evidence is kept. NEVER record passport, driving licence, NI, bank or card numbers. Write "ID checked, see paper/secure file".
 
-Date started: {{DATE}}   Completed by: maya-okafor (draft)   Approved by Parth: [ ] DD/MM/YYYY
+Date started: {{DATE}}   Completed by: sophie-bennett (draft)   Approved by Parth: [ ] DD/MM/YYYY
 
 ## 1. Identity
 | Check | Done | Date | Evidence location / note |

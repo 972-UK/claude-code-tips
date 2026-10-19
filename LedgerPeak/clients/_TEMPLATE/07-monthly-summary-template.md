@@ -1,6 +1,6 @@
 # Monthly summary: {{CLIENT_NAME}}   Month: MM/YYYY
 
-> Guide: one page, plain English, no jargon. Draft by arjun-patel; Parth approves before sending.
+> Guide: one page, plain English, no jargon. Draft by james-whitfield; Parth approves before sending.
 
 | | This month | Last month | Change |
 |---|---|---|---|

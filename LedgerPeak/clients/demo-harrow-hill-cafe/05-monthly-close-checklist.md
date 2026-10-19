@@ -1,6 +1,6 @@
 # Monthly close checklist: DEMO Harrow Hill Café   Month: MM/YYYY
 
-> Guide: leo-hartley works through this; arjun-patel writes the summary; Parth approves.
+> Guide: leo-hartley works through this; james-whitfield writes the summary; Parth approves.
 
 | # | Step | Owner | Done |
 |---|---|---|---|

@@ -15,7 +15,7 @@
 <section class="kpis" id="kpis"></section>
 
 <nav id="tabs">
-  <button data-tab="floor" class="on">Floor</button>
+  <button data-tab="floor" class="on">Live office</button>
   <button data-tab="pipeline">Pipeline</button>
   <button data-tab="clients">Clients</button>
   <button data-tab="deadlines">Deadlines</button>
@@ -26,7 +26,11 @@
 
 <main>
   <section id="floor" class="tab on">
-    <div class="floor" id="floorplan"></div>
+    <div class="livebar"><span id="liveDot" class="dot"></span><span id="liveText">Waiting for work…</span>
+      <button id="demoBtn" type="button">Watch a demo task</button></div>
+    <div class="office" id="floorplan"></div>
+    <h3 class="feedtitle">What's happening</h3>
+    <ul class="list mono" id="liveFeed"></ul>
   </section>
   <section id="pipeline" class="tab"><div class="board" id="board"></div></section>
   <section id="clients" class="tab"><div class="tablewrap"><table id="clientTable"></table></div></section>
@@ -39,6 +43,7 @@
 <footer>Data from the office files. Run <code>scripts/refresh-dashboard.sh</code> (or <code>.ps1</code>) then reload.</footer>
 
 <script src="data/data.js"></script>
+<script src="data/live.js" id="liveScript" onerror="this.remove()"></script>
 <script src="app.js"></script>
 </body>
 </html>

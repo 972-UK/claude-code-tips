@@ -1,6 +1,6 @@
 # VAT return workings: DEMO Harrow Hill Café   Period: DD/MM/YYYY to DD/MM/YYYY
 
-> Guide: arjun-patel fills each box with the transactions behind it. Parth files; nobody else submits.
+> Guide: james-whitfield fills each box with the transactions behind it. Parth files; nobody else submits.
 
 VAT scheme:          Source of rates checked: GOV.UK "VAT rates" page, date checked:
 

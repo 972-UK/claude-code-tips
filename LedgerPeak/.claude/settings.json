@@ -1,0 +1,9 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [{ "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/office_hook.py\"" }] }],
+    "PreToolUse": [{ "matcher": "Agent|Task", "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/office_hook.py\"" }] }],
+    "PostToolUse": [{ "matcher": "Agent|Task", "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/office_hook.py\"" }] }],
+    "SubagentStop": [{ "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/office_hook.py\"" }] }],
+    "Stop": [{ "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/office_hook.py\"" }] }]
+  }
+}

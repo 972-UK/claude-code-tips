@@ -1,6 +1,6 @@
 # Client profile: {{CLIENT_NAME}}
 
-> Guide: fill in at onboarding (maya-okafor). Leave unknowns as [to confirm]. No ID, NI or bank numbers here.
+> Guide: fill in at onboarding (sophie-bennett). Leave unknowns as [to confirm]. No ID, NI or bank numbers here.
 
 Created: {{DATE}}
 

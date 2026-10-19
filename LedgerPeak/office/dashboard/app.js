@@ -17,17 +17,95 @@
     ['AAT progress', k.aatProgress], ['Compliance items done', k.complianceDone],
   ].map(([l, v]) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join('');
 
-  // Floor plan: Parth's corner office plus nine desks
-  const colours = ['#1f6f5c', '#7b4ea3', '#b5651d', '#2a6fb0', '#a83e5a', '#3f7f3a', '#c08a1a', '#5a5f6b', '#2f8f8f'];
+  // Live office: department rooms, one character per desk, driven by data/live.js (written by scripts/office_hook.py)
+  const DEPTS = ['Leadership', 'Growth', 'Client Services', 'Bookkeeping & Reporting', 'Legal & Compliance', 'Innovation & Learning Lab'];
+  const person = (p) => `<div class="person" style="--hair:${p.hair};--skin:${p.skin};--shirt:${p.shirt}">
+      <div class="hair"></div><div class="head"></div><div class="body"><i class="arm l"></i><i class="arm r"></i></div></div>`;
+  const deskHtml = (a) => `<div class="seat idle" id="seat-${esc(a.id)}">
+      <div class="bubble"></div>
+      <div class="monitor"><div class="screen"></div></div>${person(a)}<div class="tabletop"></div>
+      <div class="who">${esc(a.name)}</div><div class="role">${esc(a.role)}</div>
+      <div class="task" data-last="${esc(a.lastTask)}">Last: ${esc(a.lastTask)}</div></div>`;
   $('floorplan').innerHTML =
-    `<div class="desk boss"><div class="avatar" style="background:#1f2430">PP</div><div class="who">Parth Prajapati</div>
-     <div class="role">CEO and signing officer · corner office</div><div class="task">Approvals waiting live in each client's 12-review-log.md</div></div>` +
-    D.agents.map((a, i) => {
-      const initials = a.name.split(' ').map((w) => w[0]).join('');
-      return `<div class="desk"><div class="avatar" style="background:${colours[i % colours.length]}">${esc(initials)}</div>
-        <div class="who">${esc(a.name)}</div><div class="role">${esc(a.role)}</div>
-        <div class="task">Last: ${esc(a.lastTask)}</div><span class="status ${esc(a.status)}">${esc(a.status)}</span></div>`;
-    }).join('');
+    `<div class="room boss"><div class="roomname">Parth's corner office · CEO and signing officer</div>
+      <div class="seat idle" id="seat-parth"><div class="bubble"></div><div class="monitor"><div class="screen"></div></div>
+      ${person({ hair: '#1d1a18', skin: '#b07a52', shirt: '#1f2430' })}<div class="tabletop"></div>
+      <div class="who">Parth Prajapati</div><div class="role">Approves everything before it leaves the office</div>
+      <div class="task" data-last="">Approvals live in each client's 12-review-log.md</div></div></div>` +
+    DEPTS.map((d) => `<div class="room"><div class="roomname">${esc(d)}</div><div class="desks">` +
+      D.agents.filter((a) => a.dept === d).map(deskHtml).join('') + '</div></div>').join('');
+
+  const nameOf = (id) => id === 'parth' ? 'Parth' : (D.agents.find((a) => a.id === id) || { name: id }).name;
+  function paint(L) {
+    if (!L) return;
+    let busy = 0;
+    D.agents.forEach((a) => {
+      const seat = $('seat-' + a.id);
+      const s = (L.agents || {})[a.id];
+      const status = s ? s.status : 'idle';
+      if (status === 'working') busy++;
+      seat.className = 'seat ' + status;
+      seat.querySelector('.bubble').textContent = status === 'working' ? s.task : status === 'done' ? '✔ done' : '';
+      const t = seat.querySelector('.task');
+      t.textContent = s ? (status === 'working' ? 'Now: ' : 'Last: ') + s.task : 'Last: ' + t.dataset.last;
+    });
+    const p = L.parth || { status: 'idle' };
+    const ps = $('seat-parth');
+    ps.className = 'seat ' + (p.status === 'giving task' ? 'working' : p.status === 'reviewing' ? 'done' : 'idle');
+    ps.querySelector('.bubble').textContent = p.status === 'giving task' ? 'New task!' : p.status === 'reviewing' ? 'Review time' : '';
+    $('liveDot').className = 'dot' + (busy ? ' on' : '');
+    $('liveText').textContent = busy ? `${busy} working now · updated ${L.updated || ''}` : `Office quiet · last update ${L.updated || 'never'}`;
+    $('liveFeed').innerHTML = (L.feed || []).slice().reverse().slice(0, 15)
+      .map((f) => `<li><span class="todo">${esc(f.time.slice(11))}</span><b>${esc(nameOf(f.who))}</b> ${esc(f.text)}</li>`).join('') ||
+      '<li>Nothing yet. Give the office a task in Claude Code, e.g. <code>/task prepare the DEMO café September close</code>.</li>';
+  }
+  paint(window.LP_LIVE || { agents: {}, feed: [] });
+
+  // Re-read data/live.js every 3 seconds (a fresh <script> tag works offline from file://)
+  let demo = false;
+  setInterval(() => {
+    if (demo) return;
+    const s = document.createElement('script');
+    s.src = 'data/live.js?t=' + Date.now();
+    s.onload = () => { paint(window.LP_LIVE); s.remove(); };
+    s.onerror = () => s.remove();
+    document.body.appendChild(s);
+  }, 3000);
+
+  // Demo: plays a typical /task so Parth can see the workflow without running anything
+  $('demoBtn').addEventListener('click', () => {
+    demo = true;
+    const L = { agents: {}, feed: [], parth: { status: 'giving task' } };
+    const t = () => new Date().toLocaleTimeString('en-GB');
+    const steps = [
+      ['parth', null, 'New task: onboard a new café client and prepare their first VAT return'],
+      ['grace-whitmore', 'working', 'Planning: split into onboarding, books, VAT, compliance check'],
+      ['theo-ashford', 'working', 'Checking current VAT rules on GOV.UK'],
+      ['theo-ashford', 'done', 'Briefed James on latest VAT guidance'],
+      ['sophie-bennett', 'working', 'AML due diligence and risk rating'],
+      ['leo-hartley', 'working', 'Categorising bank lines with double entry'],
+      ['sophie-bennett', 'done', 'Engagement letter drafted'],
+      ['leo-hartley', 'done', 'Bank reconciled, 1 query raised'],
+      ['james-whitfield', 'working', 'VAT boxes 1 to 9 with workings'],
+      ['victor-hale', 'working', 'Checking engagement terms'],
+      ['james-whitfield', 'done', 'VAT draft ready, check-before-filing list added'],
+      ['victor-hale', 'done', 'Terms OK, no solicitor needed'],
+      ['grace-whitmore', 'done', 'Quality check passed, handed to Parth'],
+      ['parth', 'review', 'Results ready for your review'],
+    ];
+    let i = 0;
+    const tick = () => {
+      if (i >= steps.length) { setTimeout(() => { demo = false; }, 6000); return; }
+      const [who, st, text] = steps[i++];
+      if (who === 'parth') L.parth = { status: st === 'review' ? 'reviewing' : 'giving task' };
+      else L.agents[who] = { status: st, task: text };
+      L.feed.push({ time: '00/00/0000 ' + t(), who, text });
+      L.updated = t() + ' (demo)';
+      paint(L);
+      setTimeout(tick, 1600);
+    };
+    tick();
+  });
 
   const stages = ['lead', 'contacted', 'call booked', 'proposal', 'won', 'lost'];
   $('board').innerHTML = stages.map((s) => {

@@ -10,65 +10,123 @@ window.LP_DATA = {
  },
  "agents": [
   {
+   "id": "grace-whitmore",
+   "name": "Grace Whitmore",
+   "role": "Operations Manager",
+   "dept": "Leadership",
+   "hair": "#6b3e26",
+   "skin": "#f1c9a5",
+   "shirt": "#1f6f5c",
+   "lastTask": "Runs every task end to end",
+   "status": "idle"
+  },
+  {
    "id": "ava-sterling",
    "name": "Ava Sterling",
    "role": "Chief of Staff",
+   "dept": "Leadership",
+   "hair": "#e2b04a",
+   "skin": "#f6d3b3",
+   "shirt": "#7b4ea3",
    "lastTask": "Set up deadline calendar",
    "status": "idle"
   },
   {
-   "id": "rohan-mehta",
-   "name": "Rohan Mehta",
+   "id": "henry-collins",
+   "name": "Henry Collins",
    "role": "Sales",
+   "dept": "Growth",
+   "hair": "#3b2a1e",
+   "skin": "#e9b892",
+   "shirt": "#2a6fb0",
    "lastTask": "Pipeline template ready",
    "status": "idle"
   },
   {
-   "id": "maya-okafor",
-   "name": "Maya Okafor",
+   "id": "charlotte-quinn",
+   "name": "Charlotte Quinn",
+   "role": "Marketing",
+   "dept": "Growth",
+   "hair": "#a8452a",
+   "skin": "#f6d3b3",
+   "shirt": "#c08a1a",
+   "lastTask": "Awaiting first /post",
+   "status": "idle"
+  },
+  {
+   "id": "sophie-bennett",
+   "name": "Sophie Bennett",
    "role": "Onboarding & AML",
+   "dept": "Client Services",
+   "hair": "#1d1a18",
+   "skin": "#8d5a3b",
+   "shirt": "#b5651d",
    "lastTask": "Onboarded DEMO Harrow Hill Café",
+   "status": "idle"
+  },
+  {
+   "id": "emily-brooks",
+   "name": "Emily Brooks",
+   "role": "Credit Control",
+   "dept": "Client Services",
+   "hair": "#5a3a22",
+   "skin": "#c68e65",
+   "shirt": "#a83e5a",
+   "lastTask": "Invoice log set up",
    "status": "idle"
   },
   {
    "id": "leo-hartley",
    "name": "Leo Hartley",
    "role": "Senior Bookkeeper",
+   "dept": "Bookkeeping & Reporting",
+   "hair": "#2b2b2b",
+   "skin": "#f1c9a5",
+   "shirt": "#3f7f3a",
    "lastTask": "DEMO September books loaded",
-   "status": "waiting"
-  },
-  {
-   "id": "nia-brooks",
-   "name": "Nia Brooks",
-   "role": "Credit Control",
-   "lastTask": "Invoice log set up",
    "status": "idle"
   },
   {
-   "id": "arjun-patel",
-   "name": "Arjun Patel",
+   "id": "james-whitfield",
+   "name": "James Whitfield",
    "role": "Reporting Analyst",
+   "dept": "Bookkeeping & Reporting",
+   "hair": "#8a6a48",
+   "skin": "#e9b892",
+   "shirt": "#2f8f8f",
    "lastTask": "VAT and MTD templates",
-   "status": "idle"
-  },
-  {
-   "id": "zara-quinn",
-   "name": "Zara Quinn",
-   "role": "Marketing",
-   "lastTask": "Awaiting first /post",
    "status": "idle"
   },
   {
    "id": "victor-hale",
    "name": "Victor Hale",
    "role": "Legal & Compliance",
+   "dept": "Legal & Compliance",
+   "hair": "#9a9a9a",
+   "skin": "#f1c9a5",
+   "shirt": "#5a5f6b",
    "lastTask": "Drafted 10 policies",
-   "status": "waiting"
+   "status": "idle"
+  },
+  {
+   "id": "theo-ashford",
+   "name": "Theo Ashford",
+   "role": "Head of Innovation",
+   "dept": "Innovation & Learning Lab",
+   "hair": "#e2b04a",
+   "skin": "#c68e65",
+   "shirt": "#d0482a",
+   "lastTask": "First updates log written",
+   "status": "idle"
   },
   {
    "id": "iris-bell",
    "name": "Iris Bell",
    "role": "AAT Tutor",
+   "dept": "Innovation & Learning Lab",
+   "hair": "#4a2c1a",
+   "skin": "#f6d3b3",
+   "shirt": "#6a5acd",
    "lastTask": "Level 2 academy built",
    "status": "idle"
   }
@@ -144,14 +202,14 @@ window.LP_DATA = {
    "days": 19,
    "item": "DEMO VAT return due quarter to 30/09/2026 (one month and 7 days rule, verify)",
    "who": "DEMO Harrow Hill Café",
-   "owner": "arjun-patel"
+   "owner": "james-whitfield"
   },
   {
    "date": "07/11/2026",
    "days": 19,
    "item": "DEMO MTD quarterly update to 05/10/2026 (verify)",
    "who": "DEMO Harrow Hill Café",
-   "owner": "arjun-patel"
+   "owner": "james-whitfield"
   },
   {
    "date": "15/11/2026",

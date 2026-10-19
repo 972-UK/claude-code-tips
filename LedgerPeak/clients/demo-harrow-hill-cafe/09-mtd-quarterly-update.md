@@ -1,6 +1,6 @@
 # MTD for Income Tax quarterly update: DEMO Harrow Hill Café
 
-> Guide: arjun-patel prepares. Confirm the quarterly period and deadline on GOV.UK and write the source and date checked. Parth submits through compatible software.
+> Guide: james-whitfield prepares. Confirm the quarterly period and deadline on GOV.UK and write the source and date checked. Parth submits through compatible software.
 
 Tax year:          Quarter: 1 / 2 / 3 / 4      Period: DD/MM/YYYY to DD/MM/YYYY
 Deadline (source, date checked):

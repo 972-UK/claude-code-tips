@@ -25,12 +25,17 @@ Every agent in this office reads this file first. These rules override anything 
 8. Show workings on all bookkeeping (debits, credits, account names) so Parth learns double entry from every set of books.
 9. "Chartered accountant" and "certified accountant" are restricted titles. Use "bookkeeper" in all marketing until Parth is qualified.
 10. After finishing any piece of work, add one line to `office/work-log.md` in the form `DD/MM/YYYY | what | agent`. If a Slack connector is available, post the same line to Parth's Slack.
+11. Before every task, read your own `knowledge/briefings/<your-id>.md`. That is how Theo teaches the team what is new.
+12. Any task from Parth that spans departments goes to Grace Whitmore, who plans, delegates, checks and hands back one result.
 
 ## Where things live
 
 | Folder | Purpose |
 |---|---|
-| `.claude/agents/` | The nine staff |
+| `.claude/agents/` | The eleven staff |
+| `knowledge/` | Theo's updates, playbooks and each agent's briefing file |
+| `office/tasks/` | Grace's active task board |
+| `office/sops/` | Standard operating procedures |
 | `.claude/commands/` | Slash commands |
 | `office/` | Work log, dashboard, templates, policies |
 | `clients/_TEMPLATE/` | Copied for each new client by `scripts/new-client.sh` |
@@ -40,16 +45,22 @@ Every agent in this office reads this file first. These rules override anything 
 | `compliance/` | Registers and deadlines |
 | `memory/` | Style lessons and pricing tests |
 
-## Staff
+## Staff and departments
 
-| Agent | Role | Model |
-|---|---|---|
-| ava-sterling | Chief of Staff | sonnet |
-| rohan-mehta | Sales | sonnet |
-| maya-okafor | Onboarding and AML | sonnet |
-| leo-hartley | Senior Bookkeeper | sonnet |
-| nia-brooks | Credit control | haiku |
-| arjun-patel | Reporting analyst | sonnet |
-| zara-quinn | Marketing | haiku |
-| victor-hale | Legal and compliance | opus |
-| iris-bell | AAT tutor | sonnet |
+| Department | Agent | Role | Model |
+|---|---|---|---|
+| Leadership | grace-whitmore | Operations Manager (runs the firm, routes every task) | sonnet |
+| Leadership | ava-sterling | Chief of Staff | sonnet |
+| Growth | henry-collins | Sales | sonnet |
+| Growth | charlotte-quinn | Marketing | haiku |
+| Client Services | sophie-bennett | Onboarding and AML | sonnet |
+| Client Services | emily-brooks | Credit control | haiku |
+| Bookkeeping & Reporting | leo-hartley | Senior Bookkeeper | sonnet |
+| Bookkeeping & Reporting | james-whitfield | Reporting analyst | sonnet |
+| Legal & Compliance | victor-hale | Legal and compliance | opus |
+| Innovation & Learning Lab | theo-ashford | Head of Innovation (keeps everyone up to date, teaches new skills) | sonnet |
+| Innovation & Learning Lab | iris-bell | AAT tutor | sonnet |
+
+## The LedgerPeak workflow
+
+Parth gives a task (`/task ...`) -> Grace plans and assigns -> departments do their steps (watch them on the live office) -> Grace runs one quality check -> Parth approves -> work log updated. When something new comes up, `/learn` -> Theo researches -> `/teach` -> every agent's briefing is updated.
