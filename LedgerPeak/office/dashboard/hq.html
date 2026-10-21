@@ -9,7 +9,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600&family=JetBrains+Mono:wght@400&display=swap">
 <style>
-/* Layout: header and KPIs, 3D building with the Brain at its centre, order-of-work strip, guide and Project Brain, agent screens, road to launch, skills library, then the team directory with a profile card and Grace's updates. */
+/* Layout: header and KPIs, floor plan of the office, order-of-work strip, guide and company handbook, agent screens, road to launch, skills library, then the team directory with a profile card and Grace's updates. */
 :root{
   --bg:#f3f4f6; --surface:#ffffff; --line:#d9dde3; --fg:#1b2333; --muted:#5d6676; --accent:#1f4a3d; --accent-soft:#e3efe9;
   --ok:#2f8a6a; --ok-soft:#e1f1ea; --warn:#7a5410; --warn-soft:#fbeccd;
@@ -37,23 +37,31 @@ h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,6vw,38px);mar
 .small-btn[aria-pressed="true"]{background:var(--accent);color:var(--surface);border-color:var(--accent)}
 .small-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .standby{margin:0;padding:10px 14px;border-radius:10px;background:var(--accent-soft);font-size:14px}
-.stage3d{position:relative;background:#d3dccf;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:clamp(440px,60vw,660px)}
-#o3d{position:absolute;inset:0}#o3d canvas{display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}
-#o3d.dragging canvas{cursor:grabbing}
-#o3dLabels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.o3-tag{all:unset;box-sizing:border-box;position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;display:flex;gap:7px;align-items:center;padding:6px 10px 6px 7px;border-radius:9px;background:rgba(255,255,255,.94);border:1px solid rgba(40,50,45,.1);color:#24302b;font:600 12px/1.25 var(--body);white-space:nowrap;box-shadow:0 6px 18px rgba(40,60,50,.18);will-change:transform}
-.o3-tag i{width:16px;height:16px;border-radius:50%;background:var(--c);flex:none}
-.o3-tag small{display:block;font-weight:400;font-size:11px;color:#66706b;font-variant-numeric:tabular-nums}
-.o3-tag em{display:inline-block;width:6px;height:6px;border-radius:50%;background:#c3c9c5;margin-right:5px;vertical-align:1px}
-.o3-tag.on em{background:#2fb37a;box-shadow:0 0 6px #2fb37a}
-.o3-tag:hover{border-color:var(--c)}.o3-tag:focus-visible{outline:2px solid #8fe8c8}
-.o3-tag.brain{flex-direction:column;gap:1px;text-align:center;letter-spacing:.14em;font-size:11px;color:#1d6a55;border-color:rgba(29,106,85,.25);padding:6px 12px}
-.o3-tag.brain small{letter-spacing:0}
-.o3-ctl{position:absolute;right:max(10px,env(safe-area-inset-right,0px));bottom:10px;display:grid;gap:6px}
-.o3-ctl button{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:rgba(255,255,255,.94);color:#24302b;font:700 16px var(--body);border:1px solid rgba(40,50,45,.12);box-shadow:0 4px 12px rgba(40,60,50,.15)}
-.o3-ctl button:focus-visible{outline:2px solid #8fe8c8}
-.nogl{display:grid;place-items:center;height:100%;padding:20px;text-align:center;color:#24302b}
-@media (max-width:640px){.o3-tag{font-size:10.5px;padding:4px 7px 4px 5px;gap:5px}.o3-tag i{width:10px;height:10px;border-radius:3px}.o3-tag small{display:none}.o3-tag.brain small{display:block;font-size:9.5px}.stage3d{height:540px}}
+.planwrap{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+.plan{min-width:820px}
+.plan svg{display:block;width:100%;height:auto;font-family:var(--body)}
+.p-site{fill:var(--bg)}.p-floor{fill:#f7f5f0}.p-corr{fill:#ebe7df}.p-tile{stroke:#e0dbd1;stroke-width:1}
+.p-wall{stroke:#2a2f3a;stroke-width:6;stroke-linecap:square}.p-outer{fill:none;stroke:#2a2f3a;stroke-width:10}
+.p-gap{fill:#f7f5f0}.p-window{stroke:#8fc3dd;stroke-width:4}.p-swing{fill:none;stroke:#9aa1ab;stroke-width:1.2;stroke-dasharray:3 3}
+.p-desk{fill:#e2cba8;stroke:#a7845a;stroke-width:1}.p-desk.spare{opacity:.55}.p-mon{fill:#2a2f3a}.p-kb{fill:#c9ccd1}
+.p-chair{fill:#cfd5dc;stroke:#9aa3ad;stroke-width:1}.p-table{fill:#d8b98d;stroke:#a7845a;stroke-width:1}.p-board{fill:#ffffff;stroke:#9aa3ad}
+.p-sofa{fill:#b9c7c0;stroke:#8fa198}.p-counter{fill:#d9d6cf;stroke:#a9a39a}.p-fridge{fill:#eef2f4;stroke:#9aa3ad}
+.p-cubicle{fill:#eef1f4;stroke:#a9b1ba}.p-wcbowl{fill:#ffffff;stroke:#a9b1ba}.p-shelf{fill:#c9a678;stroke:#8f6f48}
+.p-pot{fill:#d8cbb6}.p-leaf{fill:#6f9e5a}.p-leaf2{fill:#8bbd70}
+.p-room{font-size:11px;font-weight:700;letter-spacing:.06em;fill:#3b4352}.p-sub{font-size:10px;fill:#7a8291}.p-sub.on{fill:#2f8a6a;font-weight:700}
+.p-entry{font-size:10px;font-weight:700;letter-spacing:.12em;fill:#5d6676}
+.p-person{cursor:pointer;outline:none}.p-head{stroke:#ffffff;stroke-width:2}
+.p-init{font-size:9px;font-weight:700;fill:#ffffff;pointer-events:none}.p-name{font-size:10px;font-weight:600;fill:#3b4352;pointer-events:none}
+.p-ring{fill:none;stroke:transparent;stroke-width:3}
+.p-person.on .p-ring{stroke:#2fb37a;animation:ring 1.4s ease-in-out infinite}
+.p-person.sel .p-head,.p-person:focus-visible .p-head{stroke:#1f4a3d;stroke-width:3}
+@keyframes ring{50%{stroke-opacity:.35}}
+.p-bub{display:none}.p-person.on .p-bub{display:inline}
+.p-bub rect{fill:#1f4a3d}.p-bub text{font-size:10px;font-weight:600;fill:#ffffff}
+.p-runner circle{fill:#24344d;stroke:#ffffff;stroke-width:2}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted)}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+@media (prefers-reduced-motion:reduce){.p-person.on .p-ring{animation:none}}
 .hint{font-size:13px;color:var(--muted);margin:-6px 0 0}
 .flow{display:flex;gap:6px;list-style:none;margin:0;padding:0 0 4px;overflow-x:auto}
 .flow li{flex:1 0 118px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;display:grid;gap:2px}
@@ -171,12 +179,12 @@ td:last-child{font-family:var(--mono);font-size:12px}
   </div>
 
   <div class="viewbar">
-    <p class="note" style="margin:0">Drag to turn the building. Use + and − to zoom. Tap a room to meet the people in it.</p>
+    <p class="note" style="margin:0">Floor plan of LedgerPeak HQ. Tap anyone at their desk to see who they are and what they do.</p>
     <button class="small-btn" id="demoBtn" aria-pressed="false">Play example</button>
   </div>
   <p class="standby" id="standbyNote"><b>Standby.</b> Nothing here runs on its own. Real work happens in your LedgerPeak Project or in Claude Code, and the office moves when that work is running. Use "Play example" to see a task travel through the firm.</p>
-  <div class="stage3d"><div id="o3d" aria-label="3D office: twelve departments and the CEO office in glass-walled rooms around a central hall, with the Brain in the middle"></div><div id="o3dLabels"></div>
-    <div class="o3-ctl"><button id="o3In" aria-label="Zoom in">+</button><button id="o3Out" aria-label="Zoom out">−</button><button id="o3Reset" aria-label="Reset view" style="font-size:12px">⟲</button></div></div>
+  <div class="planwrap"><div class="plan" id="plan"></div></div>
+  <div class="legend" id="legend"></div>
 
   <ol class="flow" id="flow" aria-label="Order of work for every task"></ol>
 
@@ -212,8 +220,8 @@ td:last-child{font-family:var(--mono);font-size:12px}
     </div>
   </details>
 
-  <details class="panel guide" id="brain" open>
-    <summary>Project Brain · LedgerPeak rules and team</summary>
+  <details class="panel guide" id="handbook" open>
+    <summary>Company handbook · rules, order of work and team</summary>
     <p class="note">The short version of the firm's rules, order of work and team. If it ever disagrees with CLAUDE.md, CLAUDE.md wins and this page is rebuilt.</p>
     <div class="cols">
       <div><h3>Purpose</h3><p>Become the highest-rated bookkeeper in Harrow by giving sole traders, landlords, tradespeople, cafés and shops clear, accurate books and Making Tax Digital readiness, run by Parth in evenings and weekends, with every set of books teaching him double entry on the way to AAT.</p>
@@ -262,10 +270,8 @@ td:last-child{font-family:var(--mono);font-size:12px}
   <p class="note" id="footnote"></p>
 </div>
 
-<script src="data/live.js" onerror="this.remove()"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-window.LP_HQ = {"agents": [{"id": "grace-whitmore", "name": "Grace Whitmore", "role": "Operations Manager", "dept": "Executive Office", "hair": "#6b3e26", "skin": "#f1c9a5", "shirt": "#1f6f5c", "lastTask": "Runs every task end to end", "status": "idle", "model": "sonnet", "skills": "- Small-practice operations: workflow design, SOPs, RACI, capacity planning, quality control and service levels for a bookkeeping firm.\n- You know every department's skills, inputs and outputs (see the org chart below) and the firm's rules in `CLAUDE.md`.\n- You price work in effort and cost: cheapest capable agent first, one quality check, no duplicated effort.", "description": "Operations Manager. Use for ANY task Parth gives that is not obviously one person's job, or that spans departments. Grace breaks the task into steps, assigns each step to the right department and person, checks quality and hands Parth one finished result. Also owns workflows, capacity, SOPs and the quality standard.", "briefings": [], "duty": "routes every task, plans, delegates, signs off quality"}, {"id": "ava-sterling", "name": "Ava Sterling", "role": "Chief of Staff", "dept": "Executive Office", "hair": "#e2b04a", "skin": "#f6d3b3", "shirt": "#7b4ea3", "lastTask": "Set up deadline calendar", "status": "idle", "model": "sonnet", "skills": "Executive assistance and planning: prioritisation (urgent vs important), deadline management across HMRC, Companies House and client calendars, concise briefing writing.", "description": "Chief of Staff. Use for the morning brief, the deadline calendar, assigning work to other agents and updating the tracker and dashboard.", "briefings": [], "duty": "daily brief, calendar, roadmap tracking"}, {"id": "eleanor-price", "lastTask": "Joined the firm", "status": "idle", "hair": "#3b2a1e", "skin": "#f1c9a5", "shirt": "#2c4a7a", "name": "Eleanor Price", "role": "Director of Strategy", "dept": "Strategy & Business Development", "model": "sonnet", "skills": "Small professional-services strategy: market sizing from public data (ONS business counts, local directories), competitor benchmarking (pricing pages, review scores, service mix), positioning, pricing architecture, partnership channels (local accountants who do not want bookkeeping, business networks, trade associations, software partner directories) and growth planning for a solo-run firm.", "description": "Director of Strategy and Business Development. Use for market research in Harrow and North West London, competitor analysis, pricing strategy, service design, partnerships, the growth plan and the road-to-launch roadmap.", "briefings": [], "duty": "market research, competitors, pricing strategy, growth plan, roadmap"}, {"id": "henry-collins", "name": "Henry Collins", "role": "Head of Sales", "dept": "Sales & Marketing", "hair": "#3b2a1e", "skin": "#e9b892", "shirt": "#2a6fb0", "lastTask": "Pipeline template ready", "status": "idle", "model": "sonnet", "skills": "B2B sales for professional services: consultative selling, objection handling on price, value-based proposals, UK GDPR and PECR rules for B2B outreach, local SEO-led lead sourcing in NW London.", "description": "Sales. Use for lead lists, cold emails (UK GDPR and PECR aware, with opt-out), discovery-call scripts and proposals.", "briefings": ["19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."], "duty": "leads, outreach, discovery calls, proposals"}, {"id": "charlotte-quinn", "name": "Charlotte Quinn", "role": "Marketing Manager", "dept": "Sales & Marketing", "hair": "#a8452a", "skin": "#f6d3b3", "shirt": "#c08a1a", "lastTask": "Awaiting first /post", "status": "idle", "model": "haiku", "skills": "Local small-business marketing: Google Business Profile, review generation within platform rules, social content, ASA/CAP code compliance, honest copywriting.", "description": "Marketing. Use for social posts, Google Business Profile updates, review requests and website copy. No fake testimonials.", "briefings": ["19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."], "duty": "brand, posts, Google Business Profile, website copy"}, {"id": "amelia-hart", "lastTask": "Joined the firm", "status": "idle", "hair": "#c8783a", "skin": "#f6d3b3", "shirt": "#d77fa1", "name": "Amelia Hart", "role": "Client Relationship Manager", "dept": "Client Experience", "model": "haiku", "skills": "Client service in professional practices: onboarding journeys, expectation setting, plain-English writing, complaint handling to the firm's complaints procedure, satisfaction checks, review requests within Google's rules.", "description": "Client Relationship Manager. Use for client communication: welcome journeys, monthly check-ins, plain-English explanations, feedback and complaints handling, review requests and the waiting list.", "briefings": [], "duty": "client communication, check-ins, complaints, waiting list"}, {"id": "sophie-bennett", "name": "Sophie Bennett", "role": "Onboarding and AML Manager", "dept": "Client Onboarding & AML", "hair": "#1d1a18", "skin": "#8d5a3b", "shirt": "#b5651d", "lastTask": "Onboarded DEMO Harrow Hill Café", "status": "idle", "model": "sonnet", "skills": "MLR 2017 customer due diligence, risk-based approach, PEP and sanctions screening, engagement letters, smooth client onboarding experience.", "description": "Onboarding and AML checks. Use for new clients: customer due diligence, risk rating, engagement letter and welcome pack.", "briefings": [], "duty": "due diligence, risk rating, engagement letters"}, {"id": "leo-hartley", "name": "Leo Hartley", "role": "Senior Bookkeeper", "dept": "Bookkeeping & Accounts", "hair": "#2b2b2b", "skin": "#f1c9a5", "shirt": "#3f7f3a", "lastTask": "DEMO September books loaded", "status": "idle", "model": "sonnet", "skills": "Double-entry bookkeeping to AAT Level 3+ standard: chart of accounts design, VAT treatment (standard, reduced, zero, exempt, outside scope, reverse charge), bank and control account reconciliations, accruals and prepayments, cash vs accruals basis for sole traders.", "description": "Senior Bookkeeper. Use to categorise transactions, post double entry, reconcile the bank and run month-end close, always with workings.", "briefings": [], "duty": "categorising, double entry, reconciliations, month-end"}, {"id": "james-whitfield", "name": "James Whitfield", "role": "Reporting Analyst", "dept": "Bookkeeping & Accounts", "hair": "#8a6a48", "skin": "#e9b892", "shirt": "#2f8f8f", "lastTask": "VAT and MTD templates", "status": "idle", "model": "sonnet", "skills": "Management reporting in plain English, VAT return preparation (standard, flat rate, cash accounting), MTD for Income Tax quarterly updates and categories, KPI and variance analysis for small businesses.", "description": "Reporting analyst. Use for monthly client summaries, VAT return box-by-box workings and MTD quarterly figures with a check-before-filing list.", "briefings": ["19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."], "duty": "monthly summaries, VAT returns, MTD updates"}, {"id": "daniel-foster", "lastTask": "Joined the firm", "status": "idle", "hair": "#1d1a18", "skin": "#8d5a3b", "shirt": "#4b6b3a", "name": "Daniel Foster", "role": "Tax and Payroll Support Specialist", "dept": "Tax & Payroll", "model": "sonnet", "skills": "Self Assessment supporting schedules (self-employment and UK property pages), allowable vs disallowable expenses as a records question, CIS deduction statements and reconciliations for subcontractors, landlord income and expense schedules, basic payroll processing and RTI submission records, key HMRC deadlines.", "description": "Tax and Payroll Support Specialist. Use for Self Assessment preparation packs, Construction Industry Scheme (CIS) records for tradespeople, landlord income schedules, and basic payroll and RTI support.", "briefings": [], "duty": "Self Assessment packs, CIS, landlord schedules, payroll records"}, {"id": "edward-lancaster", "lastTask": "Joined the firm", "status": "idle", "hair": "#7a7a7a", "skin": "#e9b892", "shirt": "#20334f", "name": "Edward Lancaster", "role": "Finance Director", "dept": "Finance & Credit Control", "model": "sonnet", "skills": "Small-firm financial management: start-up budgets, 12-month cash flow forecasts, break-even analysis, contribution per client, pricing margins, management accounts and the self-employed tax set-aside.", "description": "Finance Director. Use for LedgerPeak's own finances: budget, cash flow forecast, pricing margin checks, monthly management accounts, start-up costs and the break-even point.", "briefings": [], "duty": "LedgerPeak's budget, cash flow, margins, management accounts"}, {"id": "emily-brooks", "name": "Emily Brooks", "role": "Credit Controller", "dept": "Finance & Credit Control", "hair": "#5a3a22", "skin": "#c68e65", "shirt": "#a83e5a", "lastTask": "Invoice log set up", "status": "idle", "model": "haiku", "skills": "Credit control for small firms: aged debt analysis, staged chasing, Late Payment of Commercial Debts (Interest) Act 1998 basics, keeping relationships warm while collecting cash.", "description": "Credit control. Use for LedgerPeak's own invoices, the aged debtor report and polite-to-firm chase messages.", "briefings": [], "duty": "invoices, aged debtors, chasers"}, {"id": "harriet-ellis", "lastTask": "Joined the firm", "status": "idle", "hair": "#5a3a22", "skin": "#f1c9a5", "shirt": "#8a2f3f", "name": "Harriet Ellis", "role": "Head of Quality and Risk", "dept": "Quality & Risk", "model": "sonnet", "skills": "Professional quality control: review checklists, sampling, error classification, root-cause notes, risk registers, and the firm's rules in `CLAUDE.md`.", "description": "Head of Quality and Risk. Use to review any deliverable before it reaches Parth, run checklists, keep the risk register and catch errors, missing sources or rule breaches.", "briefings": [], "duty": "reviews every deliverable, risk register"}, {"id": "victor-hale", "name": "Victor Hale", "role": "Head of Legal and Compliance", "dept": "Legal & Compliance", "hair": "#9a9a9a", "skin": "#f1c9a5", "shirt": "#5a5f6b", "lastTask": "Drafted 10 policies", "status": "idle", "model": "opus", "skills": "UK compliance for a bookkeeping practice: MLR 2017, POCA 2002, UK GDPR and DPA 2018, PECR, ICO registration, consumer and contract basics, professional indemnity. Knows the limit of a non-solicitor.", "description": "Legal and compliance. Use for AML, UK GDPR, ICO fee, insurance, engagement terms and questions on when to see a solicitor. Searches GOV.UK first.", "briefings": [], "duty": "AML, UK GDPR, contracts, policies, when to see a solicitor"}, {"id": "william-hayes", "lastTask": "Joined the firm", "status": "idle", "hair": "#2b2b2b", "skin": "#c68e65", "shirt": "#36506b", "name": "William Hayes", "role": "Head of Technology", "dept": "Technology & Automation", "model": "sonnet", "skills": "Cloud bookkeeping software (Xero, QuickBooks Online, FreeAgent), receipt capture (Dext, Hubdoc), bank feeds and CSV imports, MTD-compatible software lists, password managers and two-factor authentication, UK GDPR security basics, spreadsheet design and simple scripting.", "description": "Head of Technology and Automation. Use for software choice and set-up (Xero, QuickBooks, FreeAgent, Dext, bank feeds), data security, file structure, automations and the office systems.", "briefings": [], "duty": "software, bank feeds, security, automation"}, {"id": "theo-ashford", "name": "Theo Ashford", "role": "Head of Innovation", "dept": "Innovation & Learning", "hair": "#e2b04a", "skin": "#c68e65", "shirt": "#d0482a", "lastTask": "First updates log written", "status": "idle", "model": "sonnet", "skills": "- Fast, reliable research: GOV.UK, HMRC manuals, legislation.gov.uk, ICO, AAT, software release notes (Xero, QuickBooks, FreeAgent), AI tooling.\n- Turning complex change into a one-page explanation a new starter understands.\n- Spotting how a new tool or rule changes a workflow, and redesigning the step.", "description": "Head of the Innovation & Learning Lab. Use to find out what has changed in the world (HMRC, MTD, AML, GDPR, AI tools, bookkeeping software), learn new skills, and teach them simply to every other agent through briefings. Use when something new comes up that the team does not know how to do.", "briefings": [], "duty": "tracks what is new, teaches every department"}, {"id": "iris-bell", "name": "Iris Bell", "role": "AAT Tutor", "dept": "Innovation & Learning", "hair": "#4a2c1a", "skin": "#f6d3b3", "shirt": "#6a5acd", "lastTask": "Level 2 academy built", "status": "idle", "model": "sonnet", "skills": "AAT Levels 2 to 4 syllabus, adult distance-learning methods (spaced repetition, retrieval practice, worked examples), exam technique for computer-based assessments.", "description": "AAT tutor. Use for /study and /mock: teaches AAT Levels 2 to 4 using real LedgerPeak tasks, sets quizzes and mocks, tracks progress.", "briefings": [], "duty": "Parth's AAT study, quizzes and mocks"}], "rules": ["Parth is the signing officer.", "Never invent facts, fees, deadlines, thresholds or legal rules.", "Never store passport numbers, full bank account numbers, card numbers, passwords or National Insurance numbers in any file.", "Do not change Parth's wording in documents he has edited.", "If a client needs a related document Parth forgot to list, work it out, prepare it anyway, and tell him.", "Keep LedgerPeak completely separate from Parth's day job.", "Keep usage low.", "Show workings on all bookkeeping (debits, credits, account names) so Parth learns double entry from every set of books.", "\"Chartered accountant\" and \"certified accountant\" are restricted titles.", "After finishing any piece of work, add one line to office/work-log.md in the form DD/MM/YYYY | what | agent.", "Before every task, read your own knowledge/briefings/<your-id>.md.", "Any task from Parth that spans departments goes to Grace Whitmore, who plans, delegates, checks and hands back one result.", "Pre-registration mode is ON (see below)."], "roadmap": [{"title": "Stage 1: Foundations", "items": [{"id": "1.1", "text": "Read the day-job employment contract for second-job clauses", "owner": "Parth", "target": "26/10/2026", "done": false}, {"id": "1.2", "text": "Run the DEMO café month-end close end to end and review it", "owner": "Leo, James, Harriet", "target": "26/10/2026", "done": false}, {"id": "1.3", "text": "Brand basics: name check, logo brief, tone of voice, one-line promise", "owner": "Charlotte", "target": "02/11/2026", "done": false}, {"id": "1.4", "text": "Harrow market brief: target trades, competitor prices and review scores", "owner": "Eleanor", "target": "02/11/2026", "done": false}, {"id": "1.5", "text": "Start-up budget and 12-month cash flow forecast", "owner": "Edward", "target": "02/11/2026", "done": false}, {"id": "1.6", "text": "Choose bookkeeping software to learn first; free trial set-up guide", "owner": "William", "target": "09/11/2026", "done": false}, {"id": "1.7", "text": "AAT Level 2: Introduction to Bookkeeping studied, mock passed", "owner": "Iris", "target": "23/11/2026", "done": false}]}, {"title": "Stage 2: Prove the service", "items": [{"id": "2.1", "text": "Three more DEMO clients (plumber, landlord, corner shop) built and closed", "owner": "Leo, Daniel", "target": "30/11/2026", "done": false}, {"id": "2.2", "text": "DEMO VAT return and DEMO MTD quarterly update prepared and reviewed", "owner": "James, Harriet", "target": "30/11/2026", "done": false}, {"id": "2.3", "text": "Website copy and Google Business Profile drafted (not published)", "owner": "Charlotte", "target": "07/12/2026", "done": false}, {"id": "2.4", "text": "Pricing confirmed with time-per-client from the DEMO runs", "owner": "Edward, Eleanor", "target": "07/12/2026", "done": false}, {"id": "2.5", "text": "Waiting list form wording (consent-based) ready", "owner": "Amelia, Victor", "target": "07/12/2026", "done": false}, {"id": "2.6", "text": "Systems register and security set-up (password manager, 2FA)", "owner": "William", "target": "14/12/2026", "done": false}]}, {"title": "Stage 3: Readiness decision", "items": [{"id": "3.1", "text": "Go / not yet decision: time available, costs, confidence from DEMO runs", "owner": "Parth, Grace", "target": "", "done": false}, {"id": "3.2", "text": "Confirm current registration steps and fees on GOV.UK and ICO", "owner": "Victor", "target": "", "done": false}]}, {"title": "Stage 4: Registration", "items": [{"id": "4.1", "text": "Register self-employed for Self Assessment (HMRC)", "owner": "Parth", "target": "", "done": false}, {"id": "4.2", "text": "AML supervision registration (before any client work)", "owner": "Parth, Victor", "target": "", "done": false}, {"id": "4.3", "text": "ICO data protection fee", "owner": "Parth", "target": "", "done": false}, {"id": "4.4", "text": "Professional indemnity insurance", "owner": "Parth, Victor", "target": "", "done": false}, {"id": "4.5", "text": "Business bank account", "owner": "Parth, Edward", "target": "", "done": false}, {"id": "4.6", "text": "Solicitor check of engagement letter, terms, privacy notice", "owner": "Victor", "target": "", "done": false}, {"id": "4.7", "text": "HMRC agent services account", "owner": "Parth", "target": "", "done": false}, {"id": "4.8", "text": "Switch pre-registration mode to OFF in CLAUDE.md", "owner": "Parth", "target": "", "done": false}]}, {"title": "Stage 5: Launch and first clients", "items": [{"id": "5.1", "text": "Publish website and Google Business Profile", "owner": "Charlotte", "target": "", "done": false}, {"id": "5.2", "text": "Contact the waiting list", "owner": "Amelia, Henry", "target": "", "done": false}, {"id": "5.3", "text": "First three clients onboarded with full AML checks", "owner": "Sophie", "target": "", "done": false}, {"id": "5.4", "text": "First month-end closes delivered and reviewed", "owner": "Leo, James, Harriet", "target": "", "done": false}, {"id": "5.5", "text": "First three reviews requested", "owner": "Amelia", "target": "", "done": false}]}], "lessons": [{"date": "19/10/2026", "text": "MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."}], "log": ["19/10/2026 | New client folder created: DEMO Harrow Hill Café | new-client.sh", "19/10/2026 | Office built: rules, agents, commands, templates, policies, dashboard, academy, demo | build team"], "kpi": {"leads": 4}, "demoClients": 1, "aatPassed": 0, "built": "19/10/2026"};
+window.LP_HQ = {"agents": [{"id": "grace-whitmore", "name": "Grace Whitmore", "role": "Operations Manager", "dept": "Executive Office", "hair": "#6b3e26", "skin": "#f1c9a5", "shirt": "#1f6f5c", "lastTask": "Runs every task end to end", "status": "idle", "model": "sonnet", "skills": "- Small-practice operations: workflow design, SOPs, RACI, capacity planning, quality control and service levels for a bookkeeping firm.\n- You know every department's skills, inputs and outputs (see the org chart below) and the firm's rules in `CLAUDE.md`.\n- You price work in effort and cost: cheapest capable agent first, one quality check, no duplicated effort.", "description": "Operations Manager. Use for ANY task Parth gives that is not obviously one person's job, or that spans departments. Grace breaks the task into steps, assigns each step to the right department and person, checks quality and hands Parth one finished result. Also owns workflows, capacity, SOPs and the quality standard.", "briefings": [], "duty": "routes every task, plans, delegates, signs off quality"}, {"id": "ava-sterling", "name": "Ava Sterling", "role": "Chief of Staff", "dept": "Executive Office", "hair": "#e2b04a", "skin": "#f6d3b3", "shirt": "#7b4ea3", "lastTask": "Set up deadline calendar", "status": "idle", "model": "sonnet", "skills": "Executive assistance and planning: prioritisation (urgent vs important), deadline management across HMRC, Companies House and client calendars, concise briefing writing.", "description": "Chief of Staff. Use for the morning brief, the deadline calendar, assigning work to other agents and updating the tracker and dashboard.", "briefings": [], "duty": "daily brief, calendar, roadmap tracking"}, {"id": "eleanor-price", "lastTask": "Joined the firm", "status": "idle", "hair": "#3b2a1e", "skin": "#f1c9a5", "shirt": "#2c4a7a", "name": "Eleanor Price", "role": "Director of Strategy", "dept": "Strategy & Business Development", "model": "sonnet", "skills": "Small professional-services strategy: market sizing from public data (ONS business counts, local directories), competitor benchmarking (pricing pages, review scores, service mix), positioning, pricing architecture, partnership channels (local accountants who do not want bookkeeping, business networks, trade associations, software partner directories) and growth planning for a solo-run firm.", "description": "Director of Strategy and Business Development. Use for market research in Harrow and North West London, competitor analysis, pricing strategy, service design, partnerships, the growth plan and the road-to-launch roadmap.", "briefings": [], "duty": "market research, competitors, pricing strategy, growth plan, roadmap"}, {"id": "henry-collins", "name": "Henry Collins", "role": "Head of Sales", "dept": "Sales & Marketing", "hair": "#3b2a1e", "skin": "#e9b892", "shirt": "#2a6fb0", "lastTask": "Pipeline template ready", "status": "idle", "model": "sonnet", "skills": "B2B sales for professional services: consultative selling, objection handling on price, value-based proposals, UK GDPR and PECR rules for B2B outreach, local SEO-led lead sourcing in NW London.", "description": "Sales. Use for lead lists, cold emails (UK GDPR and PECR aware, with opt-out), discovery-call scripts and proposals.", "briefings": ["19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."], "duty": "leads, outreach, discovery calls, proposals"}, {"id": "charlotte-quinn", "name": "Charlotte Quinn", "role": "Marketing Manager", "dept": "Sales & Marketing", "hair": "#a8452a", "skin": "#f6d3b3", "shirt": "#c08a1a", "lastTask": "Awaiting first /post", "status": "idle", "model": "haiku", "skills": "Local small-business marketing: Google Business Profile, review generation within platform rules, social content, ASA/CAP code compliance, honest copywriting.", "description": "Marketing. Use for social posts, Google Business Profile updates, review requests and website copy. No fake testimonials.", "briefings": ["19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."], "duty": "brand, posts, Google Business Profile, website copy"}, {"id": "amelia-hart", "lastTask": "Joined the firm", "status": "idle", "hair": "#c8783a", "skin": "#f6d3b3", "shirt": "#d77fa1", "name": "Amelia Hart", "role": "Client Relationship Manager", "dept": "Client Experience", "model": "haiku", "skills": "Client service in professional practices: onboarding journeys, expectation setting, plain-English writing, complaint handling to the firm's complaints procedure, satisfaction checks, review requests within Google's rules.", "description": "Client Relationship Manager. Use for client communication: welcome journeys, monthly check-ins, plain-English explanations, feedback and complaints handling, review requests and the waiting list.", "briefings": [], "duty": "client communication, check-ins, complaints, waiting list"}, {"id": "sophie-bennett", "name": "Sophie Bennett", "role": "Onboarding and AML Manager", "dept": "Client Onboarding & AML", "hair": "#1d1a18", "skin": "#8d5a3b", "shirt": "#b5651d", "lastTask": "Onboarded DEMO Harrow Hill Café", "status": "idle", "model": "sonnet", "skills": "MLR 2017 customer due diligence, risk-based approach, PEP and sanctions screening, engagement letters, smooth client onboarding experience.", "description": "Onboarding and AML checks. Use for new clients: customer due diligence, risk rating, engagement letter and welcome pack.", "briefings": [], "duty": "due diligence, risk rating, engagement letters"}, {"id": "leo-hartley", "name": "Leo Hartley", "role": "Senior Bookkeeper", "dept": "Bookkeeping & Accounts", "hair": "#2b2b2b", "skin": "#f1c9a5", "shirt": "#3f7f3a", "lastTask": "DEMO September books loaded", "status": "idle", "model": "sonnet", "skills": "Double-entry bookkeeping to AAT Level 3+ standard: chart of accounts design, VAT treatment (standard, reduced, zero, exempt, outside scope, reverse charge), bank and control account reconciliations, accruals and prepayments, cash vs accruals basis for sole traders.", "description": "Senior Bookkeeper. Use to categorise transactions, post double entry, reconcile the bank and run month-end close, always with workings.", "briefings": [], "duty": "categorising, double entry, reconciliations, month-end"}, {"id": "james-whitfield", "name": "James Whitfield", "role": "Reporting Analyst", "dept": "Bookkeeping & Accounts", "hair": "#8a6a48", "skin": "#e9b892", "shirt": "#2f8f8f", "lastTask": "VAT and MTD templates", "status": "idle", "model": "sonnet", "skills": "Management reporting in plain English, VAT return preparation (standard, flat rate, cash accounting), MTD for Income Tax quarterly updates and categories, KPI and variance analysis for small businesses.", "description": "Reporting analyst. Use for monthly client summaries, VAT return box-by-box workings and MTD quarterly figures with a check-before-filing list.", "briefings": ["19/10/2026 | MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."], "duty": "monthly summaries, VAT returns, MTD updates"}, {"id": "daniel-foster", "lastTask": "Joined the firm", "status": "idle", "hair": "#1d1a18", "skin": "#8d5a3b", "shirt": "#4b6b3a", "name": "Daniel Foster", "role": "Tax and Payroll Support Specialist", "dept": "Tax & Payroll", "model": "sonnet", "skills": "Self Assessment supporting schedules (self-employment and UK property pages), allowable vs disallowable expenses as a records question, CIS deduction statements and reconciliations for subcontractors, landlord income and expense schedules, basic payroll processing and RTI submission records, key HMRC deadlines.", "description": "Tax and Payroll Support Specialist. Use for Self Assessment preparation packs, Construction Industry Scheme (CIS) records for tradespeople, landlord income schedules, and basic payroll and RTI support.", "briefings": [], "duty": "Self Assessment packs, CIS, landlord schedules, payroll records"}, {"id": "edward-lancaster", "lastTask": "Joined the firm", "status": "idle", "hair": "#7a7a7a", "skin": "#e9b892", "shirt": "#20334f", "name": "Edward Lancaster", "role": "Finance Director", "dept": "Finance & Credit Control", "model": "sonnet", "skills": "Small-firm financial management: start-up budgets, 12-month cash flow forecasts, break-even analysis, contribution per client, pricing margins, management accounts and the self-employed tax set-aside.", "description": "Finance Director. Use for LedgerPeak's own finances: budget, cash flow forecast, pricing margin checks, monthly management accounts, start-up costs and the break-even point.", "briefings": [], "duty": "LedgerPeak's budget, cash flow, margins, management accounts"}, {"id": "emily-brooks", "name": "Emily Brooks", "role": "Credit Controller", "dept": "Finance & Credit Control", "hair": "#5a3a22", "skin": "#c68e65", "shirt": "#a83e5a", "lastTask": "Invoice log set up", "status": "idle", "model": "haiku", "skills": "Credit control for small firms: aged debt analysis, staged chasing, Late Payment of Commercial Debts (Interest) Act 1998 basics, keeping relationships warm while collecting cash.", "description": "Credit control. Use for LedgerPeak's own invoices, the aged debtor report and polite-to-firm chase messages.", "briefings": [], "duty": "invoices, aged debtors, chasers"}, {"id": "harriet-ellis", "lastTask": "Joined the firm", "status": "idle", "hair": "#5a3a22", "skin": "#f1c9a5", "shirt": "#8a2f3f", "name": "Harriet Ellis", "role": "Head of Quality and Risk", "dept": "Quality & Risk", "model": "sonnet", "skills": "Professional quality control: review checklists, sampling, error classification, root-cause notes, risk registers, and the firm's rules in `CLAUDE.md`.", "description": "Head of Quality and Risk. Use to review any deliverable before it reaches Parth, run checklists, keep the risk register and catch errors, missing sources or rule breaches.", "briefings": [], "duty": "reviews every deliverable, risk register"}, {"id": "victor-hale", "name": "Victor Hale", "role": "Head of Legal and Compliance", "dept": "Legal & Compliance", "hair": "#9a9a9a", "skin": "#f1c9a5", "shirt": "#5a5f6b", "lastTask": "Drafted 10 policies", "status": "idle", "model": "opus", "skills": "UK compliance for a bookkeeping practice: MLR 2017, POCA 2002, UK GDPR and DPA 2018, PECR, ICO registration, consumer and contract basics, professional indemnity. Knows the limit of a non-solicitor.", "description": "Legal and compliance. Use for AML, UK GDPR, ICO fee, insurance, engagement terms and questions on when to see a solicitor. Searches GOV.UK first.", "briefings": [], "duty": "AML, UK GDPR, contracts, policies, when to see a solicitor"}, {"id": "william-hayes", "lastTask": "Joined the firm", "status": "idle", "hair": "#2b2b2b", "skin": "#c68e65", "shirt": "#36506b", "name": "William Hayes", "role": "Head of Technology", "dept": "Technology & Automation", "model": "sonnet", "skills": "Cloud bookkeeping software (Xero, QuickBooks Online, FreeAgent), receipt capture (Dext, Hubdoc), bank feeds and CSV imports, MTD-compatible software lists, password managers and two-factor authentication, UK GDPR security basics, spreadsheet design and simple scripting.", "description": "Head of Technology and Automation. Use for software choice and set-up (Xero, QuickBooks, FreeAgent, Dext, bank feeds), data security, file structure, automations and the office systems.", "briefings": [], "duty": "software, bank feeds, security, automation"}, {"id": "theo-ashford", "name": "Theo Ashford", "role": "Head of Innovation", "dept": "Innovation & Learning", "hair": "#e2b04a", "skin": "#c68e65", "shirt": "#d0482a", "lastTask": "First updates log written", "status": "idle", "model": "sonnet", "skills": "- Fast, reliable research: GOV.UK, HMRC manuals, legislation.gov.uk, ICO, AAT, software release notes (Xero, QuickBooks, FreeAgent), AI tooling.\n- Turning complex change into a one-page explanation a new starter understands.\n- Spotting how a new tool or rule changes a workflow, and redesigning the step.", "description": "Head of the Innovation & Learning Lab. Use to find out what has changed in the world (HMRC, MTD, AML, GDPR, AI tools, bookkeeping software), learn new skills, and teach them simply to every other agent through briefings. Use when something new comes up that the team does not know how to do.", "briefings": [], "duty": "tracks what is new, teaches every department"}, {"id": "iris-bell", "name": "Iris Bell", "role": "AAT Tutor", "dept": "Innovation & Learning", "hair": "#4a2c1a", "skin": "#f6d3b3", "shirt": "#6a5acd", "lastTask": "Level 2 academy built", "status": "idle", "model": "sonnet", "skills": "AAT Levels 2 to 4 syllabus, adult distance-learning methods (spaced repetition, retrieval practice, worked examples), exam technique for computer-based assessments.", "description": "AAT tutor. Use for /study and /mock: teaches AAT Levels 2 to 4 using real LedgerPeak tasks, sets quizzes and mocks, tracks progress.", "briefings": [], "duty": "Parth's AAT study, quizzes and mocks"}], "rules": ["Parth is the signing officer.", "Never invent facts, fees, deadlines, thresholds or legal rules.", "Never store passport numbers, full bank account numbers, card numbers, passwords or National Insurance numbers in any file.", "Do not change Parth's wording in documents he has edited.", "If a client needs a related document Parth forgot to list, work it out, prepare it anyway, and tell him.", "Keep LedgerPeak completely separate from Parth's day job.", "Keep usage low.", "Show workings on all bookkeeping (debits, credits, account names) so Parth learns double entry from every set of books.", "\"Chartered accountant\" and \"certified accountant\" are restricted titles.", "After finishing any piece of work, add one line to office/work-log.md in the form DD/MM/YYYY | what | agent.", "Before every task, read your own knowledge/briefings/<your-id>.md.", "Any task from Parth that spans departments goes to Grace Whitmore, who plans, delegates, checks and hands back one result.", "Pre-registration mode is ON (see below)."], "roadmap": [{"title": "Stage 1: Foundations", "items": [{"id": "1.1", "text": "Read the day-job employment contract for second-job clauses", "owner": "Parth", "target": "26/10/2026", "done": false}, {"id": "1.2", "text": "Run the DEMO café month-end close end to end and review it", "owner": "Leo, James, Harriet", "target": "26/10/2026", "done": false}, {"id": "1.3", "text": "Brand basics: name check, logo brief, tone of voice, one-line promise", "owner": "Charlotte", "target": "02/11/2026", "done": false}, {"id": "1.4", "text": "Harrow market brief: target trades, competitor prices and review scores", "owner": "Eleanor", "target": "02/11/2026", "done": false}, {"id": "1.5", "text": "Start-up budget and 12-month cash flow forecast", "owner": "Edward", "target": "02/11/2026", "done": false}, {"id": "1.6", "text": "Choose bookkeeping software to learn first; free trial set-up guide", "owner": "William", "target": "09/11/2026", "done": false}, {"id": "1.7", "text": "AAT Level 2: Introduction to Bookkeeping studied, mock passed", "owner": "Iris", "target": "23/11/2026", "done": false}]}, {"title": "Stage 2: Prove the service", "items": [{"id": "2.1", "text": "Three more DEMO clients (plumber, landlord, corner shop) built and closed", "owner": "Leo, Daniel", "target": "30/11/2026", "done": false}, {"id": "2.2", "text": "DEMO VAT return and DEMO MTD quarterly update prepared and reviewed", "owner": "James, Harriet", "target": "30/11/2026", "done": false}, {"id": "2.3", "text": "Website copy and Google Business Profile drafted (not published)", "owner": "Charlotte", "target": "07/12/2026", "done": false}, {"id": "2.4", "text": "Pricing confirmed with time-per-client from the DEMO runs", "owner": "Edward, Eleanor", "target": "07/12/2026", "done": false}, {"id": "2.5", "text": "Waiting list form wording (consent-based) ready", "owner": "Amelia, Victor", "target": "07/12/2026", "done": false}, {"id": "2.6", "text": "Systems register and security set-up (password manager, 2FA)", "owner": "William", "target": "14/12/2026", "done": false}]}, {"title": "Stage 3: Readiness decision", "items": [{"id": "3.1", "text": "Go / not yet decision: time available, costs, confidence from DEMO runs", "owner": "Parth, Grace", "target": "", "done": false}, {"id": "3.2", "text": "Confirm current registration steps and fees on GOV.UK and ICO", "owner": "Victor", "target": "", "done": false}]}, {"title": "Stage 4: Registration", "items": [{"id": "4.1", "text": "Register self-employed for Self Assessment (HMRC)", "owner": "Parth", "target": "", "done": false}, {"id": "4.2", "text": "AML supervision registration (before any client work)", "owner": "Parth, Victor", "target": "", "done": false}, {"id": "4.3", "text": "ICO data protection fee", "owner": "Parth", "target": "", "done": false}, {"id": "4.4", "text": "Professional indemnity insurance", "owner": "Parth, Victor", "target": "", "done": false}, {"id": "4.5", "text": "Business bank account", "owner": "Parth, Edward", "target": "", "done": false}, {"id": "4.6", "text": "Solicitor check of engagement letter, terms, privacy notice", "owner": "Victor", "target": "", "done": false}, {"id": "4.7", "text": "HMRC agent services account", "owner": "Parth", "target": "", "done": false}, {"id": "4.8", "text": "Switch pre-registration mode to OFF in CLAUDE.md", "owner": "Parth", "target": "", "done": false}]}, {"title": "Stage 5: Launch and first clients", "items": [{"id": "5.1", "text": "Publish website and Google Business Profile", "owner": "Charlotte", "target": "", "done": false}, {"id": "5.2", "text": "Contact the waiting list", "owner": "Amelia, Henry", "target": "", "done": false}, {"id": "5.3", "text": "First three clients onboarded with full AML checks", "owner": "Sophie", "target": "", "done": false}, {"id": "5.4", "text": "First month-end closes delivered and reviewed", "owner": "Leo, James, Harriet", "target": "", "done": false}, {"id": "5.5", "text": "First three reviews requested", "owner": "Amelia", "target": "", "done": false}]}], "lessons": [{"date": "19/10/2026", "text": "MTD for Income Tax: from 06/04/2027 the threshold drops to £30,000 qualifying income (gross, not profit). When a lead or client is a sole trader or landlord between £30,000 and £50,000, flag that they join MTD from April 2027 and offer MTD Ready. Source: GOV.UK, checked 19/10/2026."}], "log": ["19/10/2026 | New client folder created: DEMO Harrow Hill Café | new-client.sh", "19/10/2026 | Office built: rules, agents, commands, templates, policies, dashboard, academy, demo | build team"], "kpi": {"leads": 4}, "demoClients": 1, "aatPassed": 0, "built": "21/10/2026"};
 </script>
 <script>
 (function(){
@@ -368,14 +374,14 @@ renderLog(); select(grace); renderScreens();
 
 /* ---------- live state ---------- */
 let demoRunning = false;
-function apply(L) {
+let apply = function (L) {
   const ag = (L && L.agents) || {};
   staff.forEach((s) => { const x = ag[s.id]; s.state = x && x.status === 'working' ? 'working' : 'idle'; s.task = x ? x.task : ''; });
   const p = (L && L.parth) || {}; CEO.state = p.status === 'giving task' || p.status === 'reviewing' ? 'working' : 'idle';
   CEO.task = p.status === 'reviewing' ? 'Results to approve' : p.status === 'giving task' ? 'New task assigned' : '';
   $('kWork').textContent = staff.filter((s) => s.state === 'working').length;
   renderScreens(); renderDepts(); if (selected) select(selected);
-}
+};
 apply(window.LP_LIVE);
 if (location.protocol === 'file:') setInterval(() => {
   if (demoRunning) return;
@@ -431,254 +437,179 @@ $('demoBtn').addEventListener('click', () => {
   tick();
 });
 
-/* ---------- 3D office ---------- */
-const host = $('o3d'), labelsEl = $('o3dLabels');
-let ok = false;
-try { if (!window.THREE) throw 0; const t = document.createElement('canvas'); if (!(t.getContext('webgl') || t.getContext('experimental-webgl'))) throw 0; ok = true; } catch (e) { ok = false; }
-if (!ok) { host.innerHTML = '<div class="nogl">The 3D office needs WebGL, which this browser has turned off. Everything else on this page still works.</div>'; return; }
-
-const R = new THREE.WebGLRenderer({ antialias: true });
-R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); R.shadowMap.enabled = true; R.shadowMap.type = THREE.PCFSoftShadowMap;
-host.appendChild(R.domElement);
-const S = new THREE.Scene(); S.background = new THREE.Color('#d3dccf'); S.fog = new THREE.Fog('#d3dccf', 120, 240);
-const cam = new THREE.PerspectiveCamera(36, 1, .5, 400);
-S.add(new THREE.HemisphereLight('#fff6e8', '#7f8a74', .62));
-const sun = new THREE.DirectionalLight('#fff2dc', .6); sun.position.set(-30, 60, 40); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
-Object.assign(sun.shadow.camera, { left: -60, right: 60, top: 60, bottom: -60, near: 1, far: 160 }); sun.shadow.bias = -.0005; S.add(sun);
-const hubLight = new THREE.PointLight('#a8f0d4', .8, 24, 2); hubLight.position.set(0, 6, 0); S.add(hubLight);
-const M = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: .85, metalness: .02 }, o || {}));
-const B = (c) => new THREE.MeshBasicMaterial({ color: c });
-function add(m, x, y, z, par) { m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; (par || S).add(m); return m; }
-const box = (w, h, d, mat, x, y, z, par) => add(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat), x, y, z, par);
-const cyl = (rt, rb, h, mat, x, y, z, par, seg) => add(new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg || 20), mat), x, y, z, par);
-const ball = (r, mat, x, y, z, par) => add(new THREE.Mesh(new THREE.SphereGeometry(r, 16, 12), mat), x, y, z, par);
-const white = new THREE.Color('#ffffff');
-const wood = M('#e2c9a6'), dark = M('#2a2f3b'), frameM = M('#f7f5f1'), greyM = M('#8c8a86');
-const glassM = new THREE.MeshStandardMaterial({ color: '#d6f2ea', transparent: true, opacity: .22, roughness: .1, metalness: .1, depthWrite: false });
-const extM = M('#ece7de'), winM = B('#c4e6e0');
-
-/* grounds */
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(320, 320), M('#7f9a63', { roughness: 1 })); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; S.add(ground);
-function tree(x, z, s) { const g = new THREE.Group(); g.position.set(x, 0, z); S.add(g); cyl(.25 * s, .35 * s, 2.2 * s, M('#8a6342'), 0, 1.1 * s, 0, g, 8);
-  const f = M(['#6f9e5a', '#7fae63', '#5d8f4e'][Math.floor(Math.abs(x * 7 + z * 3)) % 3]); ball(1.6 * s, f, 0, 3 * s, 0, g); ball(1.15 * s, f, .7 * s, 3.6 * s, .2 * s, g); ball(1 * s, f, -.6 * s, 3.5 * s, -.3 * s, g); }
-for (let i = 0; i < 44; i++) { const a = i * 2.399, r = 48 + ((i * 13) % 20), x = Math.cos(a) * r * 1.15, z = Math.sin(a) * r * .85; if (z > 20 && Math.abs(x) < 28) continue; tree(x, z, .9 + ((i * 7) % 5) / 8); }
-box(46, .05, 11, M('#5d6168', { roughness: 1 }), 0, .03, 33).castShadow = false;
-for (let x = -20; x <= 20; x += 4) box(.12, .02, 4, B('#f2f2f2'), x, .07, 31).castShadow = false;
-[[-14, '#2f8a6a'], [-6, '#d6dde3'], [10, '#3d5a80'], [18, '#c88410']].forEach(([x, c]) => { const g = new THREE.Group(); g.position.set(x + 2, 0, 31); S.add(g);
-  box(1.8, .7, 3.6, M(c, { roughness: .4, metalness: .3 }), 0, .6, 0, g); box(1.6, .6, 1.9, M('#2b3440', { roughness: .2 }), 0, 1.2, -.2, g);
-  [-1.1, 1.1].forEach((z) => [-.9, .9].forEach((xx) => { cyl(.32, .32, .25, dark, xx, .32, z, g, 12).rotation.z = Math.PI / 2; })); });
-box(9, .3, 3.4, frameM, 0, 3.4, 23.7); [-4.2, 4.2].forEach((x) => box(.2, 3.4, .2, frameM, x, 1.7, 25.2));
-{ const c = document.createElement('canvas'); c.width = 1024; c.height = 160; const x = c.getContext('2d'); x.fillStyle = '#1f4a3d'; x.fillRect(0, 0, 1024, 160);
-  x.fillStyle = '#ffffff'; x.font = '700 80px Public Sans, Arial, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('▲ LEDGERPEAK', 512, 84);
-  const sg = new THREE.Mesh(new THREE.PlaneGeometry(8.6, 1.35), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c) })); sg.position.set(0, 4.3, 25.42); S.add(sg); box(8.8, 1.5, .1, frameM, 0, 4.3, 25.34); }
-
-/* building shell */
-const X0 = -32, X1 = 32, Z0 = -22, Z1 = 22;
-box(X1 - X0 + 1, .4, Z1 - Z0 + 1, M('#d9d4cc'), 0, .2, 0);
-box(40, .02, 12, M('#e8e2d8', { roughness: .6 }), 0, .42, 0);
-for (let x = -20; x <= 20; x += 2) box(.03, .01, 12, B('#d6cfc3'), x, .435, 0).castShadow = false;
-for (let z = -6; z <= 6; z += 2) box(40, .01, .03, B('#d6cfc3'), 0, .435, z).castShadow = false;
-function solidWall(x0, z0, x1, z1, h, windows) { const hor = z0 === z1, len = hor ? x1 - x0 : z1 - z0, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
-  box(hor ? len : .4, h, hor ? .4 : len, extM, cx, .4 + h / 2, cz); box(hor ? len + .2 : .6, .15, hor ? .6 : len + .2, frameM, cx, .4 + h + .07, cz);
-  if (windows) for (let t = (hor ? x0 : z0) + 3; t < (hor ? x1 : z1) - 2; t += 5) { const w = new THREE.Mesh(new THREE.BoxGeometry(hor ? 3 : .04, 1.8, hor ? .04 : 3), winM); w.position.set(hor ? t : x0 + .22, 2.6, hor ? z0 + .22 : t); S.add(w); } }
-solidWall(X0, Z0, X1, Z0, 4.2, true); solidWall(X0, Z0, X0, Z1, 4.2, true);
-solidWall(X1, Z0, X1, Z1, 1.1, false); solidWall(X0, Z1, -3, Z1, 1.1, false); solidWall(3, Z1, X1, Z1, 1.1, false);
-function glassWall(x0, z0, x1, z1, doors) { const hor = z0 === z1, a = hor ? x0 : z0, b = hor ? x1 : z1, gaps = (doors || []).map((d) => [d - 1.3, d + 1.3]).sort((p, q) => p[0] - q[0]);
-  const segs = []; let s = a; gaps.forEach(([g0, g1]) => { if (g0 > s) segs.push([s, g0]); s = g1; }); if (s < b) segs.push([s, b]);
-  const P = (t) => hor ? [t, z0] : [x0, t];
-  segs.forEach(([s0, s1]) => { const len = s1 - s0, [cx, cz] = P((s0 + s1) / 2);
-    const pane = new THREE.Mesh(new THREE.BoxGeometry(hor ? len : .06, 2.6, hor ? .06 : len), glassM); pane.position.set(cx, 1.85, cz); S.add(pane);
-    box(hor ? len : .14, .12, hor ? .14 : len, frameM, cx, 3.2, cz); box(hor ? len : .12, .16, hor ? .12 : len, greyM, cx, .5, cz);
-    for (let t = s0; t <= s1 + .01; t += Math.max(1, len / Math.ceil(len / 3.6))) { const [px, pz] = P(Math.min(t, s1)); box(.12, 2.9, .12, frameM, px, 1.85, pz); } });
-  gaps.forEach(([g0, g1]) => { const [px, pz] = P((g0 + g1) / 2); box(hor ? 2.6 : .14, .16, hor ? .14 : 2.6, frameM, px, 3.2, pz); }); }
-
-/* room layout: six rooms along the back, six along the front, two either side of the hall */
+/* ---------- floor plan ---------- */
+// Architectural plan in SVG (viewBox 1200 x 780). Three bands of rooms with two corridors between them.
+const NS = 'http://www.w3.org/2000/svg';
 const ROOMS = [
-  { key: 'ceo', name: 'Parth · CEO', color: '#24344d', r: [-32, -22, -23, -6], door: [-27.5, -6], ceo: true },
-  { key: 'exec', r: [-23, -22, -12, -6], door: [-17.5, -6] },
-  { key: 'strat', r: [-12, -22, -1, -6], door: [-6.5, -6] },
-  { key: 'sales', r: [-1, -22, 11, -6], door: [5, -6] },
-  { key: 'cx', r: [11, -22, 21, -6], door: [16, -6] },
-  { key: 'onb', r: [21, -22, 32, -6], door: [26.5, -6] },
-  { key: 'book', r: [-32, 6, -17, 22], door: [-24.5, 6] },
-  { key: 'tax', r: [-17, 6, -6, 22], door: [-11.5, 6] },
-  { key: 'fin', r: [-6, 6, 6, 22], door: [0, 6] },
-  { key: 'qa', r: [6, 6, 15, 22], door: [10.5, 6] },
-  { key: 'legal', r: [15, 6, 23, 22], door: [19, 6] },
-  { key: 'tech', r: [23, 6, 32, 22], door: [27.5, 6] },
-  { key: 'lab', r: [-32, -6, -20, 6], door: [-20, 0] },
-  { key: 'kitchen', name: 'Kitchen & lounge', color: '#a67c52', r: [20, -6, 32, 6], door: [20, 0], kitchen: true },
+  { key: 'ceo', name: "CEO's office", x: 20, y: 20, w: 190, h: 230, door: ['b', 150] },
+  { key: 'exec', x: 210, y: 20, w: 220, h: 230, door: ['b', 320] },
+  { key: 'strat', x: 430, y: 20, w: 170, h: 230, door: ['b', 515] },
+  { key: 'board', name: 'Boardroom', x: 600, y: 20, w: 240, h: 230, door: ['b', 720], board: true },
+  { key: 'sales', x: 840, y: 20, w: 190, h: 230, door: ['b', 935] },
+  { key: 'cx', x: 1030, y: 20, w: 150, h: 230, door: ['b', 1105] },
+  { key: 'onb', x: 20, y: 320, w: 170, h: 230, door: ['t', 105] },
+  { key: 'book', x: 190, y: 320, w: 260, h: 230, door: ['t', 320] },
+  { key: 'tax', x: 450, y: 320, w: 160, h: 230, door: ['t', 530] },
+  { key: 'fin', x: 610, y: 320, w: 230, h: 230, door: ['t', 725] },
+  { key: 'qa', x: 840, y: 320, w: 170, h: 230, door: ['t', 925] },
+  { key: 'legal', x: 1010, y: 320, w: 170, h: 230, door: ['t', 1095] },
+  { key: 'tech', x: 20, y: 610, w: 210, h: 150, door: ['t', 125] },
+  { key: 'lab', x: 230, y: 610, w: 250, h: 150, door: ['t', 355] },
+  { key: 'reception', name: 'Reception', x: 480, y: 610, w: 240, h: 150, door: ['t', 600], reception: true },
+  { key: 'kitchen', name: 'Kitchen & lounge', x: 720, y: 610, w: 250, h: 150, door: ['t', 845], kitchen: true },
+  { key: 'wc', name: 'Washrooms & store', x: 970, y: 610, w: 210, h: 150, door: ['t', 1075], wc: true },
 ];
-ROOMS.forEach((c) => { const d = DEPTS.find((x) => x.id === c.key); if (d) { c.dept = d; c.name = d.short || d.name; c.color = d.color; } });
-glassWall(X0, -6, X1, -6, ROOMS.filter((r) => r.door[1] === -6).map((r) => r.door[0]));
-glassWall(X0, 6, X1, 6, ROOMS.filter((r) => r.door[1] === 6).map((r) => r.door[0]));
-[-23, -12, -1, 11, 21].forEach((x) => glassWall(x, Z0, x, -6));
-[-17, -6, 6, 15, 23].forEach((x) => glassWall(x, 6, x, Z1));
-glassWall(-20, -6, -20, 6, [0]); glassWall(20, -6, 20, 6, [0]);
+ROOMS.forEach((r) => { const d = DEPTS.find((x) => x.id === r.key); if (d) { r.dept = d; r.name = d.short || d.name; r.color = d.color; } else r.color = r.key === 'ceo' ? '#24344d' : '#8c8378'; });
+const svg = document.createElementNS(NS, 'svg');
+svg.setAttribute('viewBox', '0 0 1200 780'); svg.setAttribute('role', 'img');
+svg.setAttribute('aria-label', 'Floor plan of LedgerPeak HQ: CEO office, boardroom, twelve department offices, reception, kitchen and washrooms around two corridors');
+$('plan').appendChild(svg);
+function el(tag, attrs, parent, text) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; (parent || svg).appendChild(e); return e; }
+function tint(hex, a) { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; }
 
-/* the Brain */
-const hub = new THREE.Group(); S.add(hub);
-cyl(4.3, 4.5, .4, M('#b48a5f'), 0, .6, 0, hub, 56); cyl(3.5, 3.7, .4, M('#d2b088'), 0, .95, 0, hub, 56);
-for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 + .39; cyl(.35, .28, .5, M('#f4efe6'), Math.cos(a) * 4.9, .67, Math.sin(a) * 4.9, hub, 12); ball(.45, M('#6f9e5a'), Math.cos(a) * 4.9, 1.15, Math.sin(a) * 4.9, hub); }
-const glow = (c) => new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: .9 });
-const rings = [[3.55, .07, 1.17], [2.7, .08, 1.18], [1.9, .06, 1.19]].map(([r, tb, y]) => { const t = new THREE.Mesh(new THREE.TorusGeometry(r, tb, 8, 100), glow('#6fe0b8')); t.rotation.x = -Math.PI / 2; t.position.y = y; hub.add(t); return t; });
-const disc = new THREE.Mesh(new THREE.CircleGeometry(2.6, 48), new THREE.MeshBasicMaterial({ color: '#9de8cc', transparent: true, opacity: .55 })); disc.rotation.x = -Math.PI / 2; disc.position.y = 1.165; hub.add(disc);
-const beam = new THREE.Mesh(new THREE.CylinderGeometry(.25, .7, 9, 28, 1, true), new THREE.MeshBasicMaterial({ color: '#8fffd8', transparent: true, opacity: .1, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending })); beam.position.y = 5.6; hub.add(beam);
-const core = ball(.95, new THREE.MeshStandardMaterial({ color: '#c8ffe9', emissive: '#3fdca0', emissiveIntensity: 1.2, roughness: .3 }), 0, 4.6, 0, hub); core.castShadow = false;
-const shell = new THREE.Mesh(new THREE.IcosahedronGeometry(1.8, 1), new THREE.MeshBasicMaterial({ color: '#5fd6a8', wireframe: true, transparent: true, opacity: .45 })); shell.position.y = 4.6; hub.add(shell);
-const orbits = [0, 1, 2].map((i) => { const t = new THREE.Mesh(new THREE.TorusGeometry(2.2 + i * .35, .03, 6, 80), glow('#8fefcf')); t.position.y = 4.6; t.rotation.set(Math.PI / 2 + i * .7, i * 1.1, 0); hub.add(t); return t; });
+// floor and corridors
+el('rect', { x: 0, y: 0, width: 1200, height: 780, class: 'p-site' });
+el('rect', { x: 20, y: 20, width: 1160, height: 740, class: 'p-floor' });
+el('rect', { x: 20, y: 250, width: 1160, height: 70, class: 'p-corr' });
+el('rect', { x: 20, y: 550, width: 1160, height: 60, class: 'p-corr' });
+for (let x = 40; x < 1180; x += 40) { el('line', { x1: x, y1: 250, x2: x, y2: 320, class: 'p-tile' }); el('line', { x1: x, y1: 550, x2: x, y2: 610, class: 'p-tile' }); }
 
-/* people and furniture */
-const SKIN3 = ['#f1cfb0', '#e3b58f', '#c48e66', '#8d5a3b'], HAIR3 = ['#2b2018', '#6b4426', '#1c1814', '#c9a35a', '#8a3b22'];
-const SHIRT = ['#f08c3a', '#4dabf7', '#e64980', '#51cf66', '#fcc419', '#845ef7', '#ff6b6b', '#20c997'];
-function person(par, x, z, seated, k, look) {
-  const g = new THREE.Group(); g.position.set(x, 0, z); par.add(g);
-  const y0 = seated ? .62 : 0;
-  if (!seated) { cyl(.12, .12, .8, dark, -.13, .4, 0, g, 8); cyl(.12, .12, .8, dark, .13, .4, 0, g, 8); }
-  cyl(.3, .34, .8, M(look && look.shirt || SHIRT[k % SHIRT.length]), 0, y0 + .82, 0, g, 14);
-  ball(.27, M(look && look.skin || SKIN3[k % SKIN3.length]), 0, y0 + 1.48, 0, g);
-  const h = new THREE.Mesh(new THREE.SphereGeometry(.29, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2), M(look && look.hair || HAIR3[(k * 3) % HAIR3.length])); h.position.y = y0 + 1.52; h.castShadow = true; g.add(h);
-  return g;
+const gRooms = el('g', {}), gFurn = el('g', {}), gWalls = el('g', {}), gPeople = el('g', {}), gLabels = el('g', {});
+function plant(x, y) { el('circle', { cx: x, cy: y, r: 9, class: 'p-pot' }, gFurn); el('circle', { cx: x, cy: y, r: 6.5, class: 'p-leaf' }, gFurn); el('circle', { cx: x + 3, cy: y - 3, r: 3.5, class: 'p-leaf2' }, gFurn); }
+function chair(x, y) { el('rect', { x: x - 8, y: y - 7, width: 16, height: 14, rx: 4, class: 'p-chair' }, gFurn); }
+function deskAt(x, y, spare) { // x,y = desk centre; person sits below
+  el('rect', { x: x - 30, y: y - 15, width: 60, height: 30, rx: 2, class: spare ? 'p-desk spare' : 'p-desk' }, gFurn);
+  el('rect', { x: x - 13, y: y - 11, width: 26, height: 4, rx: 1, class: 'p-mon' }, gFurn);
+  el('rect', { x: x - 9, y: y + 3, width: 18, height: 5, rx: 1, class: 'p-kb' }, gFurn);
+  chair(x, y + 26);
+  return { x, y: y + 26 };
 }
-function plant(x, z, s) { s = s || 1; cyl(.32 * s, .25 * s, .55 * s, M('#f4efe6'), x, .68 * s, z, S, 12); ball(.55 * s, M('#5f9a52'), x, 1.3 * s, z); ball(.38 * s, M('#76b465'), x + .25 * s, 1.6 * s, z - .1); }
-function desk(x, z, rot, k, ag) { const g = new THREE.Group(); g.position.set(x, .42, z); g.rotation.y = rot || 0; S.add(g);
-  box(2.3, .1, 1.1, wood, 0, .73, 0, g); [[-1.05, -.45], [1.05, -.45], [-1.05, .45], [1.05, .45]].forEach(([a, b]) => box(.08, .73, .08, dark, a, .36, b, g));
-  box(1.15, .72, .06, M('#1b1f29'), 0, 1.26, -.32, g); box(.1, .25, .1, dark, 0, .88, -.32, g);
-  const cvs = document.createElement('canvas'); cvs.width = 256; cvs.height = 150; const tex = new THREE.CanvasTexture(cvs);
-  const scr = new THREE.Mesh(new THREE.PlaneGeometry(1.02, .6), new THREE.MeshBasicMaterial({ map: tex })); scr.position.set(0, 1.26, -.285); g.add(scr);
-  box(.8, .1, .8, dark, 0, .2, .95, g); box(.8, .8, .1, dark, 0, .63, 1.35, g);
-  const p = person(g, 0, .95, true, k, ag); p.position.y = -.42;
-  return { p, phase: Math.random() * 6, ag, cvs, tex, sig: '' }; }
-function sofa(x, z, rot, col) { const g = new THREE.Group(); g.position.set(x, .42, z); g.rotation.y = rot; S.add(g); const sm = M(new THREE.Color(col).lerp(new THREE.Color('#8a7f74'), .45));
-  box(2.6, .5, 1.1, sm, 0, .25, 0, g); box(2.6, .7, .3, sm, 0, .6, -.45, g); box(.3, .65, 1.1, sm, -1.3, .45, 0, g); box(.3, .65, 1.1, sm, 1.3, .45, 0, g); box(1.2, .35, .7, wood, 0, .17, 1.2, g); }
-function shelf(x, z, rot) { const g = new THREE.Group(); g.position.set(x, .42, z); g.rotation.y = rot || 0; S.add(g);
-  box(2.2, 1.9, .45, wood, 0, .95, 0, g); const cs = ['#2f8a6a', '#4dabf7', '#fcc419', '#e64980', '#845ef7', '#ff922b'];
-  for (let r = 0; r < 2; r++) for (let i = 0; i < 6; i++) box(.2, .5, .3, M(cs[(i + r * 2) % 6]), -.8 + i * .32, .5 + r * .8, .1, g); }
-function wallScreen(x, z, col) { box(2.6, .5, .6, wood, x, .67, z); box(2.4, 1.3, .08, M('#1b1f29'), x, 1.75, z + .05);
-  const ch = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.1, .02), B(new THREE.Color(col).lerp(new THREE.Color('#0c1018'), .35))); ch.position.set(x, 1.75, z + .1); S.add(ch);
-  for (let i = 0; i < 6; i++) { const h = .2 + ((i * 37 + Math.abs(x | 0)) % 7) / 10; const b = new THREE.Mesh(new THREE.BoxGeometry(.22, h, .02), B(new THREE.Color(col).lerp(white, .55))); b.position.set(x - .85 + i * .34, 1.3 + h / 2, z + .12); S.add(b); } }
 
-const rooms = [];
-ROOMS.forEach((cfg, ri) => {
-  const [x0, z0, x1, z1] = cfg.r, w = x1 - x0, d = z1 - z0, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, col = new THREE.Color(cfg.color);
-  box(w - .1, .02, d - .1, M(cfg.kitchen ? '#e4dccb' : '#c69a6c'), cx, .42, cz).castShadow = false;
-  if (!cfg.kitchen) for (let x = x0 + 1.2; x < x1; x += 1.2) box(.03, .01, d - .2, B('#b0865b'), x, .435, cz).castShadow = false;
-  box(w * .6, .03, d * .5, M(col.clone().lerp(white, .25), { roughness: 1 }), cx + .3, .44, cz + .3).castShadow = false;
-  const room = { cfg, cx, cz, desks: [] };
-  const members = cfg.ceo ? [CEO] : cfg.dept ? staff.filter((s) => s.dept === cfg.dept) : [];
-  room.members = members;
-  if (cfg.kitchen) {
-    box(8, 1, .8, M('#f4efe6'), cx, .9, z0 + 1); box(8.2, .1, 1, wood, cx, 1.45, z0 + 1); box(1, 2.2, .9, M('#e9eef0'), x1 - 1, 1.5, z0 + 1.2);
-    box(.6, .5, .5, M('#3a3a3a'), cx - 2, 1.75, z0 + 1); cyl(1.1, 1.1, .08, wood, cx, 1.15, cz + 1, S, 24); cyl(.12, .12, .7, dark, cx, .78, cz + 1, S, 8);
-    sofa(cx + 3, z1 - 1.6, Math.PI, cfg.color); plant(x0 + 1, z1 - 1, .9); plant(x1 - 1, z1 - 1, .9);
-  } else if (cfg.ceo) {
-    room.desks.push(desk(cx + .5, cz - 1.5, 0, ri * 3 + 1, { shirt: '#24344d', skin: '#b07a52', hair: '#1d1a18' }));
-    box(3.2, .08, 1.6, M('#8b5e3c'), cx + .5, 1.2, cz - 1.5); sofa(cx, z1 - 2.2, Math.PI, cfg.color); shelf(x0 + .6, z0 + 3, Math.PI / 2); plant(x1 - 1, z0 + 1, .9); plant(x0 + 1, z1 - .9, .8);
-    room.desks[0].ag = CEO;
+const seats = {};
+ROOMS.forEach((r) => {
+  r.members = r.key === 'ceo' ? [CEO] : r.dept ? staff.filter((s) => s.dept === r.dept) : [];
+  el('rect', { x: r.x, y: r.y, width: r.w, height: r.h, fill: tint(r.color, r.dept || r.key === 'ceo' ? .09 : .05) }, gRooms);
+  // furniture
+  if (r.board) {
+    el('rect', { x: r.x + 45, y: r.y + 80, width: r.w - 90, height: 70, rx: 30, class: 'p-table' }, gFurn);
+    for (let i = 0; i < 5; i++) { const cx = r.x + 72 + i * ((r.w - 144) / 4); chair(cx, r.y + 66); chair(cx, r.y + 164); }
+    chair(r.x + 32, r.y + 115); chair(r.x + r.w - 32, r.y + 115);
+    el('rect', { x: r.x + 60, y: r.y + 40, width: r.w - 120, height: 6, rx: 2, class: 'p-board' }, gFurn);
+    plant(r.x + 18, r.y + r.h - 20); plant(r.x + r.w - 18, r.y + r.h - 20);
+  } else if (r.reception) {
+    el('path', { d: `M${r.x + 70} ${r.y + 95} q50 -40 100 0 v18 q-50 -36 -100 0 z`, class: 'p-desk' }, gFurn);
+    chair(r.x + 120, r.y + 70);
+    el('rect', { x: r.x + 14, y: r.y + 46, width: 22, height: 70, rx: 6, class: 'p-sofa' }, gFurn);
+    el('rect', { x: r.x + r.w - 36, y: r.y + 46, width: 22, height: 70, rx: 6, class: 'p-sofa' }, gFurn);
+    plant(r.x + 25, r.y + 125); plant(r.x + r.w - 25, r.y + 125);
+    el('rect', { x: r.x + 95, y: r.y + r.h - 6, width: 50, height: 12, class: 'p-floor' }, gFurn);
+    el('text', { x: r.x + 120, y: r.y + r.h + 14, class: 'p-entry', 'text-anchor': 'middle' }, gLabels, 'MAIN ENTRANCE');
+  } else if (r.kitchen) {
+    el('rect', { x: r.x + 12, y: r.y + r.h - 34, width: r.w - 24, height: 22, class: 'p-counter' }, gFurn);
+    el('rect', { x: r.x + r.w - 46, y: r.y + r.h - 40, width: 30, height: 28, class: 'p-fridge' }, gFurn);
+    el('circle', { cx: r.x + 60, cy: r.y + 76, r: 22, class: 'p-table' }, gFurn); [[-30, 0], [30, 0], [0, -30], [0, 30]].forEach(([a, b]) => chair(r.x + 60 + a, r.y + 76 + b));
+    el('circle', { cx: r.x + 150, cy: r.y + 76, r: 22, class: 'p-table' }, gFurn); [[-30, 0], [30, 0], [0, -30], [0, 30]].forEach(([a, b]) => chair(r.x + 150 + a, r.y + 76 + b));
+    plant(r.x + r.w - 18, r.y + r.h - 48);
+  } else if (r.wc) {
+    for (let i = 0; i < 3; i++) { el('rect', { x: r.x + 14 + i * 42, y: r.y + 44, width: 38, height: 52, class: 'p-cubicle' }, gFurn); el('ellipse', { cx: r.x + 33 + i * 42, cy: r.y + 64, rx: 8, ry: 10, class: 'p-wcbowl' }, gFurn); }
+    el('rect', { x: r.x + 14, y: r.y + 116, width: 120, height: 18, class: 'p-counter' }, gFurn);
+    for (let i = 0; i < 3; i++) el('rect', { x: r.x + 152, y: r.y + 44 + i * 32, width: 44, height: 24, class: 'p-shelf' }, gFurn);
   } else {
-    const n = Math.max(1, members.length), cols = Math.max(1, Math.min(n, Math.floor((w - 3) / 3.2))), rows = Math.ceil(n / cols);
-    const gx = cx + .6, gz = cz - (rows - 1) * 1.8 - .4;
-    members.forEach((m, i) => { const c = i % cols, r = Math.floor(i / cols); room.desks.push(desk(gx + (c - (cols - 1) / 2) * 3.2, gz + r * 3.6, 0, i + ri * 3, m)); });
-    const back = z0 < 0 ? z0 : z1, frontZ = z0 < 0 ? z1 : z0;
-    shelf(x0 + .6, cz, Math.PI / 2); plant(x1 - 1, back + (z0 < 0 ? 1 : -1), 1);
-    if (w >= 10) wallScreen(x1 - 3.4, back + (z0 < 0 ? .9 : -.9), cfg.color);
-    if (d >= 12 && w >= 11) sofa(x0 + 2.2, frontZ + (z0 < 0 ? -2.4 : 2.4), z0 < 0 ? Math.PI : 0, cfg.color);
+    // desks for each member, plus spare desks to fill the room
+    const n = r.members.length, cols = Math.max(1, Math.floor((r.w - 20) / 80)), total = Math.max(n, Math.min(cols * (r.h >= 200 ? 2 : 1), n + 1));
+    const rows = Math.ceil(total / cols), padX = (r.w - cols * 80) / 2 + 40, top = r.y + (r.key === 'ceo' ? 92 : 78);
+    for (let i = 0; i < total; i++) {
+      const c = i % cols, row = Math.floor(i / cols), s = deskAt(r.x + padX + c * 80, top + row * (rows > 1 ? 82 : 0), i >= n);
+      if (i < n) seats[r.members[i].id] = s;
+    }
+    el('rect', { x: r.x + 8, y: r.y + r.h - 56, width: 10, height: 40, class: 'p-shelf' }, gFurn);
+    plant(r.x + r.w - 18, r.y + r.h - 22);
+    if (r.key === 'ceo') { el('rect', { x: r.x + 30, y: r.y + 160, width: 26, height: 60, rx: 6, class: 'p-sofa' }, gFurn); el('rect', { x: r.x + 64, y: r.y + 172, width: 30, height: 36, rx: 3, class: 'p-table' }, gFurn); }
   }
-  rooms.push(room);
+  // labels
+  r.label = el('text', { x: r.x + 12, y: r.door[0] === 'b' ? r.y + 22 : r.y + 22, class: 'p-room' }, gLabels, r.name.toUpperCase());
+  r.sub = el('text', { x: r.x + 12, y: r.y + 37, class: 'p-sub' }, gLabels, '');
 });
 
-/* arcs and data packets from Grace's office (Executive) to every room */
-const links = [];
-const execRoom = rooms.find((r) => r.cfg.key === 'exec');
-rooms.forEach((r, i) => {
-  const end = r === execRoom ? new THREE.Vector3(0, 4.6, 0) : new THREE.Vector3(r.cx, 3.6, r.cz), start = new THREE.Vector3(execRoom.cx, 3.6, execRoom.cz);
-  const ctrl = start.clone().lerp(end, .5).add(new THREE.Vector3(0, 7 + (i % 3) * 1.5, 0));
-  const curve = new THREE.QuadraticBezierCurve3(start, ctrl, end);
-  S.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(50)), new THREE.LineBasicMaterial({ color: r.cfg.color, transparent: true, opacity: .5 })));
-  const pk = new THREE.Mesh(new THREE.SphereGeometry(.2, 10, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(r.cfg.color).lerp(white, .3) })); S.add(pk);
-  const node = new THREE.Mesh(new THREE.SphereGeometry(.28, 12, 10), new THREE.MeshBasicMaterial({ color: r.cfg.color })); node.position.copy(end); S.add(node);
-  const [dx, dz] = r.cfg.door, side = Math.abs(dx) === 20 ? 'x' : 'z';
-  const P1 = side === 'z' ? new THREE.Vector3(dx, 0, dz > 0 ? 4.6 : -4.6) : new THREE.Vector3(dx > 0 ? 18.6 : -18.6, 0, dz);
-  const P2 = side === 'z' ? new THREE.Vector3(dx, 0, dz > 0 ? 8.5 : -8.5) : new THREE.Vector3(dx > 0 ? 23 : -23, 0, dz);
-  const P0 = P1.clone().setY(0).normalize().multiplyScalar(5.6);
-  links.push({ curve, pk, off: i * .137, pts: [P0, P1, P2], room: r });
+// walls with door openings and door swings
+const WALL = 6;
+function wallLine(x1, y1, x2, y2) { el('line', { x1, y1, x2, y2, class: 'p-wall' }, gWalls); }
+function hWall(x1, x2, y, doors) { let s = x1; doors.filter((d) => d > x1 && d < x2).sort((a, b) => a - b).forEach((d) => { wallLine(s, y, d - 22, y); s = d + 22; }); wallLine(s, y, x2, y); }
+const topDoors = ROOMS.filter((r) => r.y === 20).map((r) => r.door[1]);
+const midDoors = ROOMS.filter((r) => r.y === 320).map((r) => r.door[1]);
+const lowDoors = ROOMS.filter((r) => r.y === 610).map((r) => r.door[1]);
+hWall(20, 1180, 250, topDoors); hWall(20, 1180, 320, midDoors); wallLine(20, 550, 1180, 550); hWall(20, 1180, 610, lowDoors);
+[210, 430, 600, 840, 1030].forEach((x) => wallLine(x, 20, x, 250));
+[190, 450, 610, 840, 1010].forEach((x) => wallLine(x, 320, x, 550));
+[230, 480, 720, 970].forEach((x) => wallLine(x, 610, x, 760));
+el('rect', { x: 20, y: 20, width: 1160, height: 740, class: 'p-outer' }, gWalls);
+el('rect', { x: 575, y: 755, width: 50, height: 12, class: 'p-gap' }, gWalls); // entrance opening
+ROOMS.forEach((r) => { const [side, dx] = r.door, y = side === 'b' ? r.y + r.h : r.y, dir = side === 'b' ? -1 : 1;
+  el('path', { d: `M${dx - 20} ${y} L${dx - 20} ${y + dir * 40} A40 40 0 0 ${dir > 0 ? 0 : 1} ${dx + 20} ${y}`, class: 'p-swing' }, gWalls); });
+// windows on the outer walls
+[[60, 20, 120, 20], [260, 20, 380, 20], [470, 20, 560, 20], [660, 20, 780, 20], [880, 20, 990, 20], [1060, 20, 1150, 20], [20, 60, 20, 200], [1180, 60, 1180, 200], [20, 360, 20, 510], [1180, 360, 1180, 510]]
+  .forEach(([x1, y1, x2, y2]) => el('line', { x1, y1, x2, y2, class: 'p-window' }, gWalls));
+
+// people at their desks
+const tokens = {};
+[CEO, ...staff].forEach((p) => {
+  const s = seats[p.id]; if (!s) return;
+  const g = el('g', { class: 'p-person', tabindex: 0, role: 'button', 'aria-label': `${p.fullName || p.name}, ${p.role}` }, gPeople);
+  const ring = el('circle', { cx: s.x, cy: s.y, r: 14, class: 'p-ring' }, g);
+  el('circle', { cx: s.x, cy: s.y, r: 11, fill: p.ceo ? '#24344d' : p.dept.color, class: 'p-head' }, g);
+  el('text', { x: s.x, y: s.y + 3.5, class: 'p-init', 'text-anchor': 'middle' }, g, (p.fullName || p.name).split(' ').map((w) => w[0]).join(''));
+  el('text', { x: s.x, y: s.y + 27, class: 'p-name', 'text-anchor': 'middle' }, g, (p.fullName || p.name).split(' ')[0]);
+  const bub = el('g', { class: 'p-bub' }, g); const bt = el('rect', { x: s.x - 60, y: s.y - 50, width: 120, height: 20, rx: 10 }, bub); const tx = el('text', { x: s.x, y: s.y - 36, 'text-anchor': 'middle' }, bub, '');
+  const open = () => { if (!p.ceo) { select(p); $('card').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); } };
+  g.addEventListener('click', open); g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  tokens[p.id] = { g, ring, bub, bt, tx, p };
 });
 
-/* people walking between the hall and the rooms */
-const walkers = [0, 1, 2, 3, 4, 5, 6].map((k) => ({ g: person(S, 0, 0, false, k + 11), li: (k * 3) % links.length, t: Math.random(), sp: .06 + Math.random() * .04, back: k % 2 === 1 }));
-function along(pts, f) { const L1 = pts[0].distanceTo(pts[1]), L2 = pts[1].distanceTo(pts[2]), d = f * (L1 + L2);
-  return d < L1 ? [pts[0].clone().lerp(pts[1], d / L1), pts[1].clone().sub(pts[0])] : [pts[1].clone().lerp(pts[2], (d - L1) / L2), pts[2].clone().sub(pts[1])]; }
+// runner: a small figure walks from the Executive Office to a room when work is handed over
+const runner = el('g', { class: 'p-runner' }, gPeople); el('circle', { cx: 0, cy: 0, r: 7 }, runner); runner.style.display = 'none';
+const roomOf = (id) => ROOMS.find((r) => r.members && r.members.some((m) => m.id === id));
+const doorPt = (r) => ({ x: r.door[1], y: r.door[0] === 'b' ? r.y + r.h : r.y });
+const corrY = (r) => r.y === 610 ? 580 : 285;
+let runs = [];
+function sendRunner(toId) {
+  const from = ROOMS.find((r) => r.key === 'exec'), to = roomOf(toId); if (!to || to === from || reduce) return;
+  const a = doorPt(from), b = doorPt(to), pts = [a, { x: a.x, y: 285 }];
+  if (corrY(to) === 580) pts.push({ x: 1150, y: 285 }, { x: 1150, y: 580 });
+  pts.push({ x: b.x, y: corrY(to) }, b, seats[toId] || b);
+  runs.push({ pts, t: 0 });
+}
+let lastT = performance.now();
+function tick(now) {
+  const dt = Math.min((now - lastT) / 1000, .05); lastT = now;
+  runs = runs.filter((r) => r.t < 1);
+  if (runs.length) {
+    const r = runs[0]; r.t += dt * .55;
+    const segs = r.pts.slice(1).map((p, i) => Math.hypot(p.x - r.pts[i].x, p.y - r.pts[i].y)), L = segs.reduce((a, b) => a + b, 0);
+    let d = Math.min(r.t, 1) * L, i = 0; while (i < segs.length - 1 && d > segs[i]) { d -= segs[i]; i++; }
+    const p0 = r.pts[i], p1 = r.pts[i + 1], f = segs[i] ? d / segs[i] : 1;
+    runner.style.display = ''; runner.setAttribute('transform', `translate(${p0.x + (p1.x - p0.x) * f},${p0.y + (p1.y - p0.y) * f})`);
+  } else runner.style.display = 'none';
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
 
-/* labels */
-function tag(cls, html, color, onClick) { const b = document.createElement('button'); b.type = 'button'; b.className = 'o3-tag ' + cls; b.style.setProperty('--c', color); b.innerHTML = html; b.addEventListener('click', onClick); labelsEl.appendChild(b); return b; }
-const brainTag = tag('brain', '<b>THE BRAIN</b><small>CLAUDE.md · shared rules and memory</small>', '#6fe0b8', () => { const p = $('brain'); p.open = true; p.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); });
-rooms.forEach((r) => {
-  r.tag = tag('', `<i></i><span><b>${esc(r.cfg.name)}</b><small><em></em><span class="cnt"></span></small></span>`, r.cfg.color, () => {
-    if (r.cfg.kitchen) return;
-    const m = r.members[0]; if (m) { select(m); $('card').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }); } });
-  r.cnt = r.tag.querySelector('.cnt');
-});
-function refreshCounts() {
-  rooms.forEach((r) => {
-    let on = 0, txt;
-    if (r.cfg.kitchen) { txt = 'Coffee and a break'; }
-    else if (r.cfg.ceo) { on = CEO.state === 'working' ? 1 : 0; txt = on ? CEO.task : 'Approves every deliverable'; }
-    else { on = r.members.filter((m) => m.state === 'working').length; txt = `${r.members.length} specialist${r.members.length === 1 ? '' : 's'} · ${on} working`; }
-    if (r.cnt.textContent !== txt) r.cnt.textContent = txt; r.tag.classList.toggle('on', on > 0);
-    r.desks.forEach((d) => {
-      const a = d.ag; d.run = a.state === 'working';
-      const st = d.run ? a.task : 'Available', sig = d.run + '|' + st; if (sig === d.sig) return; d.sig = sig;
-      const c = d.cvs.getContext('2d'), colr = a.ceo ? '#24344d' : a.dept.color;
-      c.fillStyle = d.run ? '#0f2f26' : '#1c2536'; c.fillRect(0, 0, 256, 150);
-      c.fillStyle = colr; c.fillRect(0, 0, 256, 40); c.fillStyle = '#fff'; c.font = '700 26px Arial,sans-serif'; c.textBaseline = 'middle'; c.fillText(a.name.split(' ')[0], 10, 21);
-      c.fillStyle = d.run ? '#7fe0b4' : '#8d99ad'; c.beginPath(); c.arc(238, 20, 7, 0, 7); c.fill();
-      c.fillStyle = d.run ? '#c9f5e2' : '#aab4c4'; c.font = '600 19px Arial,sans-serif'; c.fillText((a.role || '').slice(0, 22), 10, 62);
-      c.font = '18px Arial,sans-serif'; c.fillStyle = '#e6ecf4'; c.fillText(String(st).slice(0, 24), 10, 90);
-      if (d.run) { c.fillStyle = 'rgba(127,224,180,.55)'; [0, 1].forEach((j) => c.fillRect(10, 110 + j * 16, 150 + ((j * 53) % 80), 8)); }
-      d.tex.needsUpdate = true; });
+function paintPlan() {
+  Object.values(tokens).forEach((t) => {
+    const on = t.p.state === 'working';
+    t.g.classList.toggle('on', on); t.g.classList.toggle('sel', t.p === selected);
+    const text = on ? (t.p.task || 'Working') : '';
+    t.tx.textContent = text.length > 26 ? text.slice(0, 25) + '…' : text;
+    const w = Math.max(60, t.tx.textContent.length * 6.2 + 18); t.bt.setAttribute('width', w); t.bt.setAttribute('x', +t.ring.getAttribute('cx') - w / 2);
   });
+  ROOMS.forEach((r) => { if (r.key === 'ceo') { r.sub.textContent = CEO.state === 'working' ? CEO.task : 'Signing officer'; r.sub.classList.toggle('on', CEO.state === 'working'); return; } if (!r.dept) return; const on = r.members.filter((m) => m.state === 'working').length;
+    r.sub.textContent = `${r.members.length} specialist${r.members.length === 1 ? '' : 's'}${on ? ' · ' + on + ' working' : ''}`; r.sub.classList.toggle('on', on > 0); });
 }
-refreshCounts(); setInterval(refreshCounts, 700);
-
-/* camera: drag to turn, buttons to zoom */
-let az = 0, el = .88, zoom = 1, drag = null, userMoved = false;
-function fit() { const w = host.clientWidth || 600, h = host.clientHeight || 480; R.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
-function placeCam() { const base = 82 * Math.max(1, (cam.aspect < 1 ? 1.05 : 1.45) / cam.aspect) * zoom; cam.position.set(Math.sin(az) * Math.sin(el) * base, Math.cos(el) * base, Math.cos(az) * Math.sin(el) * base - 2); cam.lookAt(0, 0, 1); }
-R.domElement.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY, az, el, type: e.pointerType }; host.classList.add('dragging'); });
-addEventListener('pointermove', (e) => { if (!drag) return; userMoved = true; az = Math.max(-1.1, Math.min(1.1, drag.az - (e.clientX - drag.x) * .006)); if (drag.type === 'mouse') el = Math.min(1.15, Math.max(.5, drag.el - (e.clientY - drag.y) * .004)); });
-addEventListener('pointerup', () => { drag = null; host.classList.remove('dragging'); });
-$('o3In').addEventListener('click', () => { zoom = Math.max(.4, zoom * .82); });
-$('o3Out').addEventListener('click', () => { zoom = Math.min(1.5, zoom * 1.2); });
-$('o3Reset').addEventListener('click', () => { az = 0; el = .88; zoom = 1; userMoved = false; });
-new ResizeObserver(fit).observe(host); fit();
-
-const v = new THREE.Vector3();
-function placeTag(el2, p) { v.copy(p).project(cam); const w = host.clientWidth, h = host.clientHeight;
-  if (v.z > 1 || v.x < -1.15 || v.x > 1.15 || v.y < -1.15 || v.y > 1.15) { el2.style.visibility = 'hidden'; return; }
-  el2.style.visibility = 'visible'; el2.style.transform = `translate(${((v.x + 1) / 2 * w).toFixed(1)}px,${((1 - v.y) / 2 * h).toFixed(1)}px) translate(-50%,-100%)`; }
-const clock = new THREE.Clock(); let time = 0;
-function frame() {
-  requestAnimationFrame(frame);
-  if (document.hidden) return;
-  const dt = Math.min(clock.getDelta(), .05);
-  if (!reduce) {
-    time += dt;
-    if (!userMoved && !drag) az = Math.sin(time * .08) * .15;
-    rings.forEach((r, i) => { r.rotation.z += dt * (i % 2 ? -.25 : .35); });
-    shell.rotation.y += dt * .25; shell.rotation.x += dt * .1;
-    orbits.forEach((o, i) => { o.rotation.z += dt * (.5 + i * .2); });
-    const s = 1 + Math.sin(time * 2) * .06; core.scale.set(s, s, s); hubLight.intensity = .7 + Math.sin(time * 2) * .2;
-    links.forEach((l) => { l.pk.position.copy(l.curve.getPoint(((time * .18) + l.off) % 1)); });
-    rooms.forEach((r) => r.desks.forEach((d) => { d.p.position.y = -.42 + (d.run ? Math.abs(Math.sin(time * 6 + d.phase)) * .05 : 0); d.p.rotation.y = d.run ? Math.sin(time * 2 + d.phase) * .15 : 0; }));
-    walkers.forEach((w) => { w.t += dt * w.sp; if (w.t >= 1) { w.t = 0; w.back = !w.back; if (!w.back) w.li = Math.floor(Math.random() * links.length); }
-      const [p, dir] = along(links[w.li].pts, w.back ? 1 - w.t : w.t);
-      w.g.position.set(p.x, .42 + Math.abs(Math.sin(time * 9 + w.li)) * .07, p.z); w.g.rotation.y = Math.atan2(dir.x, dir.z) + (w.back ? Math.PI : 0); });
-  } else { links.forEach((l) => l.pk.position.copy(l.curve.getPoint(.5))); walkers.forEach((w, k) => { const [p] = along(links[w.li].pts, .3 + k * .1); w.g.position.set(p.x, .42, p.z); }); }
-  placeCam(); R.render(S, cam);
-  placeTag(brainTag, new THREE.Vector3(0, 8.2, 0));
-  rooms.forEach((r) => placeTag(r.tag, new THREE.Vector3(r.cx, 4.4, r.cfg.ceo ? r.cz + 5 : r.cz - 1)));
-}
-frame();
+const prevState = {};
+const _apply = apply;
+const _select = select; select = function (p) { _select(p); paintPlan(); };
+apply = function (L) { _apply(L); staff.forEach((s) => { if (s.state === 'working' && prevState[s.id] !== 'working') sendRunner(s.id); prevState[s.id] = s.state; }); paintPlan(); };
+paintPlan();
+$('legend').innerHTML = DEPTS.map((d) => `<span><b style="background:${d.color}"></b>${esc(d.short || d.name)}</span>`).join('') + '<span><b style="background:#2fb37a;border-radius:50%"></b>Working now</span>';
 $('footnote').textContent = `Built from the LedgerPeak folder on ${D.built}. Rebuild with: python3 scripts/build_hq.py`;
 })();
 </script>

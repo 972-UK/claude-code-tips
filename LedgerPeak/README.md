@@ -80,7 +80,7 @@ While the mode is ON (see `CLAUDE.md`), the firm can build the brand, systems, p
 
 ## The office view
 
-- `office/dashboard/hq.html`: LedgerPeak HQ, the main office. A 3D building with every department in a glass-walled room around the Brain, plus specialist screens, the road to launch, the skills library and the team directory with Grace's updates. It goes live while Claude Code runs. Rebuild it after changes with `python3 scripts/build_hq.py`.
+- `office/dashboard/hq.html`: LedgerPeak HQ, the main office. An architect-style floor plan with every department in its own furnished room and each specialist at their desk, plus specialist screens, the road to launch, the skills library and the team directory with Grace's updates. It goes live while Claude Code runs. Rebuild it after changes with `python3 scripts/build_hq.py`.
 - `office/dashboard/office.html`: the pixel-art office. It shows thirteen rooms and every staff member, with a Command Centre (live feed, task board, expertise, briefings, work log, team) and a staff roster. It updates live while Claude Code runs, through the hooks in `.claude/settings.json`.
 - `office/dashboard/index.html`: the reports view, with KPIs, pipeline, clients, deadlines, academy and compliance.
 - On Windows, if `python3` is not recognised, change it to `python` in `.claude/settings.json`.

@@ -1,5 +1,5 @@
 window.LP_DATA = {
- "generated": "19/10/2026",
+ "generated": "21/10/2026",
  "kpi": {
   "payingClients": 1,
   "mrr": 325.0,
@@ -332,35 +332,35 @@ window.LP_DATA = {
  "deadlines": [
   {
    "date": "01/11/2026",
-   "days": 13,
+   "days": 11,
    "item": "Read employment contract second-job clauses",
    "who": "LedgerPeak",
    "owner": "Parth"
   },
   {
    "date": "07/11/2026",
-   "days": 19,
+   "days": 17,
    "item": "DEMO VAT return due quarter to 30/09/2026 (one month and 7 days rule, verify)",
    "who": "DEMO Harrow Hill Café",
    "owner": "james-whitfield"
   },
   {
    "date": "07/11/2026",
-   "days": 19,
+   "days": 17,
    "item": "DEMO MTD quarterly update to 05/10/2026 (verify)",
    "who": "DEMO Harrow Hill Café",
    "owner": "james-whitfield"
   },
   {
    "date": "15/11/2026",
-   "days": 27,
+   "days": 25,
    "item": "AML supervision registration submitted",
    "who": "LedgerPeak",
    "owner": "victor-hale"
   },
   {
    "date": "15/11/2026",
-   "days": 27,
+   "days": 25,
    "item": "Pay ICO data protection fee",
    "who": "LedgerPeak",
    "owner": "victor-hale"
